@@ -22,9 +22,10 @@ Supports two dependency syntaxes in the service spec file:
 
 Usage (called by build.sh, but can also be run directly):
     python3 parse_service.py \\
-        --service-file staff-portal-api/farmer-develop.txt \\
-        --repo-root    /path/to/repo \\
-        [--dockerfile  staff-portal-api/Dockerfile] \\
+        --service-file docker/staff-portal-api/develop.txt \\
+        --repo-root    /path/to/repo/docker \\
+        --source-root  /path/to/repo \\
+        [--dockerfile  docker/staff-portal-api/Dockerfile] \\
         [--output-env  /tmp/service_env.sh]
 """
 
