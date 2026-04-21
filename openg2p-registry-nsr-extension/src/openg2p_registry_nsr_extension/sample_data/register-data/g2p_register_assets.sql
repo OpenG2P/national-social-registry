@@ -1,0 +1,60 @@
+INSERT INTO "public"."g2p_register_assets" (
+  "asset_type","asset_category","quantity","size_value","size_unit","size_band","details",
+  "internal_record_id","functional_record_id","link_internal_record_id","link_foundational_id",
+  "record_name","record_image_storage_id","created_by","created_at","last_approved_at",
+  "last_approved_by","search_text","record_status","record_status_reason"
+) VALUES
+-- HH-NSR-0001 assets
+('CONSUMER_DURABLE','Television',1,NULL,NULL,NULL,'{"brand": "generic", "condition": "working"}',
+ '50000000-0000-4000-8000-000000000001','AST-NSR-0001','10000000-0000-4000-8000-000000000001',NULL,
+ 'Television',NULL,'seeder','2026-04-01 00:00:00','2026-04-01 00:00:00','seeder',
+ 'AST-NSR-0001 CONSUMER_DURABLE Television','ACTIVE',NULL),
+
+('VEHICLE','Bicycle',2,NULL,NULL,NULL,NULL,
+ '50000000-0000-4000-8000-000000000002','AST-NSR-0002','10000000-0000-4000-8000-000000000001',NULL,
+ 'Bicycle',NULL,'seeder','2026-04-01 00:00:00','2026-04-01 00:00:00','seeder',
+ 'AST-NSR-0002 VEHICLE Bicycle','ACTIVE',NULL),
+
+-- HH-NSR-0002 assets: small farm + livestock
+('LAND','Agricultural',1,0.8,'HECTARE','0-1ha','{"use": "AGRICULTURAL", "tenure": "RENTED"}',
+ '50000000-0000-4000-8000-000000000003','AST-NSR-0003','10000000-0000-4000-8000-000000000002',NULL,
+ 'Agricultural Land 0.8 ha',NULL,'seeder','2026-04-01 00:00:00','2026-04-01 00:00:00','seeder',
+ 'AST-NSR-0003 LAND Agricultural 0.8 HECTARE','ACTIVE',NULL),
+
+('LIVESTOCK','Goat',4,NULL,NULL,'1-5 heads',NULL,
+ '50000000-0000-4000-8000-000000000004','AST-NSR-0004','10000000-0000-4000-8000-000000000002',NULL,
+ 'Goats',NULL,'seeder','2026-04-01 00:00:00','2026-04-01 00:00:00','seeder',
+ 'AST-NSR-0004 LIVESTOCK Goat 4 1-5 heads','ACTIVE',NULL),
+
+-- HH-NSR-0003 assets: middle-class, phone + fridge
+('CONSUMER_DURABLE','Refrigerator',1,NULL,NULL,NULL,NULL,
+ '50000000-0000-4000-8000-000000000005','AST-NSR-0005','10000000-0000-4000-8000-000000000003',NULL,
+ 'Refrigerator',NULL,'seeder','2026-04-01 00:00:00','2026-04-01 00:00:00','seeder',
+ 'AST-NSR-0005 CONSUMER_DURABLE Refrigerator','ACTIVE',NULL),
+
+('VEHICLE','Motorcycle',1,NULL,NULL,NULL,NULL,
+ '50000000-0000-4000-8000-000000000006','AST-NSR-0006','10000000-0000-4000-8000-000000000003',NULL,
+ 'Motorcycle',NULL,'seeder','2026-04-01 00:00:00','2026-04-01 00:00:00','seeder',
+ 'AST-NSR-0006 VEHICLE Motorcycle','ACTIVE',NULL),
+
+-- HH-NSR-0004 (displaced) - no assets but need an explicit "none" record
+('OTHER','No assets owned',0,NULL,NULL,NULL,'{"note": "displaced household, living in shelter"}',
+ '50000000-0000-4000-8000-000000000007','AST-NSR-0007','10000000-0000-4000-8000-000000000004',NULL,
+ 'No assets',NULL,'seeder','2026-04-01 00:00:00','2026-04-01 00:00:00','seeder',
+ 'AST-NSR-0007 OTHER No assets owned','ACTIVE',NULL),
+
+-- HH-NSR-0005 (pastoralist) - cattle and goats
+('LIVESTOCK','Cattle',18,NULL,NULL,'10-25 heads',NULL,
+ '50000000-0000-4000-8000-000000000008','AST-NSR-0008','10000000-0000-4000-8000-000000000005',NULL,
+ 'Cattle',NULL,'seeder','2026-04-01 00:00:00','2026-04-01 00:00:00','seeder',
+ 'AST-NSR-0008 LIVESTOCK Cattle 18 10-25 heads','ACTIVE',NULL),
+
+('LIVESTOCK','Goat',30,NULL,NULL,'26-50 heads',NULL,
+ '50000000-0000-4000-8000-000000000009','AST-NSR-0009','10000000-0000-4000-8000-000000000005',NULL,
+ 'Goats',NULL,'seeder','2026-04-01 00:00:00','2026-04-01 00:00:00','seeder',
+ 'AST-NSR-0009 LIVESTOCK Goat 30 26-50 heads','ACTIVE',NULL),
+
+('PRODUCTIVE_TOOL','Water pump',1,NULL,NULL,NULL,NULL,
+ '50000000-0000-4000-8000-000000000010','AST-NSR-0010','10000000-0000-4000-8000-000000000005',NULL,
+ 'Water pump',NULL,'seeder','2026-04-01 00:00:00','2026-04-01 00:00:00','seeder',
+ 'AST-NSR-0010 PRODUCTIVE_TOOL Water pump','ACTIVE',NULL);

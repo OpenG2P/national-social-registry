@@ -1,0 +1,96 @@
+from datetime import date
+from typing import Any, Optional
+
+from openg2p_registry_core.schemas import (
+    G2PRegisterBaseSchema, G2PPersonSchema, G2PGeoSchema,
+    G2PRegisterHistorySchema, G2PPersonHistorySchema, G2PGeoHistorySchema
+)
+from ..models.enums import (
+    AgeMethodEnum,
+    CitizenshipCategoryEnum,
+    DisabilitySeverityEnum,
+    DisabilityStatusEnum,
+    DisplacementStatusEnum,
+    EmploymentStatusEnum,
+    IdentityEvidenceTypeEnum,
+    PastoralistClassificationEnum,
+    PreferredContactMethodEnum,
+    RelationshipToHeadEnum,
+    ResidencyStatusEnum,
+    VerificationStatusEnum,
+)
+
+
+class G2PRegisterSchemaIndividual(G2PRegisterBaseSchema, G2PPersonSchema, G2PGeoSchema):
+    """
+    Schema for Individual register.
+    Inherits fields from G2PRegisterBaseSchema, G2PPersonSchema, and G2PGeoSchema.
+    link_internal_record_id -> Household.internal_record_id (optional)
+    """
+    foundational_id_masked: Optional[str] = None
+    foundational_id_verification_status: Optional[VerificationStatusEnum] = None
+    identity_evidence_type: Optional[IdentityEvidenceTypeEnum] = None
+    legacy_program_ids: Optional[dict] = None
+
+    estimated_age: Optional[int] = None
+    age_method: Optional[AgeMethodEnum] = None
+    citizenship_category: Optional[CitizenshipCategoryEnum] = None
+
+    relationship_to_head: Optional[RelationshipToHeadEnum] = None
+    residency_status: Optional[ResidencyStatusEnum] = None
+    dependency_indicator: Optional[bool] = None
+
+    preferred_contact_method: Optional[PreferredContactMethodEnum] = None
+    contact_person_name: Optional[str] = None
+
+    disability_status: Optional[DisabilityStatusEnum] = None
+    disability_domains: Optional[dict] = None
+    disability_severity: Optional[DisabilitySeverityEnum] = None
+    plw_status: Optional[bool] = None
+    plw_status_date: Optional[date] = None
+    orphanhood_flag: Optional[bool] = None
+    chronic_illness_flag: Optional[bool] = None
+    displacement_status: Optional[DisplacementStatusEnum] = None
+    pastoralist_classification: Optional[PastoralistClassificationEnum] = None
+    high_mobility_indicator: Optional[bool] = None
+
+    primary_livelihood: Optional[str] = None
+    secondary_livelihood: Optional[str] = None
+    employment_status: Optional[EmploymentStatusEnum] = None
+    coping_strategies_index: Optional[int] = None
+
+
+class G2PRegisterHistorySchemaIndividual(
+    G2PRegisterHistorySchema, G2PPersonHistorySchema, G2PGeoHistorySchema
+):
+    foundational_id_masked: Optional[str] = None
+    foundational_id_verification_status: Optional[VerificationStatusEnum] = None
+    identity_evidence_type: Optional[IdentityEvidenceTypeEnum] = None
+    legacy_program_ids: Optional[dict] = None
+
+    estimated_age: Optional[int] = None
+    age_method: Optional[AgeMethodEnum] = None
+    citizenship_category: Optional[CitizenshipCategoryEnum] = None
+
+    relationship_to_head: Optional[RelationshipToHeadEnum] = None
+    residency_status: Optional[ResidencyStatusEnum] = None
+    dependency_indicator: Optional[bool] = None
+
+    preferred_contact_method: Optional[PreferredContactMethodEnum] = None
+    contact_person_name: Optional[str] = None
+
+    disability_status: Optional[DisabilityStatusEnum] = None
+    disability_domains: Optional[dict] = None
+    disability_severity: Optional[DisabilitySeverityEnum] = None
+    plw_status: Optional[bool] = None
+    plw_status_date: Optional[date] = None
+    orphanhood_flag: Optional[bool] = None
+    chronic_illness_flag: Optional[bool] = None
+    displacement_status: Optional[DisplacementStatusEnum] = None
+    pastoralist_classification: Optional[PastoralistClassificationEnum] = None
+    high_mobility_indicator: Optional[bool] = None
+
+    primary_livelihood: Optional[str] = None
+    secondary_livelihood: Optional[str] = None
+    employment_status: Optional[EmploymentStatusEnum] = None
+    coping_strategies_index: Optional[int] = None
