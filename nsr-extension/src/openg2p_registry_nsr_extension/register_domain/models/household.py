@@ -19,7 +19,9 @@ class G2PRegisterHousehold(G2PRegister, G2PGeo):
     __tablename__ = "g2p_register_households"
 
     # Composition and headship
-    household_head_internal_record_id: Mapped[str] = mapped_column(String, nullable=True)  # → Individual.internal_record_id
+    # Soft reference to Individual.internal_record_id (no DB-level FK — core platform
+    # avoids cross-register FKs). Indexed to speed up "find household by head" lookups.
+    household_head_internal_record_id: Mapped[str] = mapped_column(String, nullable=True, index=True)
     household_head_name: Mapped[str] = mapped_column(String, nullable=True)
     headship_type: Mapped[HeadshipTypeEnum] = mapped_column(String, nullable=True)
 

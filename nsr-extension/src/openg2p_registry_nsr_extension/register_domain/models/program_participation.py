@@ -15,14 +15,14 @@ class G2PRegisterProgramParticipation(G2PRegister):
     # link_internal_record_id -> Individual OR Household.internal_record_id
     linked_register_mnemonic: Mapped[LinkedRegisterMnemonicEnum] = mapped_column(String, nullable=True)
 
-    program_name: Mapped[str] = mapped_column(String, nullable=True)        # attribute lookup (PROGRAM_NAME)
-    program_mnemonic: Mapped[str] = mapped_column(String, nullable=True)
-    program_start_date: Mapped[Date] = mapped_column(Date, nullable=True)
+    program_name: Mapped[str] = mapped_column(String, nullable=True)                     # attribute lookup (PROGRAM_NAME)
+    program_mnemonic: Mapped[str] = mapped_column(String, nullable=True, index=True)     # filter: enrolments by programme
+    program_start_date: Mapped[Date] = mapped_column(Date, nullable=True, index=True)    # filter: currently-active enrolments
     program_exit_date: Mapped[Date] = mapped_column(Date, nullable=True)
-    legacy_program_id: Mapped[str] = mapped_column(String, nullable=True)
+    legacy_program_id: Mapped[str] = mapped_column(String, nullable=True, index=True)    # lookup from legacy MIS sync
 
     payment_channel_preference: Mapped[PaymentChannelPreferenceEnum] = mapped_column(String, nullable=True)
-    payment_account_token: Mapped[str] = mapped_column(String, nullable=True)  # tokenised reference only
+    payment_account_token: Mapped[str] = mapped_column(String, nullable=True, index=True)  # tokenised reference only
     payment_verification_status: Mapped[PaymentVerificationStatusEnum] = mapped_column(String, nullable=True)
 
     def get_search_text_fields(self) -> str:

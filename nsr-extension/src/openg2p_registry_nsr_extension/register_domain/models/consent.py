@@ -10,10 +10,10 @@ class G2PRegisterConsent(G2PRegister):
 
     # link_internal_record_id -> Individual.internal_record_id
     consent_captured: Mapped[bool] = mapped_column(Boolean, nullable=True)
-    consent_date: Mapped[Date] = mapped_column(Date, nullable=True)
-    consent_scope: Mapped[dict] = mapped_column(JSON, nullable=True)      # list of purpose/institution codes
+    consent_date: Mapped[Date] = mapped_column(Date, nullable=True, index=True)   # "latest consent per individual" lookups
+    consent_scope: Mapped[dict] = mapped_column(JSON, nullable=True)              # list of purpose/institution codes
     consent_method: Mapped[ConsentMethodEnum] = mapped_column(String, nullable=True)
-    consent_evidence_ref: Mapped[str] = mapped_column(Text, nullable=True)  # document storage reference
+    consent_evidence_ref: Mapped[str] = mapped_column(Text, nullable=True)        # document storage reference
     data_sharing_restrictions: Mapped[dict] = mapped_column(JSON, nullable=True)
 
     def get_search_text_fields(self) -> str:

@@ -16,12 +16,12 @@ class G2PRegisterVerificationHistory(G2PRegister):
     # link_internal_record_id -> Individual OR Household.internal_record_id
     linked_register_mnemonic: Mapped[LinkedRegisterMnemonicEnum] = mapped_column(String, nullable=True)
     update_trigger: Mapped[UpdateTriggerEnum] = mapped_column(String, nullable=True)
-    data_source: Mapped[str] = mapped_column(String, nullable=True)   # attribute lookup
-    enumerator_id: Mapped[str] = mapped_column(String, nullable=True)
-    office_location_code: Mapped[str] = mapped_column(String, nullable=True)
+    data_source: Mapped[str] = mapped_column(String, nullable=True)                       # attribute lookup
+    enumerator_id: Mapped[str] = mapped_column(String, nullable=True, index=True)         # staff productivity / audit queries
+    office_location_code: Mapped[str] = mapped_column(String, nullable=True, index=True)  # office-level rollups
     verification_status: Mapped[RecordVerificationStatusEnum] = mapped_column(String, nullable=True)
     verification_method: Mapped[VerificationMethodEnum] = mapped_column(String, nullable=True)
-    verified_at: Mapped[DateTime] = mapped_column(DateTime, nullable=True)
+    verified_at: Mapped[DateTime] = mapped_column(DateTime, nullable=True, index=True)    # time-series / "last verified" queries
     data_quality_flags: Mapped[dict] = mapped_column(JSON, nullable=True)
 
     def get_search_text_fields(self) -> str:

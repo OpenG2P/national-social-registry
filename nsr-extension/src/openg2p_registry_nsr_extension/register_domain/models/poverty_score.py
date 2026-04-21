@@ -9,10 +9,10 @@ class G2PRegisterPovertyScore(G2PRegister):
     __tablename__ = "g2p_register_poverty_scores"
 
     # link_internal_record_id -> Household.internal_record_id
-    pmt_score: Mapped[float] = mapped_column(Numeric, nullable=True)
+    pmt_score: Mapped[float] = mapped_column(Numeric, nullable=True, index=True)            # range queries for targeting thresholds
     pmt_score_type: Mapped[PmtScoreTypeEnum] = mapped_column(String, nullable=True)
     pmt_variables: Mapped[dict] = mapped_column(JSON, nullable=True)
-    pmt_calculation_date: Mapped[Date] = mapped_column(Date, nullable=True)
+    pmt_calculation_date: Mapped[Date] = mapped_column(Date, nullable=True, index=True)     # "latest score per household" queries
     pmt_model_version: Mapped[str] = mapped_column(String, nullable=True)
 
     def get_search_text_fields(self) -> str:

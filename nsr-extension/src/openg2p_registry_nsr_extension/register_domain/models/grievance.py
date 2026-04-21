@@ -14,14 +14,15 @@ class G2PRegisterGrievance(G2PRegister):
     __tablename__ = "g2p_register_grievances"
 
     # link_internal_record_id -> Individual.internal_record_id
-    grievance_case_id: Mapped[str] = mapped_column(String, nullable=True)
+    # Externally-issued case ID from the Grievance Management System — must be globally unique.
+    grievance_case_id: Mapped[str] = mapped_column(String, nullable=True, unique=True, index=True)
     grievance_type: Mapped[GrievanceTypeEnum] = mapped_column(String, nullable=True)
     submission_channel: Mapped[SubmissionChannelEnum] = mapped_column(String, nullable=True)
     grievance_status: Mapped[GrievanceStatusEnum] = mapped_column(String, nullable=True)
-    submission_date: Mapped[Date] = mapped_column(Date, nullable=True)
-    resolution_date: Mapped[Date] = mapped_column(Date, nullable=True)
+    submission_date: Mapped[Date] = mapped_column(Date, nullable=True, index=True)  # SLA / ageing reports
+    resolution_date: Mapped[Date] = mapped_column(Date, nullable=True, index=True)  # resolution-time analytics
     resolution_code: Mapped[ResolutionCodeEnum] = mapped_column(String, nullable=True)
-    resolution_rationale: Mapped[str] = mapped_column(String, nullable=True)  # attribute lookup
+    resolution_rationale: Mapped[str] = mapped_column(String, nullable=True)        # attribute lookup
     protection_referral_flag: Mapped[bool] = mapped_column(Boolean, nullable=True)
 
     def get_search_text_fields(self) -> str:
