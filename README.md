@@ -35,6 +35,15 @@ Multi-valued or time-series data is captured in supporting tables linked to an I
 
 See [`nsr-extension/`](nsr-extension/).
 
+## Helm chart
+
+A wrapper Helm chart at [`helm/openg2p-nsr/`](helm/openg2p-nsr/) installs NSR on top of the OpenG2P Registry Gen 2 base chart. It overrides only the five NSR image names and the ID-generator `idTypes` (renaming `farmer_id` → `individual`); everything else (Keycloak, Postgres, RabbitMQ, ingress, templates) is inherited from the base.
+
+- Wrapper chart version: `0.0.0-develop`
+- Base chart dependency: `openg2p-registry 4.0.0-develop`
+
+See [`helm/openg2p-nsr/README.md`](helm/openg2p-nsr/README.md) for install / upgrade instructions.
+
 ## Docker images
 
 All Docker build definitions live under [`docker/`](docker/). Five images are produced:

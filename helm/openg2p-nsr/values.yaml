@@ -1,0 +1,97 @@
+# ---------------------------------------------------------------------------
+# openg2p-nsr — values.yaml
+#
+# Only NSR-specific overrides live here. Everything else (keycloak, postgres,
+# ingress, resources, …) is inherited from the base chart `openg2p-registry`
+# (see Chart.yaml → dependencies).
+#
+# All wrapper overrides are nested under the base chart name `openg2p-registry`,
+# as required by Helm subchart value scoping. Values at the top level of this
+# file are wrapper-chart-local and do not reach the base.
+# ---------------------------------------------------------------------------
+
+openg2p-registry:
+
+  # ==========================================================================
+  # Docker image overrides — one per NSR component.
+  # Image names match the images produced by this repo's docker workflows:
+  #   .github/workflows/docker-build-backend.yml
+  #   .github/workflows/docker-build-ui.yml
+  #   .github/workflows/docker-build-db-seed.yml
+  # The `develop` tag tracks the develop branch (see branch-=-tag convention).
+  # ==========================================================================
+
+  staffPortalApi:
+    image:
+      repository: openg2p/openg2p-nsr-staff-portal-api
+      tag: "develop"
+      pullPolicy: Always
+
+  partnerApi:
+    image:
+      repository: openg2p/openg2p-nsr-partner-api
+      tag: "develop"
+      pullPolicy: Always
+
+  staffPortalUi:
+    image:
+      repository: openg2p/openg2p-nsr-staff-portal-ui
+      tag: "develop"
+      pullPolicy: Always
+
+  # Celery image is a single build that can run as worker OR beat — the mode
+  # is selected at runtime via the CELERY_APP / CELERY_OPTS env vars set on
+  # each deployment (see docker/celery/README.md). Both sub-keys therefore
+  # point at the same image.
+  celeryWorker:
+    image:
+      repository: openg2p/openg2p-nsr-celery
+      tag: "develop"
+      pullPolicy: Always
+
+  celeryBeat:
+    image:
+      repository: openg2p/openg2p-nsr-celery
+      tag: "develop"
+      pullPolicy: Always
+
+  # DB-seeder: seeds register definitions, schemas, tabs, sections, attribute
+  # lookups and (optionally) sample data. Job-style deployment; set
+  # LOAD_SAMPLE_DATA=true via envVars if you want demo rows seeded too.
+  dbSeed:
+    image:
+      repository: openg2p/openg2p-nsr-db-seed
+      tag: "develop"
+      pullPolicy: Always
+
+  # ==========================================================================
+  # ID Generator — NSR-specific id_types.
+  #
+  # Base chart default (from openg2p-registry 4.0.0-develop):
+  #   idTypes:
+  #     farmer:    { idLength: 12 }
+  #     household: { idLength: 10 }
+  #
+  # NSR adds an `individual` id-type alongside the base's existing entries.
+  # `household` is kept unchanged. `farmer` is inherited from the base as
+  # a harmless unused entry — see note below.
+  #
+  # Helm map-merge caveat: subchart map values are merged with the base,
+  # never replaced. There is no reliable way in values.yaml to DELETE a
+  # key the base provides (setting it to `null` raises "cannot overwrite
+  # table with non table"). We therefore leave `farmer` in the merged
+  # config; it has no runtime effect because NSR registers use mnemonics
+  # `Individual` and `Household`, so the id-generator service is never
+  # invoked with `farmer` as a type. If you need it gone for cosmetic
+  # reasons, the only options are (a) a post-render hook, or (b) filing
+  # an upstream change in the base chart to make idTypes fully swappable.
+  # ==========================================================================
+  idgenerator:
+    idGenerator:
+      appConfig:
+        idTypes:
+          individual:                  # NSR-specific id-type
+            idLength: 12
+          household:                   # re-assert base's household for clarity
+            idLength: 10
+          # farmer — inherited from base chart, unused by NSR, left as-is.

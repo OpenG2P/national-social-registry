@@ -1,0 +1,107 @@
+# ---------------------------------------------------------------------------
+# questions.yaml — Rancher UI form for installing the NSR wrapper chart.
+#
+# Only the most commonly-changed settings are exposed here. Advanced users
+# should edit values.yaml directly (it includes everything the base chart
+# offers via subchart scoping under `openg2p-registry:`).
+# ---------------------------------------------------------------------------
+
+categories:
+  - Social Protection
+  - OpenG2P
+
+labels:
+  io.cattle.field/appName: OpenG2P NSR
+
+questions:
+  # -------------------------------------------------------------------------
+  # General deployment
+  # -------------------------------------------------------------------------
+  - variable: openg2p-registry.global.domain
+    label: Base domain
+    description: Base FQDN under which NSR services will be exposed (e.g. `nsr.example.com`). The chart derives per-service hostnames from this.
+    type: hostname
+    required: true
+    group: "General"
+
+  - variable: openg2p-registry.global.namespace
+    label: Namespace
+    description: Kubernetes namespace to install NSR into. Created automatically by Rancher if absent.
+    type: string
+    default: openg2p-nsr
+    required: true
+    group: "General"
+
+  # -------------------------------------------------------------------------
+  # Image tags — let operators pin a released tag instead of tracking develop.
+  # -------------------------------------------------------------------------
+  - variable: openg2p-registry.staffPortalApi.image.tag
+    label: Staff Portal API image tag
+    description: Tag for `openg2p/openg2p-nsr-staff-portal-api`. Leave as `develop` for the rolling build.
+    type: string
+    default: "develop"
+    group: "Images"
+
+  - variable: openg2p-registry.partnerApi.image.tag
+    label: Partner API image tag
+    description: Tag for `openg2p/openg2p-nsr-partner-api`.
+    type: string
+    default: "develop"
+    group: "Images"
+
+  - variable: openg2p-registry.staffPortalUi.image.tag
+    label: Staff Portal UI image tag
+    description: Tag for `openg2p/openg2p-nsr-staff-portal-ui`.
+    type: string
+    default: "develop"
+    group: "Images"
+
+  - variable: openg2p-registry.celeryWorker.image.tag
+    label: Celery image tag (worker + beat)
+    description: Single image used for both Celery worker and Celery beat.
+    type: string
+    default: "develop"
+    group: "Images"
+
+  - variable: openg2p-registry.dbSeed.image.tag
+    label: DB-seed image tag
+    description: Tag for `openg2p/openg2p-nsr-db-seed`.
+    type: string
+    default: "develop"
+    group: "Images"
+
+  # -------------------------------------------------------------------------
+  # Seeding controls
+  # -------------------------------------------------------------------------
+  - variable: openg2p-registry.dbSeed.enabled
+    label: Enable DB seeder
+    description: Runs the NSR meta-data seeder as a Kubernetes Job at install/upgrade.
+    type: boolean
+    default: true
+    group: "Seeding"
+
+  - variable: openg2p-registry.dbSeed.loadSampleData
+    label: Load sample data
+    description: When true, the seeder also inserts the 5 demo households / 15 demo individuals / supporting-table demo rows. Use only for dev / test environments.
+    type: boolean
+    default: false
+    group: "Seeding"
+
+  # -------------------------------------------------------------------------
+  # ID Generator — surface the NSR `individual` id_type for easy editing.
+  # (idTypes is a MAP keyed by id-type name in the base chart, so paths
+  # use dot-keys rather than list indices.)
+  # -------------------------------------------------------------------------
+  - variable: openg2p-registry.idgenerator.idGenerator.appConfig.idTypes.individual.idLength
+    label: Individual ID length
+    description: Total length of the generated individual (foundational) ID.
+    type: int
+    default: 12
+    group: "ID Generator"
+
+  - variable: openg2p-registry.idgenerator.idGenerator.appConfig.idTypes.household.idLength
+    label: Household ID length
+    description: Total length of the generated household (foundational) ID.
+    type: int
+    default: 10
+    group: "ID Generator"
