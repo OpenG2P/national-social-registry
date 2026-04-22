@@ -1,4 +1,7 @@
 from .g2p_register_domain_service_individual import G2PRegisterDomainServiceIndividual
+from .g2p_register_domain_service_individual_disability import (
+    G2PRegisterDomainServiceIndividualDisability,
+)
 from .g2p_register_domain_service_household import G2PRegisterDomainServiceHousehold
 from .g2p_register_domain_service_program_participation import (
     G2PRegisterDomainServiceProgramParticipation,

@@ -1,4 +1,8 @@
 from .individual import G2PRegisterIndividual, G2PRegisterHistoryIndividual
+from .individual_disability import (
+    G2PRegisterIndividualDisability,
+    G2PRegisterHistoryIndividualDisability,
+)
 from .household import G2PRegisterHousehold, G2PRegisterHistoryHousehold
 from .program_participation import (
     G2PRegisterProgramParticipation,
@@ -19,6 +23,7 @@ from .enums import (
     CitizenshipCategoryEnum,
     ConsentMethodEnum,
     CookingFuelEnum,
+    DisabilityDomainEnum,
     DisabilitySeverityEnum,
     DisabilityStatusEnum,
     DisplacementStatusEnum,

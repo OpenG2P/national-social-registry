@@ -8,6 +8,7 @@ INSERT INTO "public"."g2p_register_definitions" ("register_id","register_mnemoni
 ('b0000000-0000-4000-8000-000000000050','Consent','Consents','Informed consent records for collection and sharing of personal data','a0000000-0000-4000-8000-000000000001',50,'TABLE',NULL,NULL,NULL,'FALSE','FALSE',0,'FALSE'),
 ('b0000000-0000-4000-8000-000000000060','Grievance','Grievances','Grievance cases raised by individuals regarding registry data or programme inclusion','a0000000-0000-4000-8000-000000000001',60,'TABLE',NULL,NULL,NULL,'FALSE','FALSE',0,'FALSE'),
 ('b0000000-0000-4000-8000-000000000070','VerificationHistory','Verification History','Update and verification audit trail for registry records','a0000000-0000-4000-8000-000000000001',70,'TABLE',NULL,NULL,NULL,'FALSE','FALSE',0,'FALSE'),
+('b0000000-0000-4000-8000-000000000080','IndividualDisability','Individual Disabilities','Per-domain functional difficulty (Washington Group Short Set) with severity — one row per domain','a0000000-0000-4000-8000-000000000001',80,'TABLE',NULL,NULL,NULL,'FALSE','FALSE',0,'FALSE'),
 -- Supporting tables attached to Household
 ('b0000000-0000-4000-8000-000000000020','PovertyScore','Poverty Scores','Poverty assessment scores (PMT, MPI, PPI, custom) for households','a0000000-0000-4000-8000-000000000002',20,'TABLE',NULL,NULL,NULL,'FALSE','FALSE',0,'FALSE'),
 ('b0000000-0000-4000-8000-000000000030','Asset','Assets','Household assets — land, livestock, productive tools, consumer durables','a0000000-0000-4000-8000-000000000002',30,'TABLE',NULL,NULL,NULL,'FALSE','FALSE',0,'FALSE');

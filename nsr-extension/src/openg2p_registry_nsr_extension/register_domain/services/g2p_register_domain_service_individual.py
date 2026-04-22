@@ -22,6 +22,8 @@ class G2PRegisterDomainServiceIndividual(G2PRegisterDomainService):
             "last_name",
             "middle_name",
             "given_name",
+            "full_name",
+            "alias_names",
             "foundational_id",
             "foundational_id_masked",
             "gender",

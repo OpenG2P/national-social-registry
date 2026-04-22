@@ -12,6 +12,8 @@ class G2PIdGeneratorService(BaseService, G2PIdGeneratorInterface):
 
         if mnemonic == "individual":
             return IdAffix(prefix="IND-", suffix="")
+        if mnemonic == "individualdisability":
+            return IdAffix(prefix="DIS-", suffix="")
         if mnemonic == "household":
             return IdAffix(prefix="HH-", suffix="")
         if mnemonic == "programparticipation":

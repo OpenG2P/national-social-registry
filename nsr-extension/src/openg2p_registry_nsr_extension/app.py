@@ -11,6 +11,7 @@ from openg2p_registry_core.app import Initializer as CoreInitializer
 
 from .register_domain.models import (
     G2PRegisterIndividual, G2PRegisterHistoryIndividual,
+    G2PRegisterIndividualDisability, G2PRegisterHistoryIndividualDisability,
     G2PRegisterHousehold, G2PRegisterHistoryHousehold,
     G2PRegisterProgramParticipation, G2PRegisterHistoryProgramParticipation,
     G2PRegisterPovertyScore, G2PRegisterHistoryPovertyScore,
@@ -48,6 +49,9 @@ class Initializer(BaseInitializer):
 
             await G2PRegisterIndividual.create_migrate()
             await G2PRegisterHistoryIndividual.create_migrate()
+
+            await G2PRegisterIndividualDisability.create_migrate()
+            await G2PRegisterHistoryIndividualDisability.create_migrate()
 
             await G2PRegisterProgramParticipation.create_migrate()
             await G2PRegisterHistoryProgramParticipation.create_migrate()

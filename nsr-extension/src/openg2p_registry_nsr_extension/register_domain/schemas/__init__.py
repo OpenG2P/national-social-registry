@@ -1,4 +1,8 @@
 from .individual import G2PRegisterSchemaIndividual, G2PRegisterHistorySchemaIndividual
+from .individual_disability import (
+    G2PRegisterSchemaIndividualDisability,
+    G2PRegisterHistorySchemaIndividualDisability,
+)
 from .household import G2PRegisterSchemaHousehold, G2PRegisterHistorySchemaHousehold
 from .program_participation import (
     G2PRegisterSchemaProgramParticipation,

@@ -8,6 +8,7 @@ INSERT INTO "public"."g2p_register_ui_tabs" ("tab_id","register_id","tab_label",
 ('individual_consent_tab','a0000000-0000-4000-8000-000000000001','consents',5,'FALSE',0,NULL,NULL,'FALSE','TRUE'),
 ('individual_grievance_tab','a0000000-0000-4000-8000-000000000001','grievances',6,'FALSE',0,NULL,NULL,'FALSE','TRUE'),
 ('individual_verification_tab','a0000000-0000-4000-8000-000000000001','verification_history',7,'FALSE',0,NULL,NULL,'FALSE','TRUE'),
+('individual_disability_tab','a0000000-0000-4000-8000-000000000001','disabilities',8,'FALSE',0,NULL,NULL,'FALSE','TRUE'),
 
 -- Household register tabs
 ('household_intake_form_tab','a0000000-0000-4000-8000-000000000002','',0,'TRUE',0,'Household Intake Form','This form captures household composition, dwelling conditions, and basic services information.','TRUE','TRUE'),

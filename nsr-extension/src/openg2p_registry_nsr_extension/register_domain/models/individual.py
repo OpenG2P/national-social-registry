@@ -8,7 +8,6 @@ from ..services import G2PRegisterDomainServiceIndividual
 from .enums import (
     AgeMethodEnum,
     CitizenshipCategoryEnum,
-    DisabilitySeverityEnum,
     DisabilityStatusEnum,
     DisplacementStatusEnum,
     EmploymentStatusEnum,
@@ -32,6 +31,11 @@ class G2PRegisterIndividual(G2PRegister, G2PPerson, G2PGeo):
     identity_evidence_type: Mapped[IdentityEvidenceTypeEnum] = mapped_column(String, nullable=True)
     legacy_program_ids: Mapped[dict] = mapped_column(JSON, nullable=True)  # map of legacy system -> id
 
+    # Names — kept alongside G2PPerson's first/middle/last for search & dedup
+    # on populations with inconsistent transliteration or single-name cultures.
+    full_name: Mapped[str] = mapped_column(String, nullable=True, index=True)
+    alias_names: Mapped[list] = mapped_column(JSON, nullable=True)  # alternative spellings / known-as list
+
     # Demographics (beyond G2PPerson)
     estimated_age: Mapped[int] = mapped_column(Integer, nullable=True)
     age_method: Mapped[AgeMethodEnum] = mapped_column(String, nullable=True)
@@ -47,9 +51,11 @@ class G2PRegisterIndividual(G2PRegister, G2PPerson, G2PGeo):
     contact_person_name: Mapped[str] = mapped_column(String, nullable=True)
 
     # Vulnerability and inclusion
+    # `disability_status` is the high-level YES/NO/UNKNOWN flag. Per-domain
+    # severities live in the separate IndividualDisability table (multi-row),
+    # since one person can have functional difficulty in multiple WG domains
+    # with different severities.
     disability_status: Mapped[DisabilityStatusEnum] = mapped_column(String, nullable=True)
-    disability_domains: Mapped[dict] = mapped_column(JSON, nullable=True)  # WG Short Set
-    disability_severity: Mapped[DisabilitySeverityEnum] = mapped_column(String, nullable=True)
     plw_status: Mapped[bool] = mapped_column(Boolean, nullable=True)       # pregnant/lactating
     plw_status_date: Mapped[Date] = mapped_column(Date, nullable=True)
     orphanhood_flag: Mapped[bool] = mapped_column(Boolean, nullable=True)
@@ -80,6 +86,9 @@ class G2PRegisterHistoryIndividual(G2PRegisterHistory, G2PPersonHistory, G2PGeoH
     identity_evidence_type: Mapped[str] = mapped_column(String, nullable=True)
     legacy_program_ids: Mapped[dict] = mapped_column(JSON, nullable=True)
 
+    full_name: Mapped[str] = mapped_column(String, nullable=True)
+    alias_names: Mapped[list] = mapped_column(JSON, nullable=True)
+
     estimated_age: Mapped[int] = mapped_column(Integer, nullable=True)
     age_method: Mapped[str] = mapped_column(String, nullable=True)
     citizenship_category: Mapped[str] = mapped_column(String, nullable=True)
@@ -92,8 +101,6 @@ class G2PRegisterHistoryIndividual(G2PRegisterHistory, G2PPersonHistory, G2PGeoH
     contact_person_name: Mapped[str] = mapped_column(String, nullable=True)
 
     disability_status: Mapped[str] = mapped_column(String, nullable=True)
-    disability_domains: Mapped[dict] = mapped_column(JSON, nullable=True)
-    disability_severity: Mapped[str] = mapped_column(String, nullable=True)
     plw_status: Mapped[bool] = mapped_column(Boolean, nullable=True)
     plw_status_date: Mapped[Date] = mapped_column(Date, nullable=True)
     orphanhood_flag: Mapped[bool] = mapped_column(Boolean, nullable=True)

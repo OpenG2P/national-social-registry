@@ -72,6 +72,18 @@ class DisabilitySeverityEnum(str, enum.Enum):
     CANNOT_DO_AT_ALL = "CANNOT_DO_AT_ALL"
 
 
+class DisabilityDomainEnum(str, enum.Enum):
+    # Washington Group Short Set on Functioning — an internationally standardised
+    # classification of functional-difficulty domains used by UN statistical
+    # commissions and national censuses (not country-specific).
+    VISION = "VISION"
+    HEARING = "HEARING"
+    MOBILITY = "MOBILITY"
+    COGNITION = "COGNITION"
+    SELF_CARE = "SELF_CARE"
+    COMMUNICATION = "COMMUNICATION"
+
+
 class DisplacementStatusEnum(str, enum.Enum):
     HOST_COMMUNITY = "HOST_COMMUNITY"
     IDP = "IDP"

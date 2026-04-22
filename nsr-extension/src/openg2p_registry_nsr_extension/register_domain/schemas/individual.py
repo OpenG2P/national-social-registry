@@ -1,5 +1,5 @@
 from datetime import date
-from typing import Any, Optional
+from typing import List, Optional
 
 from openg2p_registry_core.schemas import (
     G2PRegisterBaseSchema, G2PPersonSchema, G2PGeoSchema,
@@ -8,7 +8,6 @@ from openg2p_registry_core.schemas import (
 from ..models.enums import (
     AgeMethodEnum,
     CitizenshipCategoryEnum,
-    DisabilitySeverityEnum,
     DisabilityStatusEnum,
     DisplacementStatusEnum,
     EmploymentStatusEnum,
@@ -32,6 +31,9 @@ class G2PRegisterSchemaIndividual(G2PRegisterBaseSchema, G2PPersonSchema, G2PGeo
     identity_evidence_type: Optional[IdentityEvidenceTypeEnum] = None
     legacy_program_ids: Optional[dict] = None
 
+    full_name: Optional[str] = None
+    alias_names: Optional[List[str]] = None
+
     estimated_age: Optional[int] = None
     age_method: Optional[AgeMethodEnum] = None
     citizenship_category: Optional[CitizenshipCategoryEnum] = None
@@ -43,9 +45,8 @@ class G2PRegisterSchemaIndividual(G2PRegisterBaseSchema, G2PPersonSchema, G2PGeo
     preferred_contact_method: Optional[PreferredContactMethodEnum] = None
     contact_person_name: Optional[str] = None
 
+    # Per-domain disability severity lives in IndividualDisability (multi-row).
     disability_status: Optional[DisabilityStatusEnum] = None
-    disability_domains: Optional[dict] = None
-    disability_severity: Optional[DisabilitySeverityEnum] = None
     plw_status: Optional[bool] = None
     plw_status_date: Optional[date] = None
     orphanhood_flag: Optional[bool] = None
@@ -68,6 +69,9 @@ class G2PRegisterHistorySchemaIndividual(
     identity_evidence_type: Optional[IdentityEvidenceTypeEnum] = None
     legacy_program_ids: Optional[dict] = None
 
+    full_name: Optional[str] = None
+    alias_names: Optional[List[str]] = None
+
     estimated_age: Optional[int] = None
     age_method: Optional[AgeMethodEnum] = None
     citizenship_category: Optional[CitizenshipCategoryEnum] = None
@@ -80,8 +84,6 @@ class G2PRegisterHistorySchemaIndividual(
     contact_person_name: Optional[str] = None
 
     disability_status: Optional[DisabilityStatusEnum] = None
-    disability_domains: Optional[dict] = None
-    disability_severity: Optional[DisabilitySeverityEnum] = None
     plw_status: Optional[bool] = None
     plw_status_date: Optional[date] = None
     orphanhood_flag: Optional[bool] = None
