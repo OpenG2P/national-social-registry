@@ -1,9 +1,11 @@
 name: Build DB Seed Docker Image
 
-# Mirrors the openg2p-registry-gen2-extensions db-seed workflow.
-# Triggered on any push that touches the extension source, the seed Dockerfile,
-# or the entrypoint — plus manually from the Actions tab. The image tag equals
-# the current branch name (master/main are normalised to `develop`).
+# The db-seed image only bundles SQL seed content — it does not bundle any
+# Python code. So it only needs to rebuild when the SQL actually changes
+# (meta_data/ or sample_data/), when the seed Dockerfile/entrypoint changes,
+# or when this workflow itself changes.
+#
+# The image tag equals the current branch name (master/main → develop).
 on:
   push:
     branches:
@@ -11,7 +13,8 @@ on:
     tags-ignore:
       - '**'
     paths:
-      - 'nsr-extension/**'
+      - 'nsr-extension/src/**/meta_data/**'
+      - 'nsr-extension/src/**/sample_data/**'
       - 'docker/db-seed/**'
       - '.github/workflows/docker-build-db-seed.yml'
   workflow_dispatch:

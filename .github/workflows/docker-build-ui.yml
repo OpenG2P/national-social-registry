@@ -1,8 +1,25 @@
 name: Build & Push UI Dockers
 
-# Manually triggered only. Produces the staff-portal-ui image at the tag
-# declared on the first line of the chosen service spec file (e.g. `:develop`).
+# Produces the staff-portal-ui image at the tag declared on the first line
+# of the chosen service spec file (e.g. `:develop`).
+#
+# The UI image clones the openg2p-registry-gen2-staff-portal-ui repo at
+# build time; it doesn't bundle any NSR extension code. So triggering is
+# limited to this one service's own folder (spec file + Dockerfile) and
+# the workflow itself.
+#
+# Triggers:
+#   - push: auto-build on changes under docker/staff-portal-ui/
+#   - workflow_dispatch: manual trigger
 on:
+  push:
+    branches:
+      - "**"
+    tags-ignore:
+      - '**'
+    paths:
+      - 'docker/staff-portal-ui/**'
+      - '.github/workflows/docker-build-ui.yml'
   workflow_dispatch:
     inputs:
       service_file:

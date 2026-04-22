@@ -1,9 +1,33 @@
 name: Build & Push Backend Dockers
 
-# Manually triggered only. Each build produces an image tag equal to the
-# tag declared on the first line of the chosen service spec file (typically
-# aligned with the branch name, e.g. `:develop`).
+# Each build produces an image tag equal to the tag declared on the first
+# line of the chosen service spec file (typically aligned with the branch
+# name, e.g. `:develop`).
+#
+# Triggers:
+#   - push: auto-build when spec files / Dockerfiles / parse-script change,
+#     OR when NSR Python code / pyproject.toml changes. SQL seed content
+#     (meta_data/, sample_data/) is intentionally excluded — that only
+#     affects the db-seed image, handled by docker-build-db-seed.yml.
+#   - workflow_dispatch: manual trigger (pick a specific service_file).
 on:
+  push:
+    branches:
+      - "**"
+    tags-ignore:
+      - '**'
+    paths:
+      # Per-service build context (Dockerfile + spec file)
+      - 'docker/staff-portal-api/**'
+      - 'docker/partner-api/**'
+      - 'docker/celery/**'
+      # Shared build tooling
+      - 'docker/scripts/**'
+      # NSR Python code (excludes SQL via the file-extension filter)
+      - 'nsr-extension/src/**/*.py'
+      - 'nsr-extension/pyproject.toml'
+      # This workflow itself
+      - '.github/workflows/docker-build-backend.yml'
   workflow_dispatch:
     inputs:
       service_file:

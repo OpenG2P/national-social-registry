@@ -1,0 +1,124 @@
+name: Helm Chart — Lint, Package, Publish
+
+# Triggers:
+#   - push: auto-build on changes anywhere under helm/ (chart sources),
+#     or on changes to this workflow file itself.
+#   - workflow_dispatch: manual trigger.
+#
+# Jobs:
+#   1. Check out the repo + set up Helm.
+#   2. `helm dep up` — pulls the openg2p-registry base chart from the
+#      published Helm repo.
+#   3. `helm lint` — fail fast on any lint error.
+#   4. `helm package` — produce the .tgz chart archive.
+#   5. Upload the .tgz as a GitHub Actions artefact (easy local download).
+#   6. (Optional, on workflow_dispatch with publish=true) push the .tgz
+#      to the openg2p-helm gh-pages branch. Disabled by default because it
+#      requires an OPENG2P_BOT_GITHUB_PAT secret with write access to the
+#      openg2p/openg2p-helm repo.
+on:
+  push:
+    branches:
+      - "**"
+    tags-ignore:
+      - '**'
+    paths:
+      - 'helm/**'
+      - '.github/workflows/helm-publish.yml'
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: 'Also push the packaged .tgz to openg2p-helm gh-pages (requires OPENG2P_BOT_GITHUB_PAT secret)'
+        required: false
+        type: boolean
+        default: false
+
+env:
+  CHART_PATH: helm/openg2p-nsr
+  # Target repo for the public Helm index. The package job uploads the
+  # .tgz as a workflow artefact unconditionally; only the explicit publish
+  # path writes to this repo's gh-pages branch.
+  HELM_REPO_OWNER: openg2p
+  HELM_REPO_NAME: openg2p-helm
+
+jobs:
+  lint-and-package:
+    runs-on: ubuntu-latest
+    name: Lint & package openg2p-nsr
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.14.4
+
+      - name: Extract branch name (tag = branch, master/main normalised to develop)
+        shell: bash
+        run: |
+          BRANCH_NAME=$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')
+          VERSION=$BRANCH_NAME
+          if [[ $BRANCH_NAME == master || $BRANCH_NAME == main ]]; then
+            VERSION=develop
+          fi
+          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Resolve chart dependencies (base chart from published Helm repo)
+        run: |
+          helm dependency update "${CHART_PATH}"
+
+      - name: Lint the chart
+        run: |
+          helm lint "${CHART_PATH}"
+
+      - name: Package the chart
+        run: |
+          mkdir -p "${RUNNER_TEMP}/helm-dist"
+          helm package "${CHART_PATH}" --destination "${RUNNER_TEMP}/helm-dist"
+          ls -la "${RUNNER_TEMP}/helm-dist"
+          echo "CHART_DIST=${RUNNER_TEMP}/helm-dist" >> $GITHUB_ENV
+
+      - name: Upload chart package as workflow artefact
+        uses: actions/upload-artifact@v4
+        with:
+          name: openg2p-nsr-chart-${{ env.VERSION }}
+          path: ${{ env.CHART_DIST }}/*.tgz
+          retention-days: 14
+
+      # ----------------------------------------------------------------
+      # Optional publish — only runs on workflow_dispatch with publish=true.
+      # Requires OPENG2P_BOT_GITHUB_PAT (a PAT with write access to
+      # openg2p/openg2p-helm) to be configured as a repo secret.
+      # ----------------------------------------------------------------
+      - name: Publish to openg2p-helm gh-pages
+        if: github.event_name == 'workflow_dispatch' && inputs.publish == true
+        env:
+          GITHUB_TOKEN: ${{ secrets.OPENG2P_BOT_GITHUB_PAT }}
+        run: |
+          if [[ -z "${GITHUB_TOKEN}" ]]; then
+            echo "::error::OPENG2P_BOT_GITHUB_PAT secret is not set — cannot publish."
+            exit 1
+          fi
+
+          WORK_DIR="${RUNNER_TEMP}/helm-publish"
+          mkdir -p "${WORK_DIR}"
+          cd "${WORK_DIR}"
+
+          # Clone the gh-pages branch of openg2p-helm, add the new tgz,
+          # rebuild the index, commit, and push.
+          git clone --branch gh-pages --depth 1 \
+            "https://x-access-token:${GITHUB_TOKEN}@github.com/${HELM_REPO_OWNER}/${HELM_REPO_NAME}.git" \
+            openg2p-helm
+          cp "${CHART_DIST}"/*.tgz openg2p-helm/
+          cd openg2p-helm
+          helm repo index . --url "https://${HELM_REPO_OWNER}.github.io/${HELM_REPO_NAME}"
+
+          git config user.name  "openg2p-bot"
+          git config user.email "bot@openg2p.org"
+          git add -A
+          git commit -m "Publish openg2p-nsr ${VERSION} (from ${{ github.repository }}@${{ github.sha }})"
+          git push origin gh-pages
