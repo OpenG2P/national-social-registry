@@ -1,124 +1,143 @@
-name: Helm Chart — Lint, Package, Publish
+name: Publish Helm Charts
 
-# Triggers:
-#   - push: auto-build on changes anywhere under helm/ (chart sources),
-#     or on changes to this workflow file itself.
-#   - workflow_dispatch: manual trigger.
+# Adapted from openg2p/id-generator's publish-helm.yml so NSR's Helm chart
+# reaches both the general openg2p-helm index AND the Rancher-specific
+# rancher/ sub-index of https://openg2p.github.io/openg2p-helm.
 #
-# Jobs:
-#   1. Check out the repo + set up Helm.
-#   2. `helm dep up` — pulls the openg2p-registry base chart from the
-#      published Helm repo.
-#   3. `helm lint` — fail fast on any lint error.
-#   4. `helm package` — produce the .tgz chart archive.
-#   5. Upload the .tgz as a GitHub Actions artefact (easy local download).
-#   6. (Optional, on workflow_dispatch with publish=true) push the .tgz
-#      to the openg2p-helm gh-pages branch. Disabled by default because it
-#      requires an OPENG2P_BOT_GITHUB_PAT secret with write access to the
-#      openg2p/openg2p-helm repo.
+# Chart eligibility for Rancher is detected by the presence of the
+#   openg2p.org/add-to-rancher: ""
+# annotation in each chart's Chart.yaml. NSR's chart already has it.
+#
+# Triggers:
+#   - push: when anything under helm/ changes (path-filtered)
+#   - tags: any tag push
+#   - workflow_dispatch: manual "publish everything" trigger
 on:
   push:
     branches:
       - "**"
-    tags-ignore:
+    tags:
       - '**'
     paths:
       - 'helm/**'
-      - '.github/workflows/helm-publish.yml'
   workflow_dispatch:
-    inputs:
-      publish:
-        description: 'Also push the packaged .tgz to openg2p-helm gh-pages (requires OPENG2P_BOT_GITHUB_PAT secret)'
-        required: false
-        type: boolean
-        default: false
-
-env:
-  CHART_PATH: helm/openg2p-nsr
-  # Target repo for the public Helm index. The package job uploads the
-  # .tgz as a workflow artefact unconditionally; only the explicit publish
-  # path writes to this repo's gh-pages branch.
-  HELM_REPO_OWNER: openg2p
-  HELM_REPO_NAME: openg2p-helm
 
 jobs:
-  lint-and-package:
+  generate-charts:
     runs-on: ubuntu-latest
-    name: Lint & package openg2p-nsr
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Set up Helm
-        uses: azure/setup-helm@v4
-        with:
-          version: v3.14.4
-
-      - name: Extract branch name (tag = branch, master/main normalised to develop)
+    env:
+      SKIP: 'FALSE'
+      RANCHER_CHART_FILTER: "openg2p.org/add-to-rancher"
+      CHARTS_DIR: helm
+    defaults:
+      run:
         shell: bash
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - id: files
+        uses: jitterbit/get-changed-files@v1
+        if: github.event_name == 'push'
+
+      - name: Collect list of charts to publish
         run: |
-          BRANCH_NAME=$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')
-          VERSION=$BRANCH_NAME
-          if [[ $BRANCH_NAME == master || $BRANCH_NAME == main ]]; then
-            VERSION=develop
+          touch charts-list.txt
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            # Manual trigger: publish every chart under helm/
+            for chartpath in ${CHARTS_DIR}/*/; do
+              chart_name=$(basename "$chartpath")
+              echo "$chart_name" >> charts-list.txt
+              echo "Saved $chart_name chart to charts-list.txt"
+            done
+          else
+            # Push: only rebuild charts whose files changed
+            for changed_file in ${{ steps.files.outputs.all }}; do
+              if [[ ${changed_file} == ${CHARTS_DIR}/* ]]; then
+                chart_name=$(echo "${changed_file}" | awk -F/ -v dir="${CHARTS_DIR}" '$1==dir {print $2}')
+                if [[ -n "$chart_name" ]]; then
+                  echo "$chart_name" >> charts-list.txt
+                  echo "Saved $chart_name chart to charts-list.txt"
+                fi
+              fi
+            done
           fi
-          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          sort -u charts-list.txt -o charts-list.txt
+          echo "List of charts to be published:"
+          cat charts-list.txt
 
-      - name: Resolve chart dependencies (base chart from published Helm repo)
+      - name: Package charts (and detect Rancher charts)
         run: |
-          helm dependency update "${CHART_PATH}"
+          if [[ ! -s charts-list.txt ]]; then
+            echo "::warning::No charts to publish"
+            echo "SKIP=TRUE" >> $GITHUB_ENV
+          else
+            RANCHER_CHARTS=()
+            while IFS= read -r chartname; do
+              chartpath="${CHARTS_DIR}/${chartname}"
+              echo "Packaging ${chartpath}"
+              helm dep up "${chartpath}"
+              helm package "${chartpath}"
+              is_rancher_chart=$(grep "${RANCHER_CHART_FILTER}" "${chartpath}/Chart.yaml" || true)
+              if [ -n "$is_rancher_chart" ]; then
+                RANCHER_CHARTS+=("$chartname")
+              fi
+            done < charts-list.txt
+            echo "RANCHER_CHARTS=${RANCHER_CHARTS[@]}" >> $GITHUB_ENV
+            rm charts-list.txt
+          fi
 
-      - name: Lint the chart
-        run: |
-          helm lint "${CHART_PATH}"
+          # Safety: only publish from the upstream OpenG2P org.
+          shopt -s nocasematch
+          if [[ '${{ github.repository_owner }}' != 'OpenG2P' ]]; then
+            echo "Not running on OpenG2P org — skipping publish step"
+            echo "SKIP=TRUE" >> $GITHUB_ENV
+          fi
 
-      - name: Package the chart
-        run: |
-          mkdir -p "${RUNNER_TEMP}/helm-dist"
-          helm package "${CHART_PATH}" --destination "${RUNNER_TEMP}/helm-dist"
-          ls -la "${RUNNER_TEMP}/helm-dist"
-          echo "CHART_DIST=${RUNNER_TEMP}/helm-dist" >> $GITHUB_ENV
-
-      - name: Upload chart package as workflow artefact
+      - name: Upload tar as Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: openg2p-nsr-chart-${{ env.VERSION }}
-          path: ${{ env.CHART_DIST }}/*.tgz
-          retention-days: 14
+          name: charts
+          path: ./*.tgz
+        if: env.SKIP != 'TRUE'
 
-      # ----------------------------------------------------------------
-      # Optional publish — only runs on workflow_dispatch with publish=true.
-      # Requires OPENG2P_BOT_GITHUB_PAT (a PAT with write access to
-      # openg2p/openg2p-helm) to be configured as a repo secret.
-      # ----------------------------------------------------------------
-      - name: Publish to openg2p-helm gh-pages
-        if: github.event_name == 'workflow_dispatch' && inputs.publish == true
-        env:
-          GITHUB_TOKEN: ${{ secrets.OPENG2P_BOT_GITHUB_PAT }}
+      - name: Checkout openg2p-helm gh-pages branch
+        uses: actions/checkout@v4
+        with:
+          repository: 'openg2p/openg2p-helm'
+          ref: gh-pages
+          token: ${{ secrets.OPENG2P_BOT_GITHUB_PAT }}
+        if: env.SKIP != 'TRUE'
+
+      - name: Download tar from Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: charts
+          path: ./
+        if: env.SKIP != 'TRUE'
+
+      - name: Update index.yaml (general + rancher)
         run: |
-          if [[ -z "${GITHUB_TOKEN}" ]]; then
-            echo "::error::OPENG2P_BOT_GITHUB_PAT secret is not set — cannot publish."
-            exit 1
-          fi
+          # Main index: all charts
+          helm repo index .
 
-          WORK_DIR="${RUNNER_TEMP}/helm-publish"
-          mkdir -p "${WORK_DIR}"
-          cd "${WORK_DIR}"
+          # Rancher sub-index: only charts carrying the add-to-rancher annotation
+          for chartname in $RANCHER_CHARTS; do
+            cp ${chartname}*.tgz rancher/
+          done
+          helm repo index --url ../ --merge rancher/index.yaml rancher
+          for chartname in $RANCHER_CHARTS; do
+            rm rancher/${chartname}*.tgz || true
+          done
+        if: env.SKIP != 'TRUE'
 
-          # Clone the gh-pages branch of openg2p-helm, add the new tgz,
-          # rebuild the index, commit, and push.
-          git clone --branch gh-pages --depth 1 \
-            "https://x-access-token:${GITHUB_TOKEN}@github.com/${HELM_REPO_OWNER}/${HELM_REPO_NAME}.git" \
-            openg2p-helm
-          cp "${CHART_DIST}"/*.tgz openg2p-helm/
-          cd openg2p-helm
-          helm repo index . --url "https://${HELM_REPO_OWNER}.github.io/${HELM_REPO_NAME}"
-
-          git config user.name  "openg2p-bot"
-          git config user.email "bot@openg2p.org"
-          git add -A
-          git commit -m "Publish openg2p-nsr ${VERSION} (from ${{ github.repository }}@${{ github.sha }})"
-          git push origin gh-pages
+      - name: Commit Changes to openg2p-helm
+        uses: EndBug/add-and-commit@v9
+        with:
+          branch: gh-pages
+          author_name: openg2pbot
+          author_email: bot@openg2p.org
+          default_author: user_info
+          message: 'added national-social-registry helm charts for publish openg2p/national-social-registry@${{ github.sha }}'
+          add: './*.tgz ./index.yaml rancher/index.yaml'
+        if: env.SKIP != 'TRUE'
