@@ -37,7 +37,7 @@ See [`nsr-extension/`](nsr-extension/).
 
 ## Docker images
 
-All Docker build definitions live under [`docker/`](docker/). Four images are produced:
+All Docker build definitions live under [`docker/`](docker/). Five images are produced:
 
 | Image | Built from | Spec file |
 |---|---|---|
@@ -45,8 +45,11 @@ All Docker build definitions live under [`docker/`](docker/). Four images are pr
 | `openg2p/openg2p-nsr-partner-api:<branch>` | `docker/partner-api/Dockerfile` | [`docker/partner-api/develop.txt`](docker/partner-api/develop.txt) |
 | `openg2p/openg2p-nsr-celery:<branch>` | `docker/celery/Dockerfile` | [`docker/celery/develop.txt`](docker/celery/develop.txt) |
 | `openg2p/openg2p-nsr-staff-portal-ui:<branch>` | `docker/staff-portal-ui/Dockerfile` | [`docker/staff-portal-ui/develop.txt`](docker/staff-portal-ui/develop.txt) |
+| `openg2p/openg2p-nsr-db-seed:<branch>` | `docker/db-seed/Dockerfile` | *(no spec file — built directly from the Dockerfile + `nsr-extension/` SQL)* |
 
-Each spec file pins the OpenG2P platform libraries (fastapi-common, iam-core, registry-core, registry-apis, celery) to specific versions, and references the NSR extension as a **local path** (`./nsr-extension`) so the image always bakes in the current working tree. The Docker build context is `docker/`; the NSR extension source is copied into `docker/local_deps/nsr-extension/` at build time.
+The four application images pin the OpenG2P platform libraries (fastapi-common, iam-core, registry-core, registry-apis, celery) to specific versions, and reference the NSR extension as a **local path** (`./nsr-extension`) so the image always bakes in the current working tree. Their Docker build context is `docker/`; the NSR extension source is copied into `docker/local_deps/nsr-extension/` at build time.
+
+The **db-seed image** is a small Postgres-client image that packages the extension's SQL scripts (`nsr-extension/src/.../meta_data/` and `sample_data/`) and applies them to a target Postgres via its entrypoint. At container-run time set `PGHOST`, `PGPORT`, `PGDATABASE`, `PGUSER`, `PGPASSWORD`, and `LOAD_SAMPLE_DATA=true` (optional) — see [`docker/db-seed/entrypoint.sh`](docker/db-seed/entrypoint.sh).
 
 ### Building locally
 
@@ -67,12 +70,25 @@ See [`docker/scripts/README.md`](docker/scripts/README.md) for all options (mult
 
 ### Building in CI
 
-Two manually-triggered GitHub Actions workflows are provided:
+Three GitHub Actions workflows are provided:
 
-- **Build & Push Backend Dockers** — `.github/workflows/docker-build-backend.yml`
-- **Build & Push UI Dockers** — `.github/workflows/docker-build-ui.yml`
+- **Build & Push Backend Dockers** — `.github/workflows/docker-build-backend.yml` (manual trigger)
+- **Build & Push UI Dockers** — `.github/workflows/docker-build-ui.yml` (manual trigger)
+- **Build DB Seed Docker Image** — `.github/workflows/docker-build-db-seed.yml` (auto on push to `nsr-extension/**` / `docker/db-seed/**`, plus manual trigger)
 
-Trigger them from the Actions tab; each accepts a `service_file` input (defaults to `docker/.../develop.txt`).
+Backend and UI workflows take a `service_file` input (defaults to `docker/.../develop.txt`). All three tag the produced image with the current branch name (`master`/`main` are normalised to `develop`).
+
+### Running the db-seed image
+
+```bash
+docker run --rm \
+  -e PGHOST=postgres -e PGPORT=5432 \
+  -e PGDATABASE=registry -e PGUSER=registry -e PGPASSWORD=... \
+  -e LOAD_SAMPLE_DATA=true \
+  openg2p/openg2p-nsr-db-seed:develop
+```
+
+It will first apply all files under `/seed/meta_data/` (register definitions, schemas, tabs, sections, attributes, registry-config) and then, if `LOAD_SAMPLE_DATA=true`, all files under `/seed/sample_data/` (the 5 households, 15 individuals, and supporting tables).
 
 ### Building for a different branch
 
