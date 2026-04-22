@@ -1,43 +1,45 @@
-INSERT INTO "public"."g2p_attribute_values" ("value_id","attribute_id","value_code","value_display","parent_value_id") VALUES
+-- sort_order is NOT NULL on the core platform's g2p_attribute_values table.
+-- Ordinal position per attribute_id group (1-based within each attribute).
+INSERT INTO "public"."g2p_attribute_values" ("value_id","attribute_id","value_code","value_display","parent_value_id","sort_order") VALUES
 -- Programme names (generic placeholders)
-('PROG_CASH_TRANSFER','PROGRAM_NAME','CASH_TRANSFER','Cash Transfer Programme',NULL),
-('PROG_FOOD_SUPPORT','PROGRAM_NAME','FOOD_SUPPORT','Food Support Programme',NULL),
-('PROG_HEALTH_INSURANCE','PROGRAM_NAME','HEALTH_INSURANCE','Health Insurance Scheme',NULL),
-('PROG_DISABILITY_ALLOWANCE','PROGRAM_NAME','DISABILITY_ALLOWANCE','Disability Allowance',NULL),
-('PROG_ELDERLY_PENSION','PROGRAM_NAME','ELDERLY_PENSION','Elderly Pension',NULL),
-('PROG_SCHOOL_FEEDING','PROGRAM_NAME','SCHOOL_FEEDING','School Feeding Programme',NULL),
-('PROG_PUBLIC_WORKS','PROGRAM_NAME','PUBLIC_WORKS','Public Works Programme',NULL),
+('PROG_CASH_TRANSFER','PROGRAM_NAME','CASH_TRANSFER','Cash Transfer Programme',NULL,1),
+('PROG_FOOD_SUPPORT','PROGRAM_NAME','FOOD_SUPPORT','Food Support Programme',NULL,2),
+('PROG_HEALTH_INSURANCE','PROGRAM_NAME','HEALTH_INSURANCE','Health Insurance Scheme',NULL,3),
+('PROG_DISABILITY_ALLOWANCE','PROGRAM_NAME','DISABILITY_ALLOWANCE','Disability Allowance',NULL,4),
+('PROG_ELDERLY_PENSION','PROGRAM_NAME','ELDERLY_PENSION','Elderly Pension',NULL,5),
+('PROG_SCHOOL_FEEDING','PROGRAM_NAME','SCHOOL_FEEDING','School Feeding Programme',NULL,6),
+('PROG_PUBLIC_WORKS','PROGRAM_NAME','PUBLIC_WORKS','Public Works Programme',NULL,7),
 
 -- Primary livelihood (ISCO-aligned broad groupings)
-('LVH_AGRICULTURE','PRIMARY_LIVELIHOOD','AGRICULTURE','Agriculture, Forestry and Fishing',NULL),
-('LVH_LIVESTOCK','PRIMARY_LIVELIHOOD','LIVESTOCK','Livestock Rearing',NULL),
-('LVH_CRAFT','PRIMARY_LIVELIHOOD','CRAFT','Craft and Related Trades',NULL),
-('LVH_SERVICES','PRIMARY_LIVELIHOOD','SERVICES','Services and Sales',NULL),
-('LVH_WAGE_LABOUR','PRIMARY_LIVELIHOOD','WAGE_LABOUR','Casual Wage Labour',NULL),
-('LVH_PETTY_TRADE','PRIMARY_LIVELIHOOD','PETTY_TRADE','Petty Trading',NULL),
-('LVH_GOVT_EMPLOYMENT','PRIMARY_LIVELIHOOD','GOVT_EMPLOYMENT','Government Employment',NULL),
-('LVH_UNEMPLOYED','PRIMARY_LIVELIHOOD','UNEMPLOYED','Unemployed / No Livelihood',NULL),
-('LVH_OTHER','PRIMARY_LIVELIHOOD','OTHER','Other',NULL),
+('LVH_AGRICULTURE','PRIMARY_LIVELIHOOD','AGRICULTURE','Agriculture, Forestry and Fishing',NULL,1),
+('LVH_LIVESTOCK','PRIMARY_LIVELIHOOD','LIVESTOCK','Livestock Rearing',NULL,2),
+('LVH_CRAFT','PRIMARY_LIVELIHOOD','CRAFT','Craft and Related Trades',NULL,3),
+('LVH_SERVICES','PRIMARY_LIVELIHOOD','SERVICES','Services and Sales',NULL,4),
+('LVH_WAGE_LABOUR','PRIMARY_LIVELIHOOD','WAGE_LABOUR','Casual Wage Labour',NULL,5),
+('LVH_PETTY_TRADE','PRIMARY_LIVELIHOOD','PETTY_TRADE','Petty Trading',NULL,6),
+('LVH_GOVT_EMPLOYMENT','PRIMARY_LIVELIHOOD','GOVT_EMPLOYMENT','Government Employment',NULL,7),
+('LVH_UNEMPLOYED','PRIMARY_LIVELIHOOD','UNEMPLOYED','Unemployed / No Livelihood',NULL,8),
+('LVH_OTHER','PRIMARY_LIVELIHOOD','OTHER','Other',NULL,9),
 
 -- Coping strategies
-('CS_REDUCE_MEALS','COPING_STRATEGY','REDUCE_MEALS','Reduce number or size of meals',NULL),
-('CS_BORROW','COPING_STRATEGY','BORROW','Borrow from family/friends',NULL),
-('CS_SELL_ASSETS','COPING_STRATEGY','SELL_ASSETS','Sell productive assets',NULL),
-('CS_MIGRATE','COPING_STRATEGY','MIGRATE','Migrate for work',NULL),
-('CS_WITHDRAW_SCHOOL','COPING_STRATEGY','WITHDRAW_SCHOOL','Withdraw children from school',NULL),
-('CS_SEEK_AID','COPING_STRATEGY','SEEK_AID','Seek emergency aid',NULL),
-('CS_NONE','COPING_STRATEGY','NONE','No coping strategy',NULL),
+('CS_REDUCE_MEALS','COPING_STRATEGY','REDUCE_MEALS','Reduce number or size of meals',NULL,1),
+('CS_BORROW','COPING_STRATEGY','BORROW','Borrow from family/friends',NULL,2),
+('CS_SELL_ASSETS','COPING_STRATEGY','SELL_ASSETS','Sell productive assets',NULL,3),
+('CS_MIGRATE','COPING_STRATEGY','MIGRATE','Migrate for work',NULL,4),
+('CS_WITHDRAW_SCHOOL','COPING_STRATEGY','WITHDRAW_SCHOOL','Withdraw children from school',NULL,5),
+('CS_SEEK_AID','COPING_STRATEGY','SEEK_AID','Seek emergency aid',NULL,6),
+('CS_NONE','COPING_STRATEGY','NONE','No coping strategy',NULL,7),
 
 -- Data source
-('DS_SELF_REPORT','DATA_SOURCE','SELF_REPORT','Self-report',NULL),
-('DS_FIELD_VERIFICATION','DATA_SOURCE','FIELD_VERIFICATION','Field verification',NULL),
-('DS_PROGRAMME_MIS','DATA_SOURCE','PROGRAMME_MIS','Programme MIS integration',NULL),
-('DS_FOUNDATIONAL_ID','DATA_SOURCE','FOUNDATIONAL_ID','Foundational ID API',NULL),
-('DS_COMMUNITY_VALIDATION','DATA_SOURCE','COMMUNITY_VALIDATION','Community validation',NULL),
+('DS_SELF_REPORT','DATA_SOURCE','SELF_REPORT','Self-report',NULL,1),
+('DS_FIELD_VERIFICATION','DATA_SOURCE','FIELD_VERIFICATION','Field verification',NULL,2),
+('DS_PROGRAMME_MIS','DATA_SOURCE','PROGRAMME_MIS','Programme MIS integration',NULL,3),
+('DS_FOUNDATIONAL_ID','DATA_SOURCE','FOUNDATIONAL_ID','Foundational ID API',NULL,4),
+('DS_COMMUNITY_VALIDATION','DATA_SOURCE','COMMUNITY_VALIDATION','Community validation',NULL,5),
 
 -- Grievance resolution rationale
-('GR_VALID','GRIEVANCE_RESOLUTION_RATIONALE','VALID','Valid — corrective action taken',NULL),
-('GR_INVALID','GRIEVANCE_RESOLUTION_RATIONALE','INVALID','Invalid — claim not supported',NULL),
-('GR_DUPLICATE','GRIEVANCE_RESOLUTION_RATIONALE','DUPLICATE','Duplicate case',NULL),
-('GR_OUT_OF_SCOPE','GRIEVANCE_RESOLUTION_RATIONALE','OUT_OF_SCOPE','Out of registry scope — referred',NULL),
-('GR_INSUFFICIENT_EVIDENCE','GRIEVANCE_RESOLUTION_RATIONALE','INSUFFICIENT_EVIDENCE','Insufficient evidence',NULL);
+('GR_VALID','GRIEVANCE_RESOLUTION_RATIONALE','VALID','Valid — corrective action taken',NULL,1),
+('GR_INVALID','GRIEVANCE_RESOLUTION_RATIONALE','INVALID','Invalid — claim not supported',NULL,2),
+('GR_DUPLICATE','GRIEVANCE_RESOLUTION_RATIONALE','DUPLICATE','Duplicate case',NULL,3),
+('GR_OUT_OF_SCOPE','GRIEVANCE_RESOLUTION_RATIONALE','OUT_OF_SCOPE','Out of registry scope — referred',NULL,4),
+('GR_INSUFFICIENT_EVIDENCE','GRIEVANCE_RESOLUTION_RATIONALE','INSUFFICIENT_EVIDENCE','Insufficient evidence',NULL,5);
