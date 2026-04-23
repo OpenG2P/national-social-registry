@@ -1,9 +1,17 @@
 # ---------------------------------------------------------------------------
 # questions.yaml — Rancher UI form for installing the NSR wrapper chart.
 #
-# Only the most commonly-changed settings are exposed here. Advanced users
-# should edit values.yaml directly (it includes everything the base chart
-# offers via subchart scoping under `openg2p-registry:`).
+# Variable paths are prefixed with `openg2p-registry.` because all base-chart
+# values live under that subchart alias in this wrapper's values.yaml.
+#
+# Structure mirrors the base chart's own questions.yaml so operators get a
+# familiar layout; the only NSR-specific differences are:
+#   - image defaults point at openg2p/openg2p-nsr-*:develop
+#   - an informational note explains that NSR's default idTypes are
+#     individual (12) and household (10), not farmer+household.
+#
+# Advanced users should edit values.yaml directly — the Rancher form only
+# exposes the commonly-changed knobs.
 # ---------------------------------------------------------------------------
 
 categories:
@@ -14,94 +22,187 @@ labels:
   io.cattle.field/appName: OpenG2P NSR
 
 questions:
-  # -------------------------------------------------------------------------
-  # General deployment
-  # -------------------------------------------------------------------------
-  - variable: openg2p-registry.global.domain
-    label: Base domain
-    description: Base FQDN under which NSR services will be exposed (e.g. `nsr.example.com`). The chart derives per-service hostnames from this.
-    type: hostname
-    required: true
-    group: "General"
 
-  - variable: openg2p-registry.global.namespace
-    label: Namespace
-    description: Kubernetes namespace to install NSR into. Created automatically by Rancher if absent.
+  # -------------------------------------------------------------------------
+  # General — hostnames, external dependencies, component toggles.
+  # -------------------------------------------------------------------------
+  - variable: openg2p-registry.global.registryHostname
+    description: |
+      Base hostname under which all NSR services are exposed.
+      Default (auto-computed): "<release-name>.<namespace>.openg2p.org".
+      Individual components derive their own hostnames from this:
+        - Staff Portal UI:  {registryHostname}
+        - Staff Portal API: staff-{registryHostname}
+        - Partner API:      partner-{registryHostname}
+        - ID Generator:     idgenerator-{release-name}.{namespace}.openg2p.org
     type: string
-    default: openg2p-nsr
-    required: true
-    group: "General"
+    label: Registry Hostname
+    group: General
+
+  - variable: openg2p-registry.global.postgresqlHost
+    description: PostgreSQL server host (cluster-internal service name)
+    type: string
+    label: PostgreSQL Server Host
+    group: General
+
+  - variable: openg2p-registry.global.keycloakBaseUrl
+    description: Keycloak Base URL used by all components for OIDC
+    type: string
+    label: Keycloak Base URL
+    group: General
+
+  - variable: openg2p-registry.keycloak-init.enabled
+    description: Run Keycloak Init Job to create realm and OIDC client
+    type: boolean
+    label: Keycloak Init
+    group: General
+
+  - variable: openg2p-registry.staffPortalApi.enabled
+    description: Install Staff Portal API
+    type: boolean
+    label: Staff Portal API
+    group: General
+
+  - variable: openg2p-registry.staffPortalUi.enabled
+    description: Install Staff Portal UI
+    type: boolean
+    label: Staff Portal UI
+    group: General
+
+  - variable: openg2p-registry.partnerApi.enabled
+    description: Install Partner API
+    type: boolean
+    label: Partner API
+    group: General
+
+  - variable: openg2p-registry.benePortalApi.enabled
+    description: Install Beneficiary Portal API (off by default for NSR)
+    type: boolean
+    label: Beneficiary Portal API
+    group: General
+
+  - variable: openg2p-registry.idgenerator.enabled
+    description: Install ID Generator service (produces foundational IDs for Individual and Household)
+    type: boolean
+    label: ID Generator
+    group: General
 
   # -------------------------------------------------------------------------
-  # Image tags — let operators pin a released tag instead of tracking develop.
+  # Images — per-component tag overrides. Repositories are set to NSR images
+  # in values.yaml; override tag here to pin to a released tag (e.g. 1.0.0)
+  # instead of tracking `develop`.
   # -------------------------------------------------------------------------
+  - variable: openg2p-registry.staffPortalApi.image.repository
+    description: Docker image repository for Staff Portal API
+    type: string
+    label: Staff Portal API Image Repository
+    group: Images
   - variable: openg2p-registry.staffPortalApi.image.tag
-    label: Staff Portal API image tag
-    description: Tag for `openg2p/openg2p-nsr-staff-portal-api`. Leave as `develop` for the rolling build.
+    description: Docker image tag for Staff Portal API
     type: string
-    default: "develop"
-    group: "Images"
+    label: Staff Portal API Image Tag
+    group: Images
 
-  - variable: openg2p-registry.partnerApi.image.tag
-    label: Partner API image tag
-    description: Tag for `openg2p/openg2p-nsr-partner-api`.
+  - variable: openg2p-registry.staffPortalUi.image.repository
+    description: Docker image repository for Staff Portal UI
     type: string
-    default: "develop"
-    group: "Images"
-
+    label: Staff Portal UI Image Repository
+    group: Images
   - variable: openg2p-registry.staffPortalUi.image.tag
-    label: Staff Portal UI image tag
-    description: Tag for `openg2p/openg2p-nsr-staff-portal-ui`.
+    description: Docker image tag for Staff Portal UI
     type: string
-    default: "develop"
-    group: "Images"
+    label: Staff Portal UI Image Tag
+    group: Images
 
+  - variable: openg2p-registry.partnerApi.image.repository
+    description: Docker image repository for Partner API
+    type: string
+    label: Partner API Image Repository
+    group: Images
+  - variable: openg2p-registry.partnerApi.image.tag
+    description: Docker image tag for Partner API
+    type: string
+    label: Partner API Image Tag
+    group: Images
+
+  - variable: openg2p-registry.celeryBeatProducer.image.repository
+    description: Docker image repository for Celery Beat Producer (shares image with Celery Worker)
+    type: string
+    label: Celery Beat Producer Image Repository
+    group: Images
+  - variable: openg2p-registry.celeryBeatProducer.image.tag
+    description: Docker image tag for Celery Beat Producer
+    type: string
+    label: Celery Beat Producer Image Tag
+    group: Images
+
+  - variable: openg2p-registry.celeryWorker.image.repository
+    description: Docker image repository for Celery Worker
+    type: string
+    label: Celery Worker Image Repository
+    group: Images
   - variable: openg2p-registry.celeryWorker.image.tag
-    label: Celery image tag (worker + beat)
-    description: Single image used for both Celery worker and Celery beat.
+    description: Docker image tag for Celery Worker
     type: string
-    default: "develop"
-    group: "Images"
-
-  - variable: openg2p-registry.dbSeed.image.tag
-    label: DB-seed image tag
-    description: Tag for `openg2p/openg2p-nsr-db-seed`.
-    type: string
-    default: "develop"
-    group: "Images"
+    label: Celery Worker Image Tag
+    group: Images
 
   # -------------------------------------------------------------------------
-  # Seeding controls
+  # Logging
+  # -------------------------------------------------------------------------
+  - variable: openg2p-registry.logging.enabled
+    description: Ship NSR pod logs (JSON) to the OpenSearch Output configured by commons-base
+    type: boolean
+    label: Enable Logging
+    group: Logging
+  - variable: openg2p-registry.logging.outputRef
+    description: Name of the namespace-scoped Fluent Output resource (created by commons-base) to route logs to
+    type: string
+    label: Fluent Output Name
+    group: Logging
+
+  # -------------------------------------------------------------------------
+  # DB Seed — meta_data + optional sample data.
   # -------------------------------------------------------------------------
   - variable: openg2p-registry.dbSeed.enabled
-    label: Enable DB seeder
-    description: Runs the NSR meta-data seeder as a Kubernetes Job at install/upgrade.
+    description: Run DB seed Job after pods come up (loads register definitions, schemas, tabs, sections, attribute lookups, registry config)
     type: boolean
-    default: true
-    group: "Seeding"
+    label: Enable DB Seed
+    group: DB Seed
 
   - variable: openg2p-registry.dbSeed.loadSampleData
-    label: Load sample data
-    description: When true, the seeder also inserts the 5 demo households / 15 demo individuals / supporting-table demo rows. Use only for dev / test environments.
+    description: Also insert the 5 demo households, 15 demo individuals, and supporting-table demo rows. Use only for dev / test.
     type: boolean
-    default: false
-    group: "Seeding"
+    label: Load Sample Data
+    group: DB Seed
+
+  - variable: openg2p-registry.dbSeed.image.repository
+    description: Docker image repository for the DB seed container
+    type: string
+    label: DB Seed Image Repository
+    group: DB Seed
+  - variable: openg2p-registry.dbSeed.image.tag
+    description: Docker image tag for the DB seed container
+    type: string
+    label: DB Seed Image Tag
+    group: DB Seed
 
   # -------------------------------------------------------------------------
-  # ID Generator — surface the NSR `individual` id_type for easy editing.
-  # (idTypes is a MAP keyed by id-type name in the base chart, so paths
-  # use dot-keys rather than list indices.)
+  # ID Generator — informational note only. The `idTypes` field is a map
+  # keyed by id-type name, which Rancher form widgets cannot meaningfully
+  # render as a tree of editable fields. Operators who need to change
+  # id-length/prefix should switch to "Edit YAML" and modify
+  # `openg2p-registry.idgenerator.idGenerator.appConfig.idTypes` directly.
   # -------------------------------------------------------------------------
-  - variable: openg2p-registry.idgenerator.idGenerator.appConfig.idTypes.individual.idLength
-    label: Individual ID length
-    description: Total length of the generated individual (foundational) ID.
-    type: int
-    default: 12
-    group: "ID Generator"
-
-  - variable: openg2p-registry.idgenerator.idGenerator.appConfig.idTypes.household.idLength
-    label: Household ID length
-    description: Total length of the generated household (foundational) ID.
-    type: int
-    default: 10
-    group: "ID Generator"
+  - variable: openg2p-registry.idgenerator.idGenerator.appConfig.idTypesNote
+    description: |
+      NSR default id types:
+        - individual (12 digits)  — issued for persons
+        - household  (10 digits)  — issued for household units
+      (A `farmer` entry is inherited from the base chart and is unused by NSR.)
+      To add, remove, or change id-length/prefix, switch to 'Edit YAML' and
+      update `openg2p-registry.idgenerator.idGenerator.appConfig.idTypes`.
+    type: string
+    label: ID Types Configuration
+    group: ID Generator
+    default: "See description — edit YAML to configure"
