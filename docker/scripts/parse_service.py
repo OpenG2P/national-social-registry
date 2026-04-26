@@ -245,9 +245,29 @@ def parse_service_file(service_file: str, override_dockerfile: str | None, repo_
 
     version = image_id.split(":")[-1] if ":" in image_id else "latest"
 
+    # Resolve the dockerfile path. We accept two conventions:
+    #   1. CWD-relative (workspace-relative)  — used by the CI workflow,
+    #      e.g. "docker/staff-portal-api/Dockerfile"
+    #   2. repo_root-relative (relative to the docker/ context root) — used
+    #      by build.sh, e.g. "staff-portal-api/Dockerfile"
+    # Try CWD-relative first (this matches how --service-file is resolved
+    # via os.path.abspath above). If that path doesn't exist on disk, fall
+    # back to interpreting it as repo_root-relative.
     if not os.path.isabs(dockerfile):
-        dockerfile = os.path.join(repo_root, dockerfile)
-    dockerfile = os.path.abspath(dockerfile)
+        cwd_candidate = os.path.abspath(dockerfile)
+        if os.path.exists(cwd_candidate):
+            dockerfile = cwd_candidate
+        else:
+            dockerfile = os.path.abspath(os.path.join(repo_root, dockerfile))
+    else:
+        dockerfile = os.path.abspath(dockerfile)
+
+    if not os.path.exists(dockerfile):
+        print(
+            f"Error: Dockerfile not found: {dockerfile}",
+            file=sys.stderr,
+        )
+        sys.exit(1)
 
     return {
         "SVC_IMAGE":      image_id,
