@@ -28,7 +28,5 @@ class G2PIdGeneratorService(BaseService, G2PIdGeneratorInterface):
             return IdAffix(prefix="CNS-", suffix="")
         if mnemonic == "grievance":
             return IdAffix(prefix="GRV-", suffix="")
-        if mnemonic == "verificationhistory":
-            return IdAffix(prefix="VER-", suffix="")
 
         return IdAffix(prefix="DEFAULT-", suffix="")

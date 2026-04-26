@@ -21,9 +21,11 @@ Follows the same layout as [`openg2p-registry-farmer-extension`](https://github.
 | `Shock` | `g2p_register_shocks` | Individual |
 | `Consent` | `g2p_register_consents` | Individual |
 | `Grievance` | `g2p_register_grievances` | Individual |
-| `VerificationHistory` | `g2p_register_verification_history` | Individual or Household |
+| `IndividualDisability` | `g2p_register_individual_disabilities` | Individual (multi-row per WG functional domain) |
 
 Every register and supporting table has a `*_history` twin for version snapshots.
+
+> Verification / audit trail is provided by the registry-core platform itself (`g2p_register_verifications`); we do not duplicate it here.
 
 ## Install (from source)
 

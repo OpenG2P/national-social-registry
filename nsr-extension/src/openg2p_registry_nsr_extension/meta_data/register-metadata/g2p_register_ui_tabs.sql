@@ -7,8 +7,7 @@ INSERT INTO "public"."g2p_register_ui_tabs" ("tab_id","register_id","tab_label",
 ('individual_shock_tab','a0000000-0000-4000-8000-000000000001','shocks',4,'FALSE',0,NULL,NULL,'FALSE','TRUE'),
 ('individual_consent_tab','a0000000-0000-4000-8000-000000000001','consents',5,'FALSE',0,NULL,NULL,'FALSE','TRUE'),
 ('individual_grievance_tab','a0000000-0000-4000-8000-000000000001','grievances',6,'FALSE',0,NULL,NULL,'FALSE','TRUE'),
-('individual_verification_tab','a0000000-0000-4000-8000-000000000001','verification_history',7,'FALSE',0,NULL,NULL,'FALSE','TRUE'),
-('individual_disability_tab','a0000000-0000-4000-8000-000000000001','disabilities',8,'FALSE',0,NULL,NULL,'FALSE','TRUE'),
+('individual_disability_tab','a0000000-0000-4000-8000-000000000001','disabilities',7,'FALSE',0,NULL,NULL,'FALSE','TRUE'),
 
 -- Household register tabs
 ('household_intake_form_tab','a0000000-0000-4000-8000-000000000002','',0,'TRUE',0,'Household Intake Form','This form captures household composition, dwelling conditions, and basic services information.','TRUE','TRUE'),
@@ -16,5 +15,4 @@ INSERT INTO "public"."g2p_register_ui_tabs" ("tab_id","register_id","tab_label",
 ('household_individual_tab','a0000000-0000-4000-8000-000000000002','individual',2,'FALSE',0,NULL,NULL,'FALSE','TRUE'),
 ('household_poverty_tab','a0000000-0000-4000-8000-000000000002','poverty_scores',3,'FALSE',0,NULL,NULL,'FALSE','TRUE'),
 ('household_asset_tab','a0000000-0000-4000-8000-000000000002','assets',4,'FALSE',0,NULL,NULL,'FALSE','TRUE'),
-('household_program_tab','a0000000-0000-4000-8000-000000000002','programs',5,'FALSE',0,NULL,NULL,'FALSE','TRUE'),
-('household_verification_tab','a0000000-0000-4000-8000-000000000002','verification_history',6,'FALSE',0,NULL,NULL,'FALSE','TRUE');
+('household_program_tab','a0000000-0000-4000-8000-000000000002','programs',5,'FALSE',0,NULL,NULL,'FALSE','TRUE');

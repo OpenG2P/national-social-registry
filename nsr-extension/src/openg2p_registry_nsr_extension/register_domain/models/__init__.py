@@ -13,10 +13,6 @@ from .asset import G2PRegisterAsset, G2PRegisterHistoryAsset
 from .shock import G2PRegisterShock, G2PRegisterHistoryShock
 from .consent import G2PRegisterConsent, G2PRegisterHistoryConsent
 from .grievance import G2PRegisterGrievance, G2PRegisterHistoryGrievance
-from .verification_history import (
-    G2PRegisterVerificationHistory,
-    G2PRegisterHistoryVerificationHistory,
-)
 from .enums import (
     AgeMethodEnum,
     AssetTypeEnum,
@@ -41,7 +37,6 @@ from .enums import (
     PaymentVerificationStatusEnum,
     PmtScoreTypeEnum,
     PreferredContactMethodEnum,
-    RecordVerificationStatusEnum,
     RelationshipToHeadEnum,
     ResidencyStatusEnum,
     ResolutionCodeEnum,
@@ -49,8 +44,6 @@ from .enums import (
     ShockTypeEnum,
     SubmissionChannelEnum,
     TenureStatusEnum,
-    UpdateTriggerEnum,
-    VerificationMethodEnum,
     VerificationStatusEnum,
     WaterSourceTypeEnum,
 )

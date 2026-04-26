@@ -13,7 +13,3 @@ from .asset import G2PRegisterSchemaAsset, G2PRegisterHistorySchemaAsset
 from .shock import G2PRegisterSchemaShock, G2PRegisterHistorySchemaShock
 from .consent import G2PRegisterSchemaConsent, G2PRegisterHistorySchemaConsent
 from .grievance import G2PRegisterSchemaGrievance, G2PRegisterHistorySchemaGrievance
-from .verification_history import (
-    G2PRegisterSchemaVerificationHistory,
-    G2PRegisterHistorySchemaVerificationHistory,
-)

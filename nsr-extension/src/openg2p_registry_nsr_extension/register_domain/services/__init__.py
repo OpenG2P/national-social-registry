@@ -11,6 +11,3 @@ from .g2p_register_domain_service_asset import G2PRegisterDomainServiceAsset
 from .g2p_register_domain_service_shock import G2PRegisterDomainServiceShock
 from .g2p_register_domain_service_consent import G2PRegisterDomainServiceConsent
 from .g2p_register_domain_service_grievance import G2PRegisterDomainServiceGrievance
-from .g2p_register_domain_service_verification_history import (
-    G2PRegisterDomainServiceVerificationHistory,
-)

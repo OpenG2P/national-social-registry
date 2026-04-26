@@ -254,30 +254,8 @@ class ResolutionCodeEnum(str, enum.Enum):
     REJECTED = "REJECTED"
 
 
-# ---------------------------------------------------------------------------
-# Verification history / update audit
-# ---------------------------------------------------------------------------
-
-class UpdateTriggerEnum(str, enum.Enum):
-    ON_DEMAND = "ON_DEMAND"
-    RECERTIFICATION = "RECERTIFICATION"
-    LIFE_EVENT = "LIFE_EVENT"
-    SHOCK = "SHOCK"
-    INTEGRATION_SYNC = "INTEGRATION_SYNC"
-
-
-class VerificationMethodEnum(str, enum.Enum):
-    PHONE_CALL = "PHONE_CALL"
-    FIELD_VISIT = "FIELD_VISIT"
-    DOCUMENT_CHECK = "DOCUMENT_CHECK"
-    API = "API"
-    NONE = "NONE"
-
-
-class RecordVerificationStatusEnum(str, enum.Enum):
-    UNVERIFIED = "UNVERIFIED"
-    VERIFIED = "VERIFIED"
-    SPOT_CHECKED = "SPOT_CHECKED"
+# Verification / audit-trail enums removed — registry-core ships
+# `g2p_register_verifications` for that purpose; we don't duplicate it.
 
 
 # ---------------------------------------------------------------------------

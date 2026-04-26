@@ -19,7 +19,6 @@ from .register_domain.models import (
     G2PRegisterShock, G2PRegisterHistoryShock,
     G2PRegisterConsent, G2PRegisterHistoryConsent,
     G2PRegisterGrievance, G2PRegisterHistoryGrievance,
-    G2PRegisterVerificationHistory, G2PRegisterHistoryVerificationHistory,
 )
 from .register_domain.factory import G2PRegisterDomainFactory
 from .register_domain.services import (
@@ -70,8 +69,5 @@ class Initializer(BaseInitializer):
 
             await G2PRegisterGrievance.create_migrate()
             await G2PRegisterHistoryGrievance.create_migrate()
-
-            await G2PRegisterVerificationHistory.create_migrate()
-            await G2PRegisterHistoryVerificationHistory.create_migrate()
 
         asyncio.run(migrate())
