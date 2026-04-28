@@ -1,4 +1,4 @@
 #!openg2p/openg2p-nsr-staff-portal-ui:develop
 
 # Contents — cloned fresh inside the Dockerfile via REPO_URL + GIT_BRANCH build args.
-git://v1.0.2//https://github.com/openg2p/openg2p-registry-gen2-staff-portal-ui
+git://develop//https://github.com/openg2p/openg2p-registry-gen2-staff-portal-ui
