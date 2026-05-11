@@ -6,17 +6,23 @@ from openg2p_registry_core.services import G2PRegisterDomainService
 _logger = logging.getLogger("g2p-register-domain-service")
 
 
-class G2PRegisterDomainServiceShock(G2PRegisterDomainService):
+class G2PRegisterDomainServiceHouseholdAsset(G2PRegisterDomainService):
     async def validate_domain_attributes(
         self, change_request_request_payload: ChangeRequestRequestPayload
     ):
-        _logger.info("Validating shock domain attributes")
+        _logger.info("Validating household asset domain attributes")
         return
 
     def construct_search_text(self, payload: dict, extra: list[str] = None) -> str:
-        _logger.info("Constructing search text for shock")
+        _logger.info("Constructing search text for household asset")
 
-        keys = ["shock_type", "shock_period", "coping_strategy"]
+        keys = [
+            "asset_type",
+            "asset_category",
+            "size_band",
+            "size_unit",
+            "quantity",
+        ]
         search_text = []
         if extra:
             search_text.extend(str(v).strip() for v in extra if str(v).strip())
@@ -28,9 +34,9 @@ class G2PRegisterDomainServiceShock(G2PRegisterDomainService):
         return " ".join(search_text).strip()
 
     def construct_record_name(self, payload: dict, extra: list[str] = None) -> str:
-        _logger.info("Constructing record name for shock")
+        _logger.info("Constructing record name for household asset")
 
-        keys = ["shock_type", "shock_period"]
+        keys = ["asset_type", "asset_category"]
         record_name = []
         if extra:
             record_name.extend(str(v).strip() for v in extra if str(v).strip())

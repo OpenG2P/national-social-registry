@@ -2,5 +2,4 @@ INSERT INTO "public"."g2p_attributes" ("attribute_id","attribute_code","attribut
 ('PROGRAM_NAME','PROGRAM_NAME','Programme Name','FALSE'),
 ('PRIMARY_LIVELIHOOD','PRIMARY_LIVELIHOOD','Primary Livelihood','FALSE'),
 ('COPING_STRATEGY','COPING_STRATEGY','Coping Strategy','FALSE'),
-('DATA_SOURCE','DATA_SOURCE','Data Source','FALSE'),
-('GRIEVANCE_RESOLUTION_RATIONALE','GRIEVANCE_RESOLUTION_RATIONALE','Grievance Resolution Rationale','FALSE');
+('DATA_SOURCE','DATA_SOURCE','Data Source','FALSE');

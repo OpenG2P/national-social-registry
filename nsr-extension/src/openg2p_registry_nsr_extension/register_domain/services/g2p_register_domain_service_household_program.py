@@ -6,15 +6,15 @@ from openg2p_registry_core.services import G2PRegisterDomainService
 _logger = logging.getLogger("g2p-register-domain-service")
 
 
-class G2PRegisterDomainServiceProgramParticipation(G2PRegisterDomainService):
+class G2PRegisterDomainServiceHouseholdProgram(G2PRegisterDomainService):
     async def validate_domain_attributes(
         self, change_request_request_payload: ChangeRequestRequestPayload
     ):
-        _logger.info("Validating program participation domain attributes")
+        _logger.info("Validating household program domain attributes")
         return
 
     def construct_search_text(self, payload: dict, extra: list[str] = None) -> str:
-        _logger.info("Constructing search text for program participation")
+        _logger.info("Constructing search text for household program")
 
         keys = [
             "program_name",
@@ -22,7 +22,6 @@ class G2PRegisterDomainServiceProgramParticipation(G2PRegisterDomainService):
             "legacy_program_id",
             "payment_channel_preference",
             "payment_verification_status",
-            "linked_register_mnemonic",
         ]
         search_text = []
         if extra:
@@ -35,7 +34,7 @@ class G2PRegisterDomainServiceProgramParticipation(G2PRegisterDomainService):
         return " ".join(search_text).strip()
 
     def construct_record_name(self, payload: dict, extra: list[str] = None) -> str:
-        _logger.info("Constructing record name for program participation")
+        _logger.info("Constructing record name for household program")
 
         keys = ["program_name", "program_mnemonic"]
         record_name = []

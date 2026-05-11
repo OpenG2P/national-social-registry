@@ -1,4 +1,4 @@
-INSERT INTO "public"."g2p_register_assets" (
+INSERT INTO "public"."g2p_register_household_assets" (
   "asset_type","asset_category","quantity","size_value","size_unit","size_band","details",
   "internal_record_id","functional_record_id","link_internal_record_id","link_foundational_id",
   "record_name","record_image_storage_id","created_by","created_at","last_approved_at",

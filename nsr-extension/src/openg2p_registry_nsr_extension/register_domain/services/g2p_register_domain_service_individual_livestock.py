@@ -3,26 +3,20 @@ import logging
 from openg2p_registry_core.schemas import ChangeRequestRequestPayload
 from openg2p_registry_core.services import G2PRegisterDomainService
 
-_logger = logging.getLogger("g2p-register-domain-service")
+_logger = logging.getLogger("g2p-register-individual-livestock-service")
 
 
-class G2PRegisterDomainServiceAsset(G2PRegisterDomainService):
+class G2PRegisterDomainServiceIndividualLivestock(G2PRegisterDomainService):
     async def validate_domain_attributes(
         self, change_request_request_payload: ChangeRequestRequestPayload
     ):
-        _logger.info("Validating asset domain attributes")
+        _logger.info("Validating individual livestock domain attributes")
         return
 
     def construct_search_text(self, payload: dict, extra: list[str] = None) -> str:
-        _logger.info("Constructing search text for asset")
+        _logger.info("Constructing search text for individual livestock")
 
-        keys = [
-            "asset_type",
-            "asset_category",
-            "size_band",
-            "size_unit",
-            "quantity",
-        ]
+        keys = ["functional_record_id", "livestock_species", "livestock_counts"]
         search_text = []
         if extra:
             search_text.extend(str(v).strip() for v in extra if str(v).strip())
@@ -34,9 +28,9 @@ class G2PRegisterDomainServiceAsset(G2PRegisterDomainService):
         return " ".join(search_text).strip()
 
     def construct_record_name(self, payload: dict, extra: list[str] = None) -> str:
-        _logger.info("Constructing record name for asset")
+        _logger.info("Constructing record name for individual livestock")
 
-        keys = ["asset_type", "asset_category"]
+        keys = ["functional_record_id"]
         record_name = []
         if extra:
             record_name.extend(str(v).strip() for v in extra if str(v).strip())
