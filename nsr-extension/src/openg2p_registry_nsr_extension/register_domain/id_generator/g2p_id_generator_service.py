@@ -11,22 +11,8 @@ class G2PIdGeneratorService(BaseService, G2PIdGeneratorInterface):
         mnemonic = (register_mnemonic or "").lower()
 
         if mnemonic == "individual":
-            return IdAffix(prefix="IND-", suffix="")
-        if mnemonic == "individualdisability":
-            return IdAffix(prefix="DIS-", suffix="")
+            return IdAffix(prefix="IN-", suffix="")
         if mnemonic == "household":
             return IdAffix(prefix="HH-", suffix="")
-        if mnemonic == "programparticipation":
-            return IdAffix(prefix="PP-", suffix="")
-        if mnemonic == "povertyscore":
-            return IdAffix(prefix="PMT-", suffix="")
-        if mnemonic == "asset":
-            return IdAffix(prefix="AST-", suffix="")
-        if mnemonic == "shock":
-            return IdAffix(prefix="SHK-", suffix="")
-        if mnemonic == "consent":
-            return IdAffix(prefix="CNS-", suffix="")
-        if mnemonic == "grievance":
-            return IdAffix(prefix="GRV-", suffix="")
 
         return IdAffix(prefix="DEFAULT-", suffix="")

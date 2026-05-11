@@ -6,23 +6,17 @@ from openg2p_registry_core.services import G2PRegisterDomainService
 _logger = logging.getLogger("g2p-register-domain-service")
 
 
-class G2PRegisterDomainServiceGrievance(G2PRegisterDomainService):
+class G2PRegisterDomainServiceIndividualShock(G2PRegisterDomainService):
     async def validate_domain_attributes(
         self, change_request_request_payload: ChangeRequestRequestPayload
     ):
-        _logger.info("Validating grievance domain attributes")
+        _logger.info("Validating individual shock domain attributes")
         return
 
     def construct_search_text(self, payload: dict, extra: list[str] = None) -> str:
-        _logger.info("Constructing search text for grievance")
+        _logger.info("Constructing search text for individual shock")
 
-        keys = [
-            "grievance_case_id",
-            "grievance_type",
-            "submission_channel",
-            "grievance_status",
-            "resolution_code",
-        ]
+        keys = ["shock_type", "shock_period", "coping_strategy"]
         search_text = []
         if extra:
             search_text.extend(str(v).strip() for v in extra if str(v).strip())
@@ -34,9 +28,9 @@ class G2PRegisterDomainServiceGrievance(G2PRegisterDomainService):
         return " ".join(search_text).strip()
 
     def construct_record_name(self, payload: dict, extra: list[str] = None) -> str:
-        _logger.info("Constructing record name for grievance")
+        _logger.info("Constructing record name for individual shock")
 
-        keys = ["grievance_case_id", "grievance_type"]
+        keys = ["shock_type", "shock_period"]
         record_name = []
         if extra:
             record_name.extend(str(v).strip() for v in extra if str(v).strip())

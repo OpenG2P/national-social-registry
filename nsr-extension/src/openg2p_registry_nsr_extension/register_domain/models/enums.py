@@ -106,6 +106,46 @@ class EmploymentStatusEnum(str, enum.Enum):
     OTHER = "OTHER"
 
 
+class LivelihoodEnum(str, enum.Enum):
+    AGRICULTURE = "AGRICULTURE"
+    LIVESTOCK = "LIVESTOCK"
+    FISHING = "FISHING"
+    WAGE_LABOR = "WAGE_LABOR"
+    SELF_EMPLOYMENT = "SELF_EMPLOYMENT"
+    GOVERNMENT_EMPLOYEE = "GOVERNMENT_EMPLOYEE"
+    PRIVATE_SECTOR_EMPLOYEE = "PRIVATE_SECTOR_EMPLOYEE"
+    BUSINESS_TRADE = "BUSINESS_TRADE"
+    REMITTANCE = "REMITTANCE"
+    PENSION = "PENSION"
+    UNEMPLOYED = "UNEMPLOYED"
+    OTHER = "OTHER"
+
+
+class LivestockSpeciesEnum(str, enum.Enum):
+    CATTLE = "CATTLE"
+    GOATS = "GOATS"
+    SHEEP = "SHEEP"
+    POULTRY = "POULTRY"
+    CAMELS = "CAMELS"
+    EQUINES = "EQUINES"
+    OTHER = "OTHER"
+
+
+class LivestockCountBandEnum(str, enum.Enum):
+    NONE = "NONE"
+    BAND_1_5 = "BAND_1_5"
+    BAND_6_10 = "BAND_6_10"
+    BAND_11_20 = "BAND_11_20"
+    BAND_21_50 = "BAND_21_50"
+    BAND_50_PLUS = "BAND_50_PLUS"
+
+
+class ProductiveAssetEnum(str, enum.Enum):
+    PLOUGH = "PLOUGH"
+    IRRIGATION_PUMP = "IRRIGATION_PUMP"
+    OTHER = "OTHER"
+
+
 # ---------------------------------------------------------------------------
 # Household – composition, dwelling, services
 # ---------------------------------------------------------------------------
@@ -122,6 +162,33 @@ class DwellingTypeEnum(str, enum.Enum):
     PERMANENT = "PERMANENT"
     SEMI_PERMANENT = "SEMI_PERMANENT"
     TEMPORARY = "TEMPORARY"
+
+
+class RoofMaterialEnum(str, enum.Enum):
+    THATCH = "THATCH"
+    CORRUGATED_IRON = "CORRUGATED_IRON"
+    CONCRETE = "CONCRETE"
+    TILE = "TILE"
+    PLASTIC_SHEET = "PLASTIC_SHEET"
+    OTHER = "OTHER"
+
+
+class WallMaterialEnum(str, enum.Enum):
+    MUD = "MUD"
+    WOOD = "WOOD"
+    BAMBOO = "BAMBOO"
+    STONE = "STONE"
+    BRICK = "BRICK"
+    CONCRETE = "CONCRETE"
+    OTHER = "OTHER"
+
+
+class FloorMaterialEnum(str, enum.Enum):
+    EARTH = "EARTH"
+    WOOD = "WOOD"
+    CEMENT = "CEMENT"
+    TILE = "TILE"
+    OTHER = "OTHER"
 
 
 class TenureStatusEnum(str, enum.Enum):
@@ -207,70 +274,12 @@ class ShockTypeEnum(str, enum.Enum):
     OTHER = "OTHER"
 
 
-# ---------------------------------------------------------------------------
-# Consent
-# ---------------------------------------------------------------------------
-
-class ConsentMethodEnum(str, enum.Enum):
-    SIGNED = "SIGNED"
-    VERBAL = "VERBAL"
-    DIGITAL = "DIGITAL"
-    BIOMETRIC = "BIOMETRIC"
-
-
-# ---------------------------------------------------------------------------
-# Grievance
-# ---------------------------------------------------------------------------
-
-class GrievanceTypeEnum(str, enum.Enum):
-    EXCLUSION = "EXCLUSION"
-    INCLUSION = "INCLUSION"
-    DATA_ERROR = "DATA_ERROR"
-    PAYMENT = "PAYMENT"
-    PROTECTION = "PROTECTION"
-    OTHER = "OTHER"
-
-
-class SubmissionChannelEnum(str, enum.Enum):
-    IN_PERSON = "IN_PERSON"
-    PHONE = "PHONE"
-    USSD = "USSD"
-    COMMUNITY_COMMITTEE = "COMMUNITY_COMMITTEE"
-    ONLINE = "ONLINE"
-
-
-class GrievanceStatusEnum(str, enum.Enum):
-    OPEN = "OPEN"
-    UNDER_REVIEW = "UNDER_REVIEW"
-    RESOLVED = "RESOLVED"
-    APPEALED = "APPEALED"
-    CLOSED = "CLOSED"
-
-
-class ResolutionCodeEnum(str, enum.Enum):
-    ADDED = "ADDED"
-    CORRECTED = "CORRECTED"
-    REFERRED = "REFERRED"
-    REJECTED = "REJECTED"
-
-
 # Verification / audit-trail enums removed — registry-core ships
 # `g2p_register_verifications` for that purpose; we don't duplicate it.
 
 
 # ---------------------------------------------------------------------------
-# Poverty score
-# ---------------------------------------------------------------------------
-
-class PmtScoreTypeEnum(str, enum.Enum):
-    PMT = "PMT"
-    MPI = "MPI"
-    PPI = "PPI"
-    CUSTOM = "CUSTOM"
-
-
-# ---------------------------------------------------------------------------
-# Program participation
+# Program enrolment (household / individual programme tables)
 # ---------------------------------------------------------------------------
 
 class PaymentChannelPreferenceEnum(str, enum.Enum):
@@ -284,12 +293,3 @@ class PaymentVerificationStatusEnum(str, enum.Enum):
     VERIFIED = "VERIFIED"
     PENDING = "PENDING"
     FAILED = "FAILED"
-
-
-# ---------------------------------------------------------------------------
-# Shared – parent type for tables that can link to either register
-# ---------------------------------------------------------------------------
-
-class LinkedRegisterMnemonicEnum(str, enum.Enum):
-    INDIVIDUAL = "Individual"
-    HOUSEHOLD = "Household"
