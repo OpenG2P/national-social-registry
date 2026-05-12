@@ -282,14 +282,15 @@ class ShockTypeEnum(str, enum.Enum):
 # Program enrolment (household / individual programme tables)
 # ---------------------------------------------------------------------------
 
-class PaymentChannelPreferenceEnum(str, enum.Enum):
-    BANK = "BANK"
-    MOBILE_MONEY = "MOBILE_MONEY"
-    CASH = "CASH"
-    OTHER = "OTHER"
+class ProgramEnum(str, enum.Enum):
+    """Matches ``PROGRAM_NAME`` ``value_id`` rows in ``g2p_attribute_values``."""
 
-
-class PaymentVerificationStatusEnum(str, enum.Enum):
-    VERIFIED = "VERIFIED"
-    PENDING = "PENDING"
-    FAILED = "FAILED"
+    PROG_CASH_TRANSFER = "PROG_CASH_TRANSFER"
+    PROG_FOOD_SUPPORT = "PROG_FOOD_SUPPORT"
+    PROG_HEALTH_INSURANCE = "PROG_HEALTH_INSURANCE"
+    PROG_DISABILITY_ALLOWANCE = "PROG_DISABILITY_ALLOWANCE"
+    PROG_ELDERLY_PENSION = "PROG_ELDERLY_PENSION"
+    PROG_SCHOOL_FEEDING = "PROG_SCHOOL_FEEDING"
+    PROG_PUBLIC_WORKS = "PROG_PUBLIC_WORKS"
+    UPSNP = "UPSNP"
+    RPSNP = "RPSNP"
