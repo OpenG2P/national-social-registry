@@ -1,5 +1,7 @@
+from datetime import date
+
 from openg2p_registry_core.models.g2p_intake_form import G2PIntakeForm
-from sqlalchemy import Boolean, Integer, Numeric, String
+from sqlalchemy import Boolean, Date, Integer, Numeric, String, text
 from sqlalchemy.orm import Mapped, mapped_column
 from openg2p_registry_core.models import (
     G2PRegister,
@@ -27,6 +29,11 @@ class G2PHousehold:
     )
     household_head_name: Mapped[str] = mapped_column(String, nullable=True)
     headship_type: Mapped[HeadshipTypeEnum] = mapped_column(String, nullable=True)
+
+    husband_dead: Mapped[bool] = mapped_column(
+        Boolean, nullable=True, server_default=text("false")
+    )
+    husband_dead_date: Mapped[date | None] = mapped_column(Date, nullable=True)
 
     size_total: Mapped[int] = mapped_column(Integer, nullable=True)
     size_adults: Mapped[int] = mapped_column(Integer, nullable=True)
