@@ -1,1 +1,2 @@
--- No seed data for incoming_model_semantic_patterns
+INSERT INTO "public"."incoming_model_semantic_patterns" ("semantic_pattern_id","data_model_id","register_id","pattern_for_register","key_path_for_business_payload","raw_payload_enricher_class","intake_form_id","pattern_for_intake_form") VALUES
+('SP1','DM1','a0000000-0000-4000-8000-000000000001','$.body.message.search_response[0].data.reg_type=>^Individual$','$.body.message.search_response[0].data.reg_records[0]','G2PDciIndividualCreateEnricherService','c1000000-0000-4000-8000-000000000001','$.body.message.search_response[0].data.reg_record_type=>^Individual$');

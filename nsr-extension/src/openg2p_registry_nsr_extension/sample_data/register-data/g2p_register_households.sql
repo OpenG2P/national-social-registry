@@ -1,5 +1,6 @@
 INSERT INTO "public"."g2p_register_households" (
   "household_head_internal_record_id","household_head_name","headship_type",
+  "husband_dead","husband_dead_date",
   "size_total","size_adults","size_children_u5","size_school_age","size_elderly",
   "number_of_female_members","number_of_male_members","elderly_member_present",
   "dwelling_type","roof_material","wall_material","floor_material","tenure_status",
@@ -12,7 +13,7 @@ INSERT INTO "public"."g2p_register_households" (
   "latitude","longitude","altitude","plus_code","address_line_1","address_line_2",
   "postal_code","country_code","geo_lowest_level_value_id","geo_code_hierarchy_json"
 ) VALUES
-('20000000-0000-4000-8000-000000000001','Alex Rivera','MALE_HEADED',
+('20000000-0000-4000-8000-000000000001','Alex Rivera','MALE_HEADED', FALSE, NULL,
  4,2,1,1,0,2,2,'FALSE',
  'PERMANENT','Metal Sheet','Brick','Cement','OWNED',
  3,1.33,
@@ -23,7 +24,7 @@ INSERT INTO "public"."g2p_register_households" (
  '12.345','67.890','100','12AB+34','21 Main Street','Sector 1',
  '000001','XX',NULL,'{"hierarchy": [{"level": "admin1", "level_value_id": "R01", "level_value_mnemonic": "Region 1"}, {"level": "admin2", "level_value_id": "D01", "level_value_mnemonic": "District 1"}], "lowest_level_value_id": "D01"}'),
 
-('20000000-0000-4000-8000-000000000004','Morgan Cole','FEMALE_HEADED',
+('20000000-0000-4000-8000-000000000004','Morgan Cole','FEMALE_HEADED', FALSE, NULL,
  5,3,0,2,0,3,2,'FALSE',
  'SEMI_PERMANENT','Thatch','Mud Brick','Earth','RENTED',
  2,2.5,
@@ -34,7 +35,7 @@ INSERT INTO "public"."g2p_register_households" (
  '13.111','67.554','180','13AB+55','7 Market Lane','Sector 2',
  '000002','XX',NULL,'{"hierarchy": [{"level": "admin1", "level_value_id": "R01", "level_value_mnemonic": "Region 1"}, {"level": "admin2", "level_value_id": "D02", "level_value_mnemonic": "District 2"}], "lowest_level_value_id": "D02"}'),
 
-('20000000-0000-4000-8000-000000000007','Kim Lee','MALE_HEADED',
+('20000000-0000-4000-8000-000000000007','Kim Lee','MALE_HEADED', FALSE, NULL,
  6,2,2,2,1,3,3,'TRUE',
  'PERMANENT','Tile','Brick','Tile','OWNED',
  4,1.5,
@@ -45,7 +46,7 @@ INSERT INTO "public"."g2p_register_households" (
  '11.950','68.212','90','11YZ+68','42 Hillside Avenue','Sector 3',
  '000003','XX',NULL,'{"hierarchy": [{"level": "admin1", "level_value_id": "R02", "level_value_mnemonic": "Region 2"}, {"level": "admin2", "level_value_id": "D03", "level_value_mnemonic": "District 3"}], "lowest_level_value_id": "D03"}'),
 
-('20000000-0000-4000-8000-000000000010','Taylor Brooks','DISABLED_HEADED',
+('20000000-0000-4000-8000-000000000010','Taylor Brooks','DISABLED_HEADED', FALSE, NULL,
  3,2,0,0,1,2,1,'TRUE',
  'TEMPORARY','Tarpaulin','Bamboo','Earth','HOSTED',
  1,3.0,
@@ -56,7 +57,7 @@ INSERT INTO "public"."g2p_register_households" (
  '14.420','66.900','210','14CD+66','Camp B Block 4','Sector 4',
  '000004','XX',NULL,'{"hierarchy": [{"level": "admin1", "level_value_id": "R02", "level_value_mnemonic": "Region 2"}, {"level": "admin2", "level_value_id": "D04", "level_value_mnemonic": "District 4"}], "lowest_level_value_id": "D04"}'),
 
-('20000000-0000-4000-8000-000000000013','Sam Hayes','FEMALE_HEADED',
+('20000000-0000-4000-8000-000000000013','Sam Hayes','FEMALE_HEADED', FALSE, NULL,
  7,3,1,2,1,4,3,'TRUE',
  'SEMI_PERMANENT','Metal Sheet','Brick','Cement','OWNED',
  3,2.33,

@@ -38,8 +38,11 @@ Portable INSERT scripts used by the National Social Registry docker DB seed job 
 |---|---|
 | `register-metadata/g2p_register_definitions.sql` | Register/table definitions (`IndividualProgram`, `IndividualLand`, `IndividualLivelihood`, … `HouseholdHousingAndServices`, …) |
 | `register-metadata/g2p_register_schemas.sql` | Dedup / search / filter UI schemas per `register_id` |
-| `register-metadata/g2p_register_ui_tabs.sql` | Tab layout for Individual and Household registers |
-| `register-metadata/g2p_register_sections.sql` | Section + widget wiring for intake and record-detail views |
+| `register-metadata/g2p_register_ui_tabs.sql` | Register workspace tabs (`in_*` / `hh_*` labels; not intake) |
+| `register-metadata/g2p_register_ui_tab_sections.sql` | Which sections appear on each register tab (reuses `section_id` from sections) |
+| `register-metadata/g2p_intake_form_ui_tabs.sql` | One UI tab per intake form (`form_id`) |
+| `register-metadata/g2p_intake_form_ui_tab_sections.sql` | Intake tab → ordered sections (same `section_id` PKs as register sections) |
+| `register-metadata/g2p_register_sections.sql` | Canonical section definitions (`section_id`); shared by intake + register UI |
 | `lookup-data/g2p_attributes.sql` | Shared attribute catalogue (e.g. `PROGRAM_NAME`, `COPING_STRATEGY`) |
 | `lookup-data/g2p_attribute_values.sql` | Values for those attributes |
 | `data-models/data_models.sql` | Data model hooks |

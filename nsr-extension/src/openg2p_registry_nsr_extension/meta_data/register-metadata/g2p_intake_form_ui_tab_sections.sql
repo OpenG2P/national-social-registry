@@ -1,3 +1,4 @@
+-- Intake UI: ordered sections on each form's single tab (`section_order` = flow order).
 INSERT INTO public.g2p_intake_form_ui_tab_sections (
     tab_section_id,
     tab_id,
@@ -5,37 +6,64 @@ INSERT INTO public.g2p_intake_form_ui_tab_sections (
     section_order
 )
 VALUES
-(
-    'd0000000-0000-4000-8000-000000000001',
-    't1',
-    'household_intake_composition_section_01',
-    1
-),
+    (
+        'd0000000-0000-4000-8000-000000000011',
+        'nsr_form_tab_household_intake',
+        'hh_composition_headship',
+        1
+    ),
+    (
+        'd0000000-0000-4000-8000-000000000014',
+        'nsr_form_tab_household_intake',
+        'hh_location_details',
+        2
+    ),
+    (
+        'd0000000-0000-4000-8000-000000000012',
+        'nsr_form_tab_household_intake',
+        'hh_dwelling_services',
+        3
+    ),
 
-(
-    'd0000000-0000-4000-8000-000000000002',
-    't1',
-    'household_intake_dwelling_section_02',
-    2
-),
-
-(
-    'd0000000-0000-4000-8000-000000000003',
-    't2',
-    'individual_intake_identity_section_01',
-    1
-),
-
-(
-    'd0000000-0000-4000-8000-000000000004',
-    't2',
-    'individual_intake_vulnerability_section_02',
-    2
-),
-
-(
-    'd0000000-0000-4000-8000-000000000005',
-    't2',
-    'individual_intake_livelihood_section_03',
-    3
-);
+    (
+        'd0000000-0000-4000-8000-000000000021',
+        'nsr_form_tab_individual_intake',
+        'in_demographic_details',
+        1
+    ),
+    (
+        'd0000000-0000-4000-8000-000000000024',
+        'nsr_form_tab_individual_intake',
+        'in_contact_details',
+        2
+    ),
+    (
+        'd0000000-0000-4000-8000-000000000025',
+        'nsr_form_tab_individual_intake',
+        'in_identifier',
+        3
+    ),
+    (
+        'd0000000-0000-4000-8000-000000000026',
+        'nsr_form_tab_individual_intake',
+        'in_relationship_to_head',
+        4
+    ),
+    (
+        'd0000000-0000-4000-8000-000000000027',
+        'nsr_form_tab_individual_intake',
+        'in_location_details',
+        5
+    ),
+    (
+        'd0000000-0000-4000-8000-000000000022',
+        'nsr_form_tab_individual_intake',
+        'in_vulnerability_inclusion',
+        6
+    ),
+    (
+        'd0000000-0000-4000-8000-000000000023',
+        'nsr_form_tab_individual_intake',
+        'in_livelihood_employment',
+        7
+    );

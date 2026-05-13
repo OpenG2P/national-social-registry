@@ -1,3 +1,4 @@
+from datetime import date
 from typing import Optional
 
 from openg2p_registry_core.schemas import (
@@ -24,6 +25,9 @@ class G2PSchemaHousehold:
     household_head_internal_record_id: Optional[str] = None
     household_head_name: Optional[str] = None
     headship_type: Optional[HeadshipTypeEnum] = None
+
+    husband_dead: Optional[bool] = None
+    husband_dead_date: Optional[date] = None
 
     size_total: Optional[int] = None
     size_adults: Optional[int] = None
@@ -64,6 +68,9 @@ class G2PRegisterHistorySchemaHousehold(G2PRegisterHistorySchema, G2PGeoHistoryS
     Inherits fields from G2PRegisterHistorySchema and G2PGeoHistorySchema.
     Attributes specific to the Household domain are modelled only on primary register payloads.
     """
+
+    husband_dead: Optional[bool] = None
+    husband_dead_date: Optional[date] = None
 
 
 class G2PIntakeFormSchemaHousehold(

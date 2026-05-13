@@ -9,6 +9,8 @@ INSERT INTO "public"."g2p_attribute_values" ("value_id","attribute_id","value_co
 ('PROG_ELDERLY_PENSION','PROGRAM_NAME','ELDERLY_PENSION','Elderly Pension',NULL,5),
 ('PROG_SCHOOL_FEEDING','PROGRAM_NAME','SCHOOL_FEEDING','School Feeding Programme',NULL,6),
 ('PROG_PUBLIC_WORKS','PROGRAM_NAME','PUBLIC_WORKS','Public Works Programme',NULL,7),
+('UPSNP','PROGRAM_NAME','UPSNP','Urban Productive Safety Net Programme',NULL,8),
+('RPSNP','PROGRAM_NAME','RPSNP','Rural Productive Safety Net Programme',NULL,9),
 
 -- Primary livelihood (ISCO-aligned broad groupings)
 ('LVH_AGRICULTURE','PRIMARY_LIVELIHOOD','AGRICULTURE','Agriculture, Forestry and Fishing',NULL,1),
