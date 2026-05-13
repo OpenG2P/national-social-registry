@@ -1,3 +1,5 @@
+-- Links register UI tabs to shared section definitions (`section_id` PK in `g2p_register_sections`).
+-- `section_order` is display order within the tab (multiples of 10).
 INSERT INTO public.g2p_register_ui_tab_sections (
     tab_section_id,
     register_id,
@@ -6,163 +8,38 @@ INSERT INTO public.g2p_register_ui_tab_sections (
     section_order
 )
 VALUES
+    -- Individual — info tab (identity, contact, household link, location, scores)
+    ('f0000000-0000-4000-8000-000000000301', 'a0000000-0000-4000-8000-000000000001', 'individual_info_tab', 'in_header_info', 10),
+    ('f0000000-0000-4000-8000-000000000302', 'a0000000-0000-4000-8000-000000000001', 'individual_info_tab', 'in_demographic_details', 20),
+    ('f0000000-0000-4000-8000-000000000303', 'a0000000-0000-4000-8000-000000000001', 'individual_info_tab', 'in_contact_details', 30),
+    ('f0000000-0000-4000-8000-000000000304', 'a0000000-0000-4000-8000-000000000001', 'individual_info_tab', 'in_identifier', 40),
+    ('f0000000-0000-4000-8000-000000000305', 'a0000000-0000-4000-8000-000000000001', 'individual_info_tab', 'in_relationship_to_head', 50),
+    ('f0000000-0000-4000-8000-000000000306', 'a0000000-0000-4000-8000-000000000001', 'individual_info_tab', 'in_location_details', 60),
+    ('f0000000-0000-4000-8000-000000000307', 'a0000000-0000-4000-8000-000000000001', 'individual_info_tab', 'in_scores', 70),
 
-(
-    'f0000000-0000-4000-8000-000000000001',
-    'a0000000-0000-4000-8000-000000000001',
-    'individual_intake_form_tab',
-    'individual_intake_identity_section_01',
-    0
-),
+    -- Individual — livelihood tab (master livelihood + land, livestock, shocks list sections)
+    ('f0000000-0000-4000-8000-000000000311', 'a0000000-0000-4000-8000-000000000001', 'individual_livelihood_tab', 'in_livelihood_employment', 10),
+    ('f0000000-0000-4000-8000-000000000312', 'a0000000-0000-4000-8000-000000000001', 'individual_livelihood_tab', 'in_table_land', 20),
+    ('f0000000-0000-4000-8000-000000000313', 'a0000000-0000-4000-8000-000000000001', 'individual_livelihood_tab', 'in_table_livestock', 30),
+    ('f0000000-0000-4000-8000-000000000314', 'a0000000-0000-4000-8000-000000000001', 'individual_livelihood_tab', 'in_table_shocks', 40),
 
-(
-    'f0000000-0000-4000-8000-000000000002',
-    'a0000000-0000-4000-8000-000000000001',
-    'individual_intake_form_tab',
-    'individual_intake_vulnerability_section_02',
-    1
-),
+    -- Individual — vulnerability tab (master vulnerability + disability list section only)
+    ('f0000000-0000-4000-8000-000000000321', 'a0000000-0000-4000-8000-000000000001', 'individual_vulnerability_tab', 'in_vulnerability_inclusion', 10),
+    ('f0000000-0000-4000-8000-000000000322', 'a0000000-0000-4000-8000-000000000001', 'individual_vulnerability_tab', 'in_table_disabilities', 20),
 
-(
-    'f0000000-0000-4000-8000-000000000003',
-    'a0000000-0000-4000-8000-000000000001',
-    'individual_intake_form_tab',
-    'individual_intake_livelihood_section_03',
-    2
-),
+    ('f0000000-0000-4000-8000-000000000331', 'a0000000-0000-4000-8000-000000000001', 'individual_programs_tab', 'in_table_program_enrolments', 10),
 
-(
-    'f0000000-0000-4000-8000-000000000004',
-    'a0000000-0000-4000-8000-000000000002',
-    'household_intake_form_tab',
-    'household_intake_composition_section_01',
-    0
-),
+    -- Household — info tab (header, geo, composition, roster, dwelling master, scores)
+    ('f0000000-0000-4000-8000-000000000341', 'a0000000-0000-4000-8000-000000000002', 'household_info_tab', 'hh_header_info', 10),
+    ('f0000000-0000-4000-8000-000000000342', 'a0000000-0000-4000-8000-000000000002', 'household_info_tab', 'hh_location_details', 20),
+    ('f0000000-0000-4000-8000-000000000343', 'a0000000-0000-4000-8000-000000000002', 'household_info_tab', 'hh_composition_headship', 30),
+    ('f0000000-0000-4000-8000-000000000344', 'a0000000-0000-4000-8000-000000000002', 'household_info_tab', 'hh_roster', 40),
+    ('f0000000-0000-4000-8000-000000000345', 'a0000000-0000-4000-8000-000000000002', 'household_info_tab', 'hh_dwelling_services', 50),
+    ('f0000000-0000-4000-8000-000000000346', 'a0000000-0000-4000-8000-000000000002', 'household_info_tab', 'hh_scores_poverty', 60),
 
-(
-    'f0000000-0000-4000-8000-000000000005',
-    'a0000000-0000-4000-8000-000000000002',
-    'household_intake_form_tab',
-    'household_intake_dwelling_section_02',
-    1
-),
+    ('f0000000-0000-4000-8000-000000000351', 'a0000000-0000-4000-8000-000000000002', 'household_membership_tab', 'hh_members', 10),
 
-(
-    'f0000000-0000-4000-8000-000000000006',
-    'a0000000-0000-4000-8000-000000000001',
-    'individual_program_tab',
-    'individual_program_list_section_01',
-    0
-),
+    ('f0000000-0000-4000-8000-000000000361', 'a0000000-0000-4000-8000-000000000002', 'housing_services_tab', 'hh_table_housing_services', 10),
+    ('f0000000-0000-4000-8000-000000000362', 'a0000000-0000-4000-8000-000000000002', 'housing_services_tab', 'hh_table_assets', 20),
 
-(
-    'f0000000-0000-4000-8000-000000000007',
-    'a0000000-0000-4000-8000-000000000001',
-    'individual_land_tab',
-    'individual_land_list_section_01',
-    0
-),
-
-(
-    'f0000000-0000-4000-8000-000000000008',
-    'a0000000-0000-4000-8000-000000000001',
-    'individual_livelihood_tab',
-    'individual_livelihood_list_section_01',
-    0
-),
-
-(
-    'f0000000-0000-4000-8000-000000000009',
-    'a0000000-0000-4000-8000-000000000001',
-    'individual_livestock_tab',
-    'individual_livestock_list_section_01',
-    0
-),
-
-(
-    'f0000000-0000-4000-8000-000000000010',
-    'a0000000-0000-4000-8000-000000000001',
-    'individual_vulnerability_tab',
-    'individual_vulnerability_list_section_01',
-    0
-),
-
-(
-    'f0000000-0000-4000-8000-000000000011',
-    'a0000000-0000-4000-8000-000000000001',
-    'individual_shock_tab',
-    'individual_shock_list_section_01',
-    0
-),
-
-(
-    'f0000000-0000-4000-8000-000000000012',
-    'a0000000-0000-4000-8000-000000000002',
-    'household_asset_tab',
-    'household_asset_list_section_01',
-    0
-),
-
-(
-    'f0000000-0000-4000-8000-000000000013',
-    'a0000000-0000-4000-8000-000000000002',
-    'household_housing_and_services_tab',
-    'household_housing_services_list_section_01',
-    0
-),
-
-(
-    'f0000000-0000-4000-8000-000000000014',
-    'a0000000-0000-4000-8000-000000000001',
-    'individual_disability_tab',
-    'individual_disability_list_section_01',
-    0
-),
-
-(
-    'f0000000-0000-4000-8000-000000000015',
-    'a0000000-0000-4000-8000-000000000001',
-    'individual_individual_tab',
-    'individual_view_identity_section',
-    1
-),
-
-(
-    'f0000000-0000-4000-8000-000000000016',
-    'a0000000-0000-4000-8000-000000000001',
-    'individual_individual_tab',
-    'individual_view_vulnerability_section',
-    2
-),
-
-(
-    'f0000000-0000-4000-8000-000000000017',
-    'a0000000-0000-4000-8000-000000000001',
-    'individual_individual_tab',
-    'individual_view_livelihood_section',
-    3
-),
-
-(
-    'f0000000-0000-4000-8000-000000000018',
-    'a0000000-0000-4000-8000-000000000002',
-    'household_household_tab',
-    'household_view_composition_section',
-    1
-),
-
-(
-    'f0000000-0000-4000-8000-000000000019',
-    'a0000000-0000-4000-8000-000000000002',
-    'household_household_tab',
-    'household_view_dwelling_section',
-    2
-),
-
-(
-    'f0000000-0000-4000-8000-000000000020',
-    'a0000000-0000-4000-8000-000000000002',
-    'household_program_tab',
-    'household_program_list_section_01',
-    0
-);
+    ('f0000000-0000-4000-8000-000000000371', 'a0000000-0000-4000-8000-000000000002', 'household_programs', 'hh_table_program_enrolments', 10);
