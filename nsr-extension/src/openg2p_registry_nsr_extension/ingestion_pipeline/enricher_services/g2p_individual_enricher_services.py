@@ -1,5 +1,5 @@
 import logging
-from typing import Dict
+from typing import Any, Dict
 
 from openg2p_registry_core.interfaces import G2PPayloadEnricherInterface
 from sqlalchemy.orm import Session
@@ -7,10 +7,26 @@ from sqlalchemy.orm import Session
 _logger = logging.getLogger('g2p-payload-enricher-service')
 
 
+def _merge_additional_attributes(raw: Any) -> Dict[str, Any]:
+    """DO.SR.02 allows additional_attributes as 0…1 object or, in practice, a list of objects; merge into one dict (later keys win)."""
+    merged: Dict[str, Any] = {}
+    if isinstance(raw, dict):
+        merged.update(raw)
+    elif isinstance(raw, list):
+        for item in raw:
+            if isinstance(item, dict):
+                merged.update(item)
+    return merged
+
+
 # DCI Payload Enrichers
 class G2PDciIndividualCreateEnricherService(G2PPayloadEnricherInterface):
     def enrich(self, data: Dict, session: Session) -> Dict:
         _logger.info("Processing G2PDciIndividualCreateEnricherService")
+        if isinstance(data, dict):
+            data["additional_attributes"] = _merge_additional_attributes(
+                data.get("additional_attributes")
+            )
         return data
 
 
