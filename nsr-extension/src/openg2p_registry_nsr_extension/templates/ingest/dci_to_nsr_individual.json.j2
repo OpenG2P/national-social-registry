@@ -194,15 +194,16 @@
 {%- if not occ and addl.get('occupation') -%}
   {%- set occ = addl.get('occupation') | string | trim -%}
 {%- endif -%}
+{# Top-level keys MUST equal g2p_register_sections.section_mnemonic (not section_id / in_*). See postgres-play-nsr.sql. #}
 {
-  "in_header_info": [
+  "header_info": [
     {
       "record_name": {{ rec_name | tojson }},
       "record_status": "ACTIVE",
       "functional_record_id": {{ uin | tojson }}
     }
   ],
-  "in_demographic_details": [
+  "individual_demographic_details": [
     {
       "first_name": {{ (name.get('given_name') or name.get('first_name') or '') | tojson }},
       "middle_name": {{ (name.get('second_name') or name.get('middle_name') or '') | tojson }},
@@ -217,7 +218,7 @@
       "registration_date": {{ ((m.get('registration_date') or demo.get('registration_date') or '') | string).split('T')[0] | tojson }}
     }
   ],
-  "in_contact_details": [
+  "individual_contact_details": [
     {
       "primary_phone": {{ p0 | tojson }},
       "alternate_phone": {{ p1 | tojson }},
@@ -225,20 +226,20 @@
       "preferred_contact_method": "CALL"
     }
   ],
-  "in_identifier": [
+  "individual_identifier": [
     {
       "foundational_id": {{ nat | tojson }},
       "rid": ""
     }
   ],
-  "in_relationship_to_head": [
+  "relationship_to_household_head": [
     {
       "relationship_to_head": {{ rel_to_head(addl.get('relationship_to_head')) | tojson }},
       "dependency_indicator": false,
       "residency_status": {{ residency_enum(addl.get('residency_status')) | tojson }}
     }
   ],
-  "in_location_details": [
+  "individual_location_details": [
     {
       "address_line_1": "",
       "address_line_2": "",
@@ -246,8 +247,8 @@
       "geo_lowest_level_value_id": ""
     }
   ],
-  "in_scores": [],
-  "in_livelihood_employment": [
+  "computation_scores": [],
+  "livelihood_and_employment": [
     {
       "primary_livelihood": {% if primary_liv %}{{ primary_liv | tojson }}{% else %}null{% endif %},
       "secondary_livelihood": {% if secondary_liv %}{{ secondary_liv | tojson }}{% else %}null{% endif %},
@@ -257,16 +258,16 @@
       "coping_strategies_index": null
     }
   ],
-  "in_table_land": [
+  "individual_land": [
     {
       "land_access": false,
       "land_size": null,
       "productive_assets": []
     }
   ],
-  "in_table_livestock": [],
-  "in_table_shocks": [],
-  "in_vulnerability_inclusion": [
+  "individual_livestock": [],
+  "individual_shocks": [],
+  "vulnerability_and_inclusion": [
     {
       "disability_status": {{ dstatus | tojson }},
       "orphanhood_flag": false,
@@ -277,7 +278,7 @@
       "plw_status": false
     }
   ],
-  "in_table_disabilities": [
+  "individual_disabilities": [
 {%- if dis_rows is iterable and dis_rows is not string -%}
   {%- for row in dis_rows -%}
     {%- if row is mapping -%}
@@ -289,5 +290,5 @@
   {%- endfor -%}
 {%- endif -%}
   ],
-  "in_table_program_enrolments": []
+  "individual_program": []
 }
