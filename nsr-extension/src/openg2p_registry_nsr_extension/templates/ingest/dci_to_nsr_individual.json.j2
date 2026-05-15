@@ -129,16 +129,34 @@
 {%- endif -%}
 {%- endmacro -%}
 {%- set m = expanded if expanded is defined else {} -%}
-{%- set demo = m.get('demographic_info', {}) -%}
+{%- set demo = m.get('demographic_info') if m.get('demographic_info') is mapping else {} -%}
+{# demographic_info may be absent (e.g. CRVS Person): use flat name/sex/identifier on reg_record #}
 {%- set name = demo.get('name', {}) if demo is mapping else {} -%}
+{%- if (not name) or (name is mapping and not (name.get('given_name') or name.get('first_name') or name.get('surname') or name.get('last_name'))) -%}
+  {%- set nm_root = m.get('name') -%}
+  {%- if nm_root is mapping -%}
+    {%- set name = nm_root -%}
+  {%- endif -%}
+{%- endif -%}
 {%- set mids = m.get('member_identifier', []) -%}
+{%- set root_ident = m.get('identifier', []) -%}
 {%- set id_ns = namespace(uin='', nat='') -%}
 {%- for x in mids if mids is iterable and mids is not string -%}
   {%- if (x.get('identifier_type') or '') | upper in ['UIN'] -%}
     {%- set id_ns.uin = x.get('identifier_value') or '' -%}
   {%- endif -%}
 {%- endfor -%}
+{%- if (not id_ns.uin) and root_ident is iterable and root_ident is not string -%}
+  {%- for x in root_ident -%}
+    {%- if x is mapping and (x.get('identifier_type') or '') | upper in ['UIN'] -%}
+      {%- set id_ns.uin = x.get('identifier_value') or '' -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
 {%- set dids = demo.get('identifier', []) if demo is mapping else [] -%}
+{%- if (not dids or ((dids | length) == 0)) and root_ident is iterable and root_ident is not string -%}
+  {%- set dids = root_ident -%}
+{%- endif -%}
 {%- for x in dids if dids is iterable and dids is not string -%}
   {%- if (x.get('identifier_type') or '') | upper in ['NATIONALID', 'NATIONAL_ID', 'NATIONAL ID'] -%}
     {%- set id_ns.nat = x.get('identifier_value') or '' -%}
@@ -169,6 +187,8 @@
   {%- set addl = {} -%}
 {%- endif -%}
 {%- set rec_name = ((name.get('given_name', name.get('first_name', '')) ~ ' ' ~ (name.get('surname', name.get('last_name', '')))) | trim) -%}
+{%- set sex_src = ((demo.get('sex') if demo is mapping else none) or m.get('sex')) -%}
+{%- set birth_src = ((demo.get('birth_date') if demo is mapping else none) or m.get('birth_date')) -%}
 {%- set primary_liv = livelihood_from_text(addl.get('primary_livelihood', '')) -%}
 {%- set secondary_liv = livelihood_from_text(addl.get('secondary_livelihood', '')) -%}
 {%- set emp = employment_enum(m.get('employment_status', '')) -%}
@@ -194,30 +214,103 @@
 {%- if not occ and addl.get('occupation') -%}
   {%- set occ = addl.get('occupation') | string | trim -%}
 {%- endif -%}
+{# Death: CRVS uses death_place (geo id); death_date is optional legacy. Either → INACTIVE + reason Death. #}
+{%- set death_place_raw = m.get('death_place') -%}
+{%- if death_place_raw is none or (death_place_raw | string | trim) == '' -%}
+  {%- set death_place_raw = demo.get('death_place') if demo is mapping else none -%}
+{%- endif -%}
+{%- if death_place_raw is none or (death_place_raw | string | trim) == '' -%}
+  {%- set death_place_raw = addl.get('death_place') -%}
+{%- endif -%}
+{%- set death_place_str = (death_place_raw | string | trim) if death_place_raw is not none and (death_place_raw | string | trim) != '' else '' -%}
+{%- set death_src = m.get('death_date') -%}
+{%- if death_src is none or (death_src | string | trim) == '' -%}
+  {%- set death_src = demo.get('death_date') if demo is mapping else none -%}
+{%- endif -%}
+{%- if death_src is none or (death_src | string | trim) == '' -%}
+  {%- set death_src = addl.get('death_date') -%}
+{%- endif -%}
+{%- set death_date_str = (death_src | string | trim).split('T')[0] if death_src is not none and (death_src | string | trim) != '' else '' -%}
+{%- set has_death_date = death_date_str | length > 0 -%}
+{%- set has_death = (death_place_str | length > 0) or has_death_date -%}
+{%- set hdr_record_status = 'INACTIVE' if has_death else 'ACTIVE' -%}
+{# Omit a top-level section if the payload provides nothing useful for it (no empty [] / placeholder-only rows). #}
+{%- set has_demographic = (
+  (name.get('given_name') if name is mapping else none)
+  or (name.get('first_name') if name is mapping else none)
+  or (name.get('surname') if name is mapping else none)
+  or (name.get('last_name') if name is mapping else none)
+  or (name.get('second_name') if name is mapping else none)
+  or (name.get('middle_name') if name is mapping else none)
+  or (demo.get('birth_date') if demo is mapping else none)
+  or m.get('birth_date')
+  or (demo.get('sex') if demo is mapping else none)
+  or m.get('sex')
+  or m.get('marital_status')
+  or m.get('education_level')
+  or (lang_str | string | trim)
+  or m.get('registration_date')
+  or (demo.get('registration_date') if demo is mapping else none)
+  or addl.get('citizenship_category')
+) -%}
+{%- set has_contact = (p0 | string | trim) or (p1 | string | trim) -%}
+{%- set has_identifier = (nat | string | trim) -%}
+{# Avoid "| string" on missing keys: None|string renders "None" and is truthy. #}
+{%- set has_relationship = ((addl.get('relationship_to_head') or '') | string | trim) or ((addl.get('residency_status') or '') | string | trim) or (addl.get('dependency_indicator') is not none) -%}
+{%- set inc_il = income_level_norm(m.get('income_level')) -%}
+{%- set csi_raw = m.get('coping_strategies_index') -%}
+{%- set has_csi = csi_raw is not none and (csi_raw | string | trim) != '' -%}
+{%- set has_livelihood = primary_liv or secondary_liv or emp or (occ | string | trim) or (inc_il | string | trim) or has_csi -%}
+{%- set dis_ns = namespace(c=0) -%}
+{%- if dis_rows is iterable and dis_rows is not string -%}
+  {%- for row in dis_rows -%}
+    {%- if row is mapping -%}
+      {%- set dis_ns.c = dis_ns.c + 1 -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+{%- set has_disabilities = dis_ns.c > 0 -%}
+{%- set has_vulnerability = (
+  dstatus != 'UNKNOWN'
+  or dsp
+  or pst
+  or m.get('orphanhood_flag') in [true, 1, '1', 'true', 'True', 'TRUE']
+  or m.get('chronic_illness_flag') in [true, 1, '1', 'true', 'True', 'TRUE']
+  or m.get('plw_status') in [true, 1, '1', 'true', 'True', 'TRUE']
+  or m.get('high_mobility_indicator') in [true, 1, '1', 'true', 'True', 'TRUE']
+) -%}
 {# Top-level keys MUST equal g2p_register_sections.section_mnemonic (not section_id / in_*). See postgres-play-nsr.sql. #}
 {
   "header_info": [
     {
       "record_name": {{ rec_name | tojson }},
-      "record_status": "ACTIVE",
+      "record_status": {{ hdr_record_status | tojson }},
+{%- if has_death %}
+      "record_status_reason": "Death",
+{%- endif %}
       "functional_record_id": {{ uin | tojson }}
     }
-  ],
+  ]
+{%- if has_demographic -%}
+,
   "individual_demographic_details": [
     {
       "first_name": {{ (name.get('given_name') or name.get('first_name') or '') | tojson }},
       "middle_name": {{ (name.get('second_name') or name.get('middle_name') or '') | tojson }},
       "last_name": {{ (name.get('surname') or name.get('last_name') or '') | tojson }},
       "alias_names": [],
-      "birth_date": {{ ((demo.get('birth_date') or '') | string).split('T')[0] | tojson }},
-      "gender": {{ gender_enum(demo.get('sex')) | tojson }},
+      "birth_date": {{ ((birth_src or '') | string).split('T')[0] | tojson }},
+      "gender": {{ gender_enum(sex_src) | tojson }},
       "marital_status": {{ marital_enum(m.get('marital_status')) | tojson }},
       "citizenship_category": {{ citizenship_enum(addl.get('citizenship_category')) | tojson }},
       "education_level": {{ education_level_norm(m.get('education_level')) | tojson }},
       "language_code": {{ lang_str | tojson }},
       "registration_date": {{ ((m.get('registration_date') or demo.get('registration_date') or '') | string).split('T')[0] | tojson }}
     }
-  ],
+  ]
+{%- endif %}
+{%- if has_contact -%}
+,
   "individual_contact_details": [
     {
       "primary_phone": {{ p0 | tojson }},
@@ -225,70 +318,70 @@
       "contact_person_name": "",
       "preferred_contact_method": "CALL"
     }
-  ],
+  ]
+{%- endif %}
+{%- if has_identifier -%}
+,
   "individual_identifier": [
     {
       "foundational_id": {{ nat | tojson }},
       "rid": ""
     }
-  ],
+  ]
+{%- endif %}
+{%- if has_relationship -%}
+,
   "relationship_to_household_head": [
     {
       "relationship_to_head": {{ rel_to_head(addl.get('relationship_to_head')) | tojson }},
-      "dependency_indicator": false,
+      "dependency_indicator": {% if addl.get('dependency_indicator') is sameas true or addl.get('dependency_indicator') == 1 or ((addl.get('dependency_indicator') | string | lower) == 'true') %}true{% else %}false{% endif %},
       "residency_status": {{ residency_enum(addl.get('residency_status')) | tojson }}
     }
-  ],
-  "individual_location_details": [
-    {
-      "address_line_1": "",
-      "address_line_2": "",
-      "postal_code": "",
-      "geo_lowest_level_value_id": ""
-    }
-  ],
-  "computation_scores": [],
+  ]
+{%- endif %}
+{%- if has_livelihood -%}
+,
   "livelihood_and_employment": [
     {
       "primary_livelihood": {% if primary_liv %}{{ primary_liv | tojson }}{% else %}null{% endif %},
       "secondary_livelihood": {% if secondary_liv %}{{ secondary_liv | tojson }}{% else %}null{% endif %},
       "employment_status": {% if emp %}{{ emp | tojson }}{% else %}null{% endif %},
       "occupation": {{ occ | tojson }},
-      "income_level": {{ income_level_norm(m.get('income_level')) | tojson }},
-      "coping_strategies_index": null
+      "income_level": {{ inc_il | tojson }},
+      "coping_strategies_index": {% if has_csi %}{{ csi_raw | tojson }}{% else %}null{% endif %}
     }
-  ],
-  "individual_land": [
-    {
-      "land_access": false,
-      "land_size": null,
-      "productive_assets": []
-    }
-  ],
-  "individual_livestock": [],
-  "individual_shocks": [],
+  ]
+{%- endif %}
+{%- if has_vulnerability -%}
+,
   "vulnerability_and_inclusion": [
     {
       "disability_status": {{ dstatus | tojson }},
-      "orphanhood_flag": false,
-      "chronic_illness_flag": false,
+      "orphanhood_flag": {{ (m.get('orphanhood_flag') in [true, 1, '1', 'true', 'True', 'TRUE']) | tojson }},
+      "chronic_illness_flag": {{ (m.get('chronic_illness_flag') in [true, 1, '1', 'true', 'True', 'TRUE']) | tojson }},
       "displacement_status": {% if dsp %}{{ dsp | tojson }}{% else %}null{% endif %},
       "pastoralist_classification": {% if pst %}{{ pst | tojson }}{% else %}null{% endif %},
-      "high_mobility_indicator": false,
-      "plw_status": false
+      "high_mobility_indicator": {{ (m.get('high_mobility_indicator') in [true, 1, '1', 'true', 'True', 'TRUE']) | tojson }},
+      "plw_status": {{ (m.get('plw_status') in [true, 1, '1', 'true', 'True', 'TRUE']) | tojson }}
     }
-  ],
+  ]
+{%- endif %}
+{%- if has_disabilities -%}
+,
   "individual_disabilities": [
 {%- if dis_rows is iterable and dis_rows is not string -%}
+  {%- set dis_emit = namespace(first=true) -%}
   {%- for row in dis_rows -%}
     {%- if row is mapping -%}
+    {%- if not dis_emit.first -%},{%- endif -%}
+    {%- set dis_emit.first = false -%}
     {
       "disability_domain": {{ domain_from_dci(row.get('functional_limitation_type')) | tojson }},
       "disability_severity": {{ severity_from_dci(row.get('functional_limitations_level')) | tojson }}
-    }{% if not loop.last %},{% endif %}
+    }
     {%- endif -%}
   {%- endfor -%}
 {%- endif -%}
-  ],
-  "individual_program": []
+  ]
+{%- endif %}
 }
