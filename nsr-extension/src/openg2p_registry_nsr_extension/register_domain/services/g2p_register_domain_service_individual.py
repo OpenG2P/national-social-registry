@@ -1,7 +1,10 @@
 import logging
+from datetime import date
 
 from openg2p_registry_core.schemas import ChangeRequestRequestPayload
+from openg2p_registry_core.models import G2PRegisterChangeRequest
 from openg2p_registry_core.services import G2PRegisterDomainService
+from sqlalchemy.ext.asyncio import AsyncSession
 
 _logger = logging.getLogger("g2p-register-domain-service")
 
@@ -74,3 +77,57 @@ class G2PRegisterDomainServiceIndividual(G2PRegisterDomainService):
         )
 
         return " ".join(record_name).strip()
+
+    async def post_ingest(self, register_id: str, register_row, session: AsyncSession):
+        from ..models.household import G2PRegisterHousehold
+
+        link_internal_record_id = getattr(register_row, "link_internal_record_id", None)
+        if not link_internal_record_id:
+            return
+
+        household = await session.get(G2PRegisterHousehold, link_internal_record_id)
+        if not household:
+            return
+
+        birth_date = getattr(register_row, "birth_date", None)
+        if birth_date:
+            age = self._calculate_age(birth_date)
+            if age is not None and age < 5:
+                household.size_children_u5 = (household.size_children_u5 or 0) + 1
+
+    async def post_approve(self, change_request: G2PRegisterChangeRequest, session: AsyncSession):
+        from openg2p_registry_core.models import G2PRegisterChangeRequestPayload
+        from ..models.household import G2PRegisterHousehold
+        from ..models.individual import G2PRegisterIndividual
+
+        payload_obj = await session.get(G2PRegisterChangeRequestPayload, change_request.change_request_id)
+        if not payload_obj or not payload_obj.change_payload:
+            return
+
+        for record in payload_obj.change_payload:
+            record_status = record.get("record_status")
+            record_status_reason = record.get("record_status_reason")
+
+            if record_status == "INACTIVE" and record_status_reason == "Death":
+
+                individual = await session.get(G2PRegisterIndividual, change_request.internal_record_id)
+                if not individual or not individual.link_internal_record_id:
+                    continue
+
+                household = await session.get(G2PRegisterHousehold, individual.link_internal_record_id)
+                if not household:
+                    continue
+
+                household.husband_dead = True
+                household.husband_dead_date = change_request.approved_at.date()
+
+    @staticmethod
+    def _calculate_age(birth_date):
+        if not birth_date:
+            return None
+        today = date.today()
+        return (
+            today.year
+            - birth_date.year
+            - ((today.month, today.day) < (birth_date.month, birth_date.day))
+        )
