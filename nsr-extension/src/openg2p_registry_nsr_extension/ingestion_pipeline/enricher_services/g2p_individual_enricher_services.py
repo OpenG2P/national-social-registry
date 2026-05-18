@@ -1,8 +1,11 @@
 import logging
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from openg2p_registry_core.interfaces import G2PPayloadEnricherInterface
+from sqlalchemy import select
 from sqlalchemy.orm import Session
+
+from ...register_domain.models import G2PRegisterIndividual
 
 _logger = logging.getLogger('g2p-payload-enricher-service')
 
@@ -17,6 +20,35 @@ def _merge_additional_attributes(raw: Any) -> Dict[str, Any]:
             if isinstance(item, dict):
                 merged.update(item)
     return merged
+
+
+def _resolve_parent_link_internal_record_id(vc: Dict[str, Any], session: Session) -> Optional[str]:
+    jwt_payload = (vc.get('jwt') or {}).get('payload') or {}
+    parents_data = jwt_payload.get('parents')
+    if isinstance(parents_data, dict):
+        parents_data = [parents_data]
+    elif not isinstance(parents_data, list):
+        parents_data = []
+
+    for parent in parents_data:
+        if not isinstance(parent, dict):
+            continue
+        identifier_value = parent.get('identifier')
+        if not identifier_value:
+            continue
+        parent_individual = session.execute(
+            select(G2PRegisterIndividual).where(
+                G2PRegisterIndividual.foundational_id == str(identifier_value)
+            )
+        ).scalar_one_or_none()
+        if parent_individual and parent_individual.link_internal_record_id:
+            _logger.info(
+                'G2PCrvsVCIndividualCreateEnricherService: parent match foundational_id=%s link_internal_record_id=%s',
+                identifier_value,
+                parent_individual.link_internal_record_id,
+            )
+            return parent_individual.link_internal_record_id
+    return None
 
 
 # DCI Payload Enrichers
@@ -78,3 +110,19 @@ class G2PUndpIndividualDeleteEnricherService(G2PPayloadEnricherInterface):
     def enrich(self, data: Dict, session: Session) -> Dict:
         _logger.info("Processing G2PUndpIndividualDeleteEnricherService")
         return data
+
+
+class G2PCrvsVCIndividualCreateEnricherService(G2PPayloadEnricherInterface):
+    """Resolve parent household link only; VC shape is unchanged — ``crvsvc_to_nsr_individual`` performs field mapping."""
+
+    def enrich(self, data: Dict, session: Session) -> Dict:
+        _logger.info("Processing G2PCrvsVCIndividualCreateEnricherService")
+        if not isinstance(data, dict):
+            return data
+
+        out = dict(data)
+        parent_link = _resolve_parent_link_internal_record_id(data, session)
+        if parent_link:
+            out['link_internal_record_id'] = parent_link
+
+        return out
