@@ -1,22 +1,4 @@
-INSERT INTO "public"."g2p_register_individual_livestock" (
-  "livestock_species","livestock_counts",
-  "internal_record_id","functional_record_id","link_internal_record_id","link_foundational_id",
-  "record_name","record_image_storage_id","created_by","created_at","last_approved_at",
-  "last_approved_by","search_text","record_status","record_status_reason"
-) VALUES
--- Sam Hayes pastoralist profile (matches household asset livestock theme)
-('GOATS','BAND_6_10',
- '63000000-0000-4000-8000-000000000001','LST-NSR-0001','20000000-0000-4000-8000-000000000013',NULL,
- 'Goats BAND_6_10',NULL,'seeder','2026-04-01 00:00:00','2026-04-01 00:00:00','seeder',
- 'LST-NSR-0001 GOATS BAND_6_10','ACTIVE',NULL),
-
-('CATTLE','BAND_1_5',
- '63000000-0000-4000-8000-000000000002','LST-NSR-0002','20000000-0000-4000-8000-000000000013',NULL,
- 'Cattle BAND_1_5',NULL,'seeder','2026-04-01 00:00:00','2026-04-01 00:00:00','seeder',
- 'LST-NSR-0002 CATTLE','ACTIVE',NULL),
-
--- Morgan Cole small backyard poultry (HH-NSR-0002)
-('POULTRY','BAND_1_5',
- '63000000-0000-4000-8000-000000000003','LST-NSR-0003','20000000-0000-4000-8000-000000000004',NULL,
- 'Poultry backyard',NULL,'seeder','2026-04-01 00:00:00','2026-04-01 00:00:00','seeder',
- 'LST-NSR-0003 POULTRY','ACTIVE',NULL);
+INSERT INTO "public"."g2p_register_individual_livestock" ("internal_record_id","functional_record_id","link_internal_record_id","link_foundational_id","record_name","record_image_storage_id","created_by","created_at","last_approved_at","last_approved_by","search_text","record_status","record_status_reason","livestock_species","livestock_counts") VALUES 
+('63000000-0000-4000-8000-000000000001','LST-NSR-0001','20000000-0000-4000-8000-000000000013',NULL,'Goats BAND_6_10',NULL,'seeder','2026-04-01 00:00:00','2026-04-01 00:00:00','seeder','LST-NSR-0001 GOATS BAND_6_10','ACTIVE',NULL,'GOATS','BAND_6_10'),
+('63000000-0000-4000-8000-000000000002','LST-NSR-0002','20000000-0000-4000-8000-000000000013',NULL,'Cattle BAND_1_5',NULL,'seeder','2026-04-01 00:00:00','2026-04-01 00:00:00','seeder','LST-NSR-0002 CATTLE','ACTIVE',NULL,'CATTLE','BAND_1_5'),
+('63000000-0000-4000-8000-000000000003','LST-NSR-0003','20000000-0000-4000-8000-000000000004',NULL,'Poultry backyard',NULL,'seeder','2026-04-01 00:00:00','2026-04-01 00:00:00','seeder','LST-NSR-0003 POULTRY','ACTIVE',NULL,'POULTRY','BAND_1_5');

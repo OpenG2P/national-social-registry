@@ -1,4 +1,18 @@
-INSERT INTO "public"."g2p_registry_documents" ("document_id","document_store_id","document_label","filename") VALUES
-('d0000000-0000-4000-8000-000000000001','b4c8f1a2-903d-4e6c-8bdf-2a9140c73e01','jinja-template','temp.json.j2');
-
--- `document_store_id` matches `data_models.response_template_file_id` for DM1 (MinIO object key convention).
+INSERT INTO "public"."g2p_registry_documents" ("document_id","document_store_id","document_label","filename") VALUES 
+('56619678-0cad-4eb1-924e-6e74fb20291f','0fc038dcce424ddfbeede3cea781be6c','jinja-template','dci_commons_response.json.j2'),
+('77767c21-3087-40f2-8aaf-f00fccee8f35','3d3b485d84e342a59de3d911393c51a7','jinja-template','nsr_individual_to_dci.json.j2'),
+('605c5e49-9edc-453c-bb72-380e14a6317f','0da112c7fa0243278f26d9e8e2082433','jinja-template','nsr_individual_to_dci.json.j2'),
+('81386635-bc0e-45b5-a331-0611495fe40a','58a2b8e1473d4fb2982c0159b80f9beb','jinja-template','dci_to_nsr_individual.json.j2'),
+('f5ac7812-3ab7-4730-af33-6bf2692df5ce','1c7c89fe12df400f927524a8736da214','jinja-template','dci_commons_response.json.j2'),
+('cc8cdbd3-77c2-4da9-8a77-552912592268','c43795d4b03746829784af9ffe887704','jinja-template','dci_to_nsr_individual.json.j2'),
+('dd0a1e2f-8e42-447c-a06d-ef5bdb76060b','24abcf3d63f546d2bcf47d5bdda432f2','jinja-template','dci_to_nsr_individual.json.j2'),
+('5456a922-8f3d-42e2-be2b-4614b0852ba1','4253566b0da54c0cafb1a185915ace1a','jinja-template','dci_to_nsr_individual.json.j2'),
+('3f89af06-0089-45a7-ad05-b00ed1cb489c','595443d228594b8b8972d4f6d8b3689d','jinja-template','dci_to_nsr_individual.json.j2'),
+('ee60fadd-1a0c-4b65-8504-717ac8a23470','e6a9d1d8ae0e4b9fb390c354b09d8e35','jinja-template','dci_to_nsr_individual.json.j2'),
+('965e2abf-6a74-4de5-8863-7e08aa3400eb','e898b605cfca446fb71bf00277788990','jinja-template','dci_to_nsr_individual.json.j2'),
+('ef55aa4b-b158-46c5-8557-3be918f12f9c','e33a349fce1c4d159c70c97da8c0f44f','jinja-template','dci_to_nsr_individual.json.j2'),
+('7547ea14-afae-48fa-8eb7-1cba2a7b7672','4a8f0be86e2d47459ab3654034196f37','jinja-template','crvsvc_to_nsr_individual.json.j2'),
+('6a170332-991d-4af9-8276-7ee9c0adf1ec','9f7a6ef49d9f4d3f8b54f3aeac6bba70','jinja-template','dci_to_nsr_individual.json.j2'),
+('c76e1659-3bdb-450a-bb55-191021898262','75c9d10ac4654e48bb10d84c0f50362c','jinja-template','crvsvc_to_nsr_individual.json.j2'),
+('41ee7c09-d6de-4f28-bfa0-bcb7e46c6d5f','f8caeb1d84ad4cc0be56ab96ff509431','jinja-template','crvsvc_to_nsr_individual.json.j2'),
+('8aaf99e3-a98e-4f13-9197-ed6bea42f1ec','095b602e21ab491892a94bc0f7d8cd93','jinja-template','crvsvc_to_nsr_individual.json.j2');

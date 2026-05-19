@@ -1,69 +1,26 @@
--- Intake UI: ordered sections on each form's single tab (`section_order` = flow order).
-INSERT INTO public.g2p_intake_form_ui_tab_sections (
-    tab_section_id,
-    tab_id,
-    section_id,
-    section_order
-)
-VALUES
-    (
-        'd0000000-0000-4000-8000-000000000011',
-        'nsr_form_tab_household_intake',
-        'hh_composition_headship',
-        1
-    ),
-    (
-        'd0000000-0000-4000-8000-000000000014',
-        'nsr_form_tab_household_intake',
-        'hh_location_details',
-        2
-    ),
-    (
-        'd0000000-0000-4000-8000-000000000012',
-        'nsr_form_tab_household_intake',
-        'hh_dwelling_services',
-        3
-    ),
-
-    (
-        'd0000000-0000-4000-8000-000000000021',
-        'nsr_form_tab_individual_intake',
-        'in_demographic_details',
-        1
-    ),
-    (
-        'd0000000-0000-4000-8000-000000000024',
-        'nsr_form_tab_individual_intake',
-        'in_contact_details',
-        2
-    ),
-    (
-        'd0000000-0000-4000-8000-000000000025',
-        'nsr_form_tab_individual_intake',
-        'in_identifier',
-        3
-    ),
-    (
-        'd0000000-0000-4000-8000-000000000026',
-        'nsr_form_tab_individual_intake',
-        'in_relationship_to_head',
-        4
-    ),
-    (
-        'd0000000-0000-4000-8000-000000000027',
-        'nsr_form_tab_individual_intake',
-        'in_location_details',
-        5
-    ),
-    (
-        'd0000000-0000-4000-8000-000000000022',
-        'nsr_form_tab_individual_intake',
-        'in_vulnerability_inclusion',
-        6
-    ),
-    (
-        'd0000000-0000-4000-8000-000000000023',
-        'nsr_form_tab_individual_intake',
-        'in_livelihood_employment',
-        7
-    );
+INSERT INTO "public"."g2p_intake_form_ui_tab_sections" ("tab_section_id","tab_id","section_id","section_order") VALUES 
+('78f15c94-2d9d-4f5f-9913-477a3e9339b2','nsr_form_tab_individual_intake','in_header_info',2),
+('99a993b3-9460-449e-9da8-031c09ee5586','nsr_form_tab_individual_intake','in_contact_details',3),
+('c8e45540-6704-4848-96bc-b50ce008b0d4','nsr_form_tab_individual_intake','in_demographic_details',4),
+('0d79184a-f8a9-4de1-a9c1-03f2f5aeb894','nsr_form_tab_individual_intake','in_table_disabilities',5),
+('92465546-25a1-45c8-a0e5-6a3c4e60c818','nsr_form_tab_individual_intake','d1e81461-ee90-483f-8cf2-19028657bca1',6),
+('fe136ca1-b77a-4dc2-89dc-ec3e409bb931','nsr_form_tab_individual_intake','b47ae24b-340a-4974-a90a-655a3a642b13',7),
+('d7e6058e-3c15-44f1-81ff-a455fcb51598','nsr_form_tab_individual_intake','6d5285d3-fa8d-4753-87cd-822bb2ce7658',8),
+('82276bef-b20f-480d-9235-10fab14281cd','nsr_form_tab_individual_intake','in_identifier',9),
+('a3bc266f-7483-4e4b-9a5a-1c57cc102022','nsr_form_tab_individual_intake','in_table_land',10),
+('9b6e1d20-428f-435c-af10-fa9240114586','nsr_form_tab_individual_intake','in_table_livestock',11),
+('6a8ed231-d6b8-439b-a91e-06a777bee812','nsr_form_tab_individual_intake','in_location_details',12),
+('d84ee82c-9129-4c2a-b719-7ee3675ca83d','nsr_form_tab_individual_intake','in_table_program_enrolments',13),
+('db30b024-af5a-48a0-bcf1-51b9de4cc9c6','nsr_form_tab_individual_intake','in_table_shocks',14),
+('842381f2-cbd4-4128-b269-1d085c2db572','nsr_form_tab_individual_intake','in_livelihood_employment',15),
+('f8bd2e73-7358-48b4-b81b-330936d5ae0d','nsr_form_tab_individual_intake','in_relationship_to_head',16),
+('f44d85f3-800d-4a33-b68b-fa51b02650b5','nsr_form_tab_individual_intake','in_vulnerability_inclusion',17),
+('07e72227-de88-4aab-a5d3-1fb515c0e696','nsr_form_tab_household_intake','hh_composition_headship',1),
+('bb939dca-a7be-409e-b8e3-9ee05abf3905','nsr_form_tab_household_intake','hh_dwelling_services',2),
+('32e31343-525a-4a34-b6c1-aaeea9ec7138','nsr_form_tab_household_intake','hh_table_assets',4),
+('da516474-c65a-4b17-99eb-606c80c1e671','nsr_form_tab_household_intake','hh_header_info',5),
+('b7ecd984-5c54-449a-a37c-65fb880c9dcf','nsr_form_tab_household_intake','hh_table_housing_services',6),
+('6fb0fdf0-476f-4640-a297-20ecf395b093','nsr_form_tab_household_intake','hh_location_details',7),
+('4d197087-c86c-489d-b7ce-18287892ac86','nsr_form_tab_household_intake','hh_members',8),
+('7b0fba3e-97ef-42c0-a9bc-50623c46c4cf','nsr_form_tab_household_intake','hh_table_program_enrolments',9),
+('b6493ee8-27a0-4ee3-9420-cce28e1bb4b1','nsr_form_tab_household_intake','hh_roster',10);
