@@ -22,8 +22,20 @@ def _merge_additional_attributes(raw: Any) -> Dict[str, Any]:
     return merged
 
 
-def _resolve_parent_link_internal_record_id(vc: Dict[str, Any], session: Session) -> Optional[str]:
-    jwt_payload = (vc.get('jwt') or {}).get('payload') or {}
+def _normalize_crvs_envelope(data: Dict[str, Any]) -> Dict[str, Any]:
+    """Accept staff/partner flat body ``{jwt, disclosures, kbJwt}`` or legacy ``{vc: {...}, vcStatus}``."""
+    if not isinstance(data, dict):
+        return {}
+    legacy_vc = data.get('vc')
+    if isinstance(legacy_vc, dict):
+        return legacy_vc
+    if isinstance(data.get('jwt'), dict):
+        return data
+    return data
+
+
+def _resolve_parent_link_internal_record_id(envelope: Dict[str, Any], session: Session) -> Optional[str]:
+    jwt_payload = (envelope.get('jwt') or {}).get('payload') or {}
     parents_data = jwt_payload.get('parents')
     if isinstance(parents_data, dict):
         parents_data = [parents_data]
@@ -113,15 +125,21 @@ class G2PUndpIndividualDeleteEnricherService(G2PPayloadEnricherInterface):
 
 
 class G2PCrvsVCIndividualCreateEnricherService(G2PPayloadEnricherInterface):
-    """Resolve parent household link only; VC shape is unchanged — ``crvsvc_to_nsr_individual`` performs field mapping."""
+    """Resolve parent household link on CRVS SD-JWT ingest body.
+
+    Expects business payload ``$.body`` = ``{jwt, disclosures, kbJwt}`` (flat POST body).
+    Legacy wrapped payloads ``{vc: {jwt, ...}, vcStatus}`` are normalized before lookup.
+    Field mapping is performed by ``crvsvc_to_nsr_individual.json.j2``.
+    """
 
     def enrich(self, data: Dict, session: Session) -> Dict:
         _logger.info("Processing G2PCrvsVCIndividualCreateEnricherService")
         if not isinstance(data, dict):
             return data
 
-        out = dict(data)
-        parent_link = _resolve_parent_link_internal_record_id(data, session)
+        envelope = _normalize_crvs_envelope(data)
+        out = dict(envelope)
+        parent_link = _resolve_parent_link_internal_record_id(envelope, session)
         if parent_link:
             out['link_internal_record_id'] = parent_link
 
