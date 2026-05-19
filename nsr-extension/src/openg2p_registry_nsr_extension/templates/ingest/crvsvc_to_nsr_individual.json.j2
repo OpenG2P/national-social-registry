@@ -142,6 +142,38 @@
   {%- endif -%}
 {%- endif -%}
 {%- endmacro -%}
+{# Sparse JSON: omit keys when value is absent, empty string, empty list, or null #}
+{%- macro emit_str(oj, key, val) -%}
+{%- if val is not none and val is not undefined and ((val | string) | trim) != '' -%}
+{%- if not oj.first -%},{%- endif -%}
+"{{ key }}": {{ (val | string | trim) | tojson }}
+{%- set oj.first = false -%}
+{%- endif -%}
+{%- endmacro -%}
+{%- macro emit_json(oj, key, val) -%}
+{%- if val is none or val is undefined -%}
+{%- elif val is string and (val | trim) == '' -%}
+{%- elif val is iterable and val is not string and (val | list | length) == 0 -%}
+{%- else -%}
+{%- if not oj.first -%},{%- endif -%}
+"{{ key }}": {{ val | tojson }}
+{%- set oj.first = false -%}
+{%- endif -%}
+{%- endmacro -%}
+{%- macro emit_mapping(oj, key, val) -%}
+{%- if val is mapping and (val | length) > 0 -%}
+{%- if not oj.first -%},{%- endif -%}
+"{{ key }}": {{ val | tojson }}
+{%- set oj.first = false -%}
+{%- endif -%}
+{%- endmacro -%}
+{%- macro emit_num(oj, key, val) -%}
+{%- if val is not none and val is not undefined and ((val | string) | trim) != '' -%}
+{%- if not oj.first -%},{%- endif -%}
+"{{ key }}": {{ val | tojson }}
+{%- set oj.first = false -%}
+{%- endif -%}
+{%- endmacro -%}
 {%- set raw_exp = expanded if expanded is defined else {} -%}
 {# Ingest body shape: flat ``{jwt, disclosures, kbJwt}`` (staff/partner POST body). Legacy: ``{vc: {jwt, ...}, vcStatus}``. #}
 {%- if raw_exp.get('vc') is mapping -%}
@@ -217,8 +249,8 @@
 {%- else -%}
   {%- set m = raw_exp -%}
 {%- endif -%}
-{# CRVS: parent household link from enricher (optional) #}
-{%- set link_ili = m.get('link_internal_record_id') -%}
+{# CRVS: parent household link from enricher root field (optional) #}
+{%- set link_ili = m.get('link_internal_record_id') or raw_exp.get('link_internal_record_id') -%}
 {%- set demo = m.get('demographic_info') if m.get('demographic_info') is mapping else {} -%}
 {# demographic_info may be absent (e.g. CRVS Person): use flat name/sex/identifier on reg_record #}
 {%- set name = demo.get('name', {}) if demo is mapping else {} -%}
@@ -459,14 +491,15 @@
   {%- set ej.first = false -%}
   "header_info": [
     {
-      "record_status": {{ hdr_record_status | tojson }},
-{%- if has_death %}
-      "record_status_reason": "Death",
-{%- endif %}
-      "record_name": {{ rec_name | tojson }}
-      {%- if link_ili is not none and ((link_ili | string | trim) | length > 0) -%}
-      ,"link_internal_record_id": {{ link_ili | tojson }}
-      {%- endif %}
+{%- set hj = namespace(first=true) -%}
+{{ emit_json(hj, 'record_status', hdr_record_status) }}
+{%- if has_death -%}
+{%- if not hj.first -%},{%- endif -%}
+"record_status_reason": "Death"
+{%- set hj.first = false -%}
+{%- endif -%}
+{{ emit_str(hj, 'record_name', rec_name) }}
+{{ emit_str(hj, 'link_internal_record_id', link_ili) }}
     }
   ]
 {%- endif %}
@@ -475,10 +508,11 @@
   {%- set ej.first = false -%}
   "individual_contact_details": [
     {
-      "primary_phone": {{ p0 | tojson }},
-      "alternate_phone": {{ p1 | tojson }},
-      "contact_person_name": {{ (addl.get('contact_person_name') or '') | string | tojson }},
-      "preferred_contact_method": {{ ((addl.get('preferred_contact_method') or 'CALL') | string) | tojson }}
+{%- set cj = namespace(first=true) -%}
+{{ emit_str(cj, 'primary_phone', p0) }}
+{{ emit_str(cj, 'alternate_phone', p1) }}
+{{ emit_str(cj, 'contact_person_name', addl.get('contact_person_name')) }}
+{{ emit_str(cj, 'preferred_contact_method', addl.get('preferred_contact_method')) }}
     }
   ]
 {%- endif %}
@@ -487,17 +521,36 @@
   {%- set ej.first = false -%}
   "individual_demographic_details": [
     {
-      "first_name": {{ (name.get('given_name') or name.get('first_name') or '') | tojson }},
-      "middle_name": {{ (name.get('second_name') or name.get('middle_name') or '') | tojson }},
-      "last_name": {{ (name.get('surname') or name.get('last_name') or '') | tojson }},
-      "alias_names": [],
-      "birth_date": {{ ((birth_src or '') | string).split('T')[0] | tojson }},
-      "gender": {{ gender_enum(sex_src) | tojson }},
-      "marital_status": {{ marital_enum(m.get('marital_status')) | tojson }},
-      "citizenship_category": {{ citizenship_enum(addl.get('citizenship_category')) | tojson }},
-      "education_level": {{ education_level_norm(m.get('education_level')) | tojson }},
-      "language_code": {{ lang_str | tojson }},
-      "registration_date": {{ ((m.get('registration_date') or demo.get('registration_date') or '') | string).split('T')[0] | tojson }}
+{%- set dj = namespace(first=true) -%}
+{%- set fn = (name.get('given_name') or name.get('first_name') or '') | string | trim -%}
+{%- set mn = (name.get('second_name') or name.get('middle_name') or '') | string | trim -%}
+{%- set ln = (name.get('surname') or name.get('last_name') or '') | string | trim -%}
+{%- set bd = ((birth_src or '') | string).split('T')[0] | trim -%}
+{%- set lang_trim = lang_str | string | trim -%}
+{%- set reg_dt = ((m.get('registration_date') or demo.get('registration_date') or '') | string).split('T')[0] | trim -%}
+{%- set edu = education_level_norm(m.get('education_level')) | string | trim -%}
+{%- set cit_src = addl.get('citizenship_category') -%}
+{{ emit_str(dj, 'first_name', fn) }}
+{{ emit_str(dj, 'middle_name', mn) }}
+{{ emit_str(dj, 'last_name', ln) }}
+{{ emit_str(dj, 'full_name', rec_name) }}
+{{ emit_str(dj, 'birth_date', bd) }}
+{%- if sex_src is not none and ((sex_src | string) | trim) != '' -%}
+{%- if not dj.first -%},{%- endif -%}
+"gender": {{ gender_enum(sex_src) | tojson }}
+{%- set dj.first = false -%}
+{%- endif -%}
+{%- if not dj.first -%},{%- endif -%}
+"marital_status": "SINGLE"
+{%- set dj.first = false -%}
+{%- if cit_src is not none and ((cit_src | string) | trim) != '' -%}
+{%- if not dj.first -%},{%- endif -%}
+"citizenship_category": {{ citizenship_enum(cit_src) | tojson }}
+{%- set dj.first = false -%}
+{%- endif -%}
+{{ emit_str(dj, 'education_level', edu) }}
+{{ emit_str(dj, 'language_code', lang_trim) }}
+{{ emit_str(dj, 'registration_date', reg_dt) }}
     }
   ]
 {%- endif %}
@@ -523,8 +576,9 @@
   {%- set ej.first = false -%}
   "individual_household_info": [
     {
-      "household_head_name": {{ hh_head_name | tojson }},
-      "headship_type": {{ hh_headship_info | tojson }}
+{%- set hhj = namespace(first=true) -%}
+{{ emit_str(hhj, 'household_head_name', hh_head_name) }}
+{{ emit_str(hhj, 'headship_type', hh_headship_info) }}
     }
   ]
 {%- endif %}
@@ -533,13 +587,42 @@
   {%- set ej.first = false -%}
   "individual_household_roster": [
     {
-      "household_size_total": {% if hh_roster_total is not none and (hh_roster_total | string | trim) != '' %}{{ hh_roster_total | int | tojson }}{% else %}null{% endif %},
-      "household_size_adults": {% if hh_roster_adults is not none and (hh_roster_adults | string | trim) != '' %}{{ hh_roster_adults | int | tojson }}{% else %}null{% endif %},
-      "household_size_children_u5": {% if hh_roster_u5 is not none and (hh_roster_u5 | string | trim) != '' %}{{ hh_roster_u5 | int | tojson }}{% else %}null{% endif %},
-      "household_size_school_age": {% if hh_roster_school is not none and (hh_roster_school | string | trim) != '' %}{{ hh_roster_school | int | tojson }}{% else %}null{% endif %},
-      "household_size_elderly": {% if hh_roster_elderly is not none and (hh_roster_elderly | string | trim) != '' %}{{ hh_roster_elderly | int | tojson }}{% else %}null{% endif %},
-      "elderly_member_present": {% if hh_elderly_pres is sameas true or hh_elderly_pres == 1 or hh_elderly_pres == '1' or ((hh_elderly_pres | string | lower) == 'true') %}true{% elif hh_elderly_pres is sameas false or hh_elderly_pres == 0 or hh_elderly_pres == '0' or ((hh_elderly_pres | string | lower) == 'false') %}false{% else %}false{% endif %},
-      "headship_type": {{ hh_roster_headship | tojson }}
+{%- set hrj = namespace(first=true) -%}
+{%- if hh_roster_total is not none and (hh_roster_total | string | trim) != '' -%}
+{%- if not hrj.first -%},{%- endif -%}
+"household_size_total": {{ hh_roster_total | int | tojson }}
+{%- set hrj.first = false -%}
+{%- endif -%}
+{%- if hh_roster_adults is not none and (hh_roster_adults | string | trim) != '' -%}
+{%- if not hrj.first -%},{%- endif -%}
+"household_size_adults": {{ hh_roster_adults | int | tojson }}
+{%- set hrj.first = false -%}
+{%- endif -%}
+{%- if hh_roster_u5 is not none and (hh_roster_u5 | string | trim) != '' -%}
+{%- if not hrj.first -%},{%- endif -%}
+"household_size_children_u5": {{ hh_roster_u5 | int | tojson }}
+{%- set hrj.first = false -%}
+{%- endif -%}
+{%- if hh_roster_school is not none and (hh_roster_school | string | trim) != '' -%}
+{%- if not hrj.first -%},{%- endif -%}
+"household_size_school_age": {{ hh_roster_school | int | tojson }}
+{%- set hrj.first = false -%}
+{%- endif -%}
+{%- if hh_roster_elderly is not none and (hh_roster_elderly | string | trim) != '' -%}
+{%- if not hrj.first -%},{%- endif -%}
+"household_size_elderly": {{ hh_roster_elderly | int | tojson }}
+{%- set hrj.first = false -%}
+{%- endif -%}
+{%- if hh_elderly_pres is sameas true or hh_elderly_pres == 1 or hh_elderly_pres == '1' or ((hh_elderly_pres | string | lower) == 'true') -%}
+{%- if not hrj.first -%},{%- endif -%}
+"elderly_member_present": true
+{%- set hrj.first = false -%}
+{%- elif hh_elderly_pres is sameas false or hh_elderly_pres == 0 or hh_elderly_pres == '0' or ((hh_elderly_pres | string | lower) == 'false') -%}
+{%- if not hrj.first -%},{%- endif -%}
+"elderly_member_present": false
+{%- set hrj.first = false -%}
+{%- endif -%}
+{{ emit_str(hrj, 'headship_type', hh_roster_headship) }}
     }
   ]
 {%- endif %}
@@ -548,18 +631,31 @@
   {%- set ej.first = false -%}
   "individual_houshold_dweling_services": [
     {
-      "dwelling_type": {{ h_dw | tojson }},
-      "roof_material": {{ h_rf | tojson }},
-      "wall_material": {{ h_wm | tojson }},
-      "floor_material": {{ h_fm | tojson }},
-      "tenure_status": {{ h_ts | tojson }},
-      "water_source_type": {{ h_ws | tojson }},
-      "water_distance_minutes": {% if h_wd is not none and (h_wd | string | trim) != '' %}{{ h_wd | int | tojson }}{% else %}null{% endif %},
-      "sanitation_type": {{ h_sn | tojson }},
-      "lighting_source": {{ h_lt | tojson }},
-      "cooking_fuel_type": {{ h_cf | tojson }},
-      "rooms_count": {% if h_rm is not none and (h_rm | string | trim) != '' %}{{ h_rm | int | tojson }}{% else %}null{% endif %},
-      "overcrowding_indicator": {% if h_oc is not none and (h_oc | string | trim) != '' %}{{ h_oc | float | tojson }}{% else %}null{% endif %}
+{%- set dwj = namespace(first=true) -%}
+{{ emit_str(dwj, 'dwelling_type', h_dw) }}
+{{ emit_str(dwj, 'roof_material', h_rf) }}
+{{ emit_str(dwj, 'wall_material', h_wm) }}
+{{ emit_str(dwj, 'floor_material', h_fm) }}
+{{ emit_str(dwj, 'tenure_status', h_ts) }}
+{{ emit_str(dwj, 'water_source_type', h_ws) }}
+{%- if h_wd is not none and (h_wd | string | trim) != '' -%}
+{%- if not dwj.first -%},{%- endif -%}
+"water_distance_minutes": {{ h_wd | int | tojson }}
+{%- set dwj.first = false -%}
+{%- endif -%}
+{{ emit_str(dwj, 'sanitation_type', h_sn) }}
+{{ emit_str(dwj, 'lighting_source', h_lt) }}
+{{ emit_str(dwj, 'cooking_fuel_type', h_cf) }}
+{%- if h_rm is not none and (h_rm | string | trim) != '' -%}
+{%- if not dwj.first -%},{%- endif -%}
+"rooms_count": {{ h_rm | int | tojson }}
+{%- set dwj.first = false -%}
+{%- endif -%}
+{%- if h_oc is not none and (h_oc | string | trim) != '' -%}
+{%- if not dwj.first -%},{%- endif -%}
+"overcrowding_indicator": {{ h_oc | float | tojson }}
+{%- set dwj.first = false -%}
+{%- endif -%}
     }
   ]
 {%- endif %}
@@ -568,8 +664,9 @@
   {%- set ej.first = false -%}
   "individual_identifier": [
     {
-      "foundational_id": {{ nat | tojson }},
-      "rid": {{ rid_val | tojson }}
+{%- set ij = namespace(first=true) -%}
+{{ emit_str(ij, 'foundational_id', nat) }}
+{{ emit_str(ij, 'rid', rid_val) }}
     }
   ]
 {%- endif %}
@@ -578,9 +675,26 @@
   {%- set ej.first = false -%}
   "individual_land": [
     {
-      "land_access": {% if addl.get('land_access') is sameas true or addl.get('land_access') == 1 or addl.get('land_access') == '1' %}true{% elif addl.get('land_access') is sameas false or addl.get('land_access') == 0 %}false{% else %}false{% endif %},
-      "land_size": {% if addl.get('land_size') is not none and (addl.get('land_size') | string | trim) != '' %}{{ addl.get('land_size') | float | tojson }}{% else %}null{% endif %},
-      "productive_assets": {% if pa_nonempty %}{{ pa | list | tojson }}{% else %}[]{% endif %}
+{%- set lj = namespace(first=true) -%}
+{%- if addl.get('land_access') is sameas true or addl.get('land_access') == 1 or addl.get('land_access') == '1' -%}
+{%- if not lj.first -%},{%- endif -%}
+"land_access": true
+{%- set lj.first = false -%}
+{%- elif addl.get('land_access') is sameas false or addl.get('land_access') == 0 or addl.get('land_access') == '0' -%}
+{%- if not lj.first -%},{%- endif -%}
+"land_access": false
+{%- set lj.first = false -%}
+{%- endif -%}
+{%- if addl.get('land_size') is not none and (addl.get('land_size') | string | trim) != '' -%}
+{%- if not lj.first -%},{%- endif -%}
+"land_size": {{ addl.get('land_size') | float | tojson }}
+{%- set lj.first = false -%}
+{%- endif -%}
+{%- if pa_nonempty -%}
+{%- if not lj.first -%},{%- endif -%}
+"productive_assets": {{ pa | list | tojson }}
+{%- set lj.first = false -%}
+{%- endif -%}
     }
   ]
 {%- endif %}
@@ -594,13 +708,30 @@
   {%- set ej.first = false -%}
   "individual_location_details": [
     {
-      "geo_lowest_level_value_id": {{ (addl.get('geo_lowest_level_value_id') or '') | string | tojson }},
-      "geo_code_hierarchy_json": {% if geo_j is mapping %}{{ geo_j | tojson }}{% elif geo_j %}{{ geo_j | string | tojson }}{% else %}null{% endif %},
-      "address_line_1": {{ (addl.get('address_line_1') or '') | string | tojson }},
-      "address_line_2": {{ (addl.get('address_line_2') or '') | string | tojson }},
-      "postal_code": {{ (addl.get('postal_code') or '') | string | tojson }},
-      "latitude": {% if lat_v is not none and (lat_v | string | trim) != '' %}{{ lat_v | float | tojson }}{% else %}null{% endif %},
-      "longitude": {% if lon_v is not none and (lon_v | string | trim) != '' %}{{ lon_v | float | tojson }}{% else %}null{% endif %}
+{%- set locj = namespace(first=true) -%}
+{{ emit_str(locj, 'geo_lowest_level_value_id', addl.get('geo_lowest_level_value_id')) }}
+{%- if geo_j is mapping and (geo_j | length) > 0 -%}
+{%- if not locj.first -%},{%- endif -%}
+"geo_code_hierarchy_json": {{ geo_j | tojson }}
+{%- set locj.first = false -%}
+{%- elif geo_j is string and (geo_j | trim | length) > 0 -%}
+{%- if not locj.first -%},{%- endif -%}
+"geo_code_hierarchy_json": {{ geo_j | trim | tojson }}
+{%- set locj.first = false -%}
+{%- endif -%}
+{{ emit_str(locj, 'address_line_1', addl.get('address_line_1')) }}
+{{ emit_str(locj, 'address_line_2', addl.get('address_line_2')) }}
+{{ emit_str(locj, 'postal_code', addl.get('postal_code')) }}
+{%- if lat_v is not none and (lat_v | string | trim) != '' -%}
+{%- if not locj.first -%},{%- endif -%}
+"latitude": {{ lat_v | float | tojson }}
+{%- set locj.first = false -%}
+{%- endif -%}
+{%- if lon_v is not none and (lon_v | string | trim) != '' -%}
+{%- if not locj.first -%},{%- endif -%}
+"longitude": {{ lon_v | float | tojson }}
+{%- set locj.first = false -%}
+{%- endif -%}
     }
   ]
 {%- endif %}
@@ -619,13 +750,30 @@
   {%- set ej.first = false -%}
   "livelihood_and_employment": [
     {
-      "primary_livelihood": {% if primary_liv %}{{ primary_liv | tojson }}{% else %}null{% endif %},
-      "secondary_livelihood": {% if secondary_liv %}{{ secondary_liv | tojson }}{% else %}null{% endif %},
-      "employment_status": {% if emp %}{{ emp | tojson }}{% else %}null{% endif %},
-      "occupation": {{ occ | tojson }},
-      "income_level": {{ inc_il | tojson }},
-      "coping_strategies_index": {% if has_csi %}{{ csi_raw | tojson }}{% else %}null{% endif %},
-      "mobile_phone_type": {% if mob_phone is not none and (mob_phone | string | trim) != '' %}{{ mob_phone | string | tojson }}{% else %}null{% endif %}
+{%- set lvj = namespace(first=true) -%}
+{%- if primary_liv -%}
+{%- if not lvj.first -%},{%- endif -%}
+"primary_livelihood": {{ primary_liv | tojson }}
+{%- set lvj.first = false -%}
+{%- endif -%}
+{%- if secondary_liv -%}
+{%- if not lvj.first -%},{%- endif -%}
+"secondary_livelihood": {{ secondary_liv | tojson }}
+{%- set lvj.first = false -%}
+{%- endif -%}
+{%- if emp -%}
+{%- if not lvj.first -%},{%- endif -%}
+"employment_status": {{ emp | tojson }}
+{%- set lvj.first = false -%}
+{%- endif -%}
+{{ emit_str(lvj, 'occupation', occ) }}
+{{ emit_str(lvj, 'income_level', inc_il) }}
+{%- if has_csi -%}
+{%- if not lvj.first -%},{%- endif -%}
+"coping_strategies_index": {{ csi_raw | tojson }}
+{%- set lvj.first = false -%}
+{%- endif -%}
+{{ emit_str(lvj, 'mobile_phone_type', mob_phone) }}
     }
   ]
 {%- endif %}
@@ -634,9 +782,22 @@
   {%- set ej.first = false -%}
   "relationship_to_household_head": [
     {
-      "relationship_to_head": {{ rel_to_head(addl.get('relationship_to_head')) | tojson }},
-      "dependency_indicator": {% if dep_true %}true{% else %}false{% endif %},
-      "residency_status": {{ residency_enum(addl.get('residency_status')) | tojson }}
+{%- set rj = namespace(first=true) -%}
+{%- if rel_raw | length > 0 -%}
+{%- if not rj.first -%},{%- endif -%}
+"relationship_to_head": {{ rel_to_head(addl.get('relationship_to_head')) | tojson }}
+{%- set rj.first = false -%}
+{%- endif -%}
+{%- if addl.get('dependency_indicator') is not none -%}
+{%- if not rj.first -%},{%- endif -%}
+"dependency_indicator": {% if dep_true %}true{% else %}false{% endif %}
+{%- set rj.first = false -%}
+{%- endif -%}
+{%- if res_raw | length > 0 -%}
+{%- if not rj.first -%},{%- endif -%}
+"residency_status": {{ residency_enum(addl.get('residency_status')) | tojson }}
+{%- set rj.first = false -%}
+{%- endif -%}
     }
   ]
 {%- endif %}
@@ -645,13 +806,42 @@
   {%- set ej.first = false -%}
   "vulnerability_and_inclusion": [
     {
-      "disability_status": {{ dstatus | tojson }},
-      "orphanhood_flag": {{ (m.get('orphanhood_flag') in [true, 1, '1', 'true', 'True', 'TRUE']) | tojson }},
-      "chronic_illness_flag": {{ (m.get('chronic_illness_flag') in [true, 1, '1', 'true', 'True', 'TRUE']) | tojson }},
-      "displacement_status": {% if dsp %}{{ dsp | tojson }}{% else %}null{% endif %},
-      "pastoralist_classification": {% if pst %}{{ pst | tojson }}{% else %}null{% endif %},
-      "high_mobility_indicator": {{ (m.get('high_mobility_indicator') in [true, 1, '1', 'true', 'True', 'TRUE']) | tojson }},
-      "plw_status": {{ (m.get('plw_status') in [true, 1, '1', 'true', 'True', 'TRUE']) | tojson }}
+{%- set vj = namespace(first=true) -%}
+{%- if dstatus != 'UNKNOWN' -%}
+{%- if not vj.first -%},{%- endif -%}
+"disability_status": {{ dstatus | tojson }}
+{%- set vj.first = false -%}
+{%- endif -%}
+{%- if m.get('orphanhood_flag') is not none -%}
+{%- if not vj.first -%},{%- endif -%}
+"orphanhood_flag": {{ (m.get('orphanhood_flag') in [true, 1, '1', 'true', 'True', 'TRUE']) | tojson }}
+{%- set vj.first = false -%}
+{%- endif -%}
+{%- if m.get('chronic_illness_flag') is not none -%}
+{%- if not vj.first -%},{%- endif -%}
+"chronic_illness_flag": {{ (m.get('chronic_illness_flag') in [true, 1, '1', 'true', 'True', 'TRUE']) | tojson }}
+{%- set vj.first = false -%}
+{%- endif -%}
+{%- if dsp -%}
+{%- if not vj.first -%},{%- endif -%}
+"displacement_status": {{ dsp | tojson }}
+{%- set vj.first = false -%}
+{%- endif -%}
+{%- if pst -%}
+{%- if not vj.first -%},{%- endif -%}
+"pastoralist_classification": {{ pst | tojson }}
+{%- set vj.first = false -%}
+{%- endif -%}
+{%- if m.get('high_mobility_indicator') is not none -%}
+{%- if not vj.first -%},{%- endif -%}
+"high_mobility_indicator": {{ (m.get('high_mobility_indicator') in [true, 1, '1', 'true', 'True', 'TRUE']) | tojson }}
+{%- set vj.first = false -%}
+{%- endif -%}
+{%- if m.get('plw_status') is not none -%}
+{%- if not vj.first -%},{%- endif -%}
+"plw_status": {{ (m.get('plw_status') in [true, 1, '1', 'true', 'True', 'TRUE']) | tojson }}
+{%- set vj.first = false -%}
+{%- endif -%}
     }
   ]
 {%- endif %}
