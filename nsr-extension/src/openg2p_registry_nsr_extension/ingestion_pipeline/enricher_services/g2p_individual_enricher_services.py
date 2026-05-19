@@ -142,5 +142,8 @@ class G2PCrvsVCIndividualCreateEnricherService(G2PPayloadEnricherInterface):
         parent_link = _resolve_parent_link_internal_record_id(envelope, session)
         if parent_link:
             out['link_internal_record_id'] = parent_link
+        else:
+            _logger.warning("No parent link found for CRVS SD-JWT ingest body")
+            raise ValueError("No parent link found for CRVS SD-JWT ingest body")
 
         return out
