@@ -143,7 +143,11 @@
 {%- endif -%}
 {%- endmacro -%}
 {%- set raw_exp = expanded if expanded is defined else {} -%}
-{# Preserve VC envelope (jwt/disclosures/kbJwt); derive DCI-compat ``m`` for shared binding logic below #}
+{# Ingest body shape: flat ``{jwt, disclosures, kbJwt}`` (staff/partner POST body). Legacy: ``{vc: {jwt, ...}, vcStatus}``. #}
+{%- if raw_exp.get('vc') is mapping -%}
+  {%- set raw_exp = raw_exp.get('vc') -%}
+{%- endif -%}
+{# Map SD-JWT envelope → DCI-compat ``m`` for shared section binding below #}
 {%- if raw_exp.get('jwt') is mapping -%}
   {%- set _jwt_wrap = raw_exp.get('jwt') or {} -%}
   {%- set jwtp = (_jwt_wrap.get('payload') if _jwt_wrap.get('payload') is mapping else {}) -%}
