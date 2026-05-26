@@ -12,4 +12,4 @@ git://v1.1.0//https://github.com/openg2p/openg2p-registry-gen2-core#subdirectory
 ./nsr-extension
 
 # Partner API
-git://v1.1.0//https://github.com/openg2p/openg2p-registry-gen2-apis#subdirectory=openg2p-registry-partner-api
+git://develop//https://github.com/openg2p/openg2p-registry-gen2-apis#subdirectory=openg2p-registry-partner-api
