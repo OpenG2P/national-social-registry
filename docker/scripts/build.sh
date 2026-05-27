@@ -67,6 +67,7 @@ DEFAULT_SERVICES=(
   "celery/develop.txt"
   "partner-api/develop.txt"
   "staff-portal-ui/develop.txt"
+  "agent-portal-api/g2p-4929.txt"
 )
 
 # ---------------------------------------------------------------------------
