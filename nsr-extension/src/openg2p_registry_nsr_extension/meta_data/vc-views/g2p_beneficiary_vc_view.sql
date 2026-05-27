@@ -16,11 +16,17 @@
 -- BeneficiaryIdCard — minimal identity credential.
 -- One row per phone number (a person may have several; each maps 1:1 to them),
 -- active records only.
+-- `photo` = the MINIO OBJECT KEY of the registrant's photo (NOT the bytes). The
+-- Agent Portal API fetches the object by this key, thumbnails it for the
+-- claim-169 QR, and places it on the printed card. Adjust the source expression
+-- to wherever your registry stores the photo reference (here: a `photo` document
+-- key on the individual record; map to your actual column/jsonb path).
 CREATE OR REPLACE VIEW public.beneficiary_vc_view AS
 SELECT ph ->> 'number'              AS phone,
        i.functional_record_id       AS "functionalRecordId",
        i.full_name                  AS "fullName",
-       to_char(i.birth_date, 'YYYY-MM-DD') AS "dateOfBirth"
+       to_char(i.birth_date, 'YYYY-MM-DD') AS "dateOfBirth",
+       i.photo                      AS "photoKey"
 FROM   public.g2p_register_individuals i,
        jsonb_array_elements(i.phone_numbers) ph
 WHERE  i.record_status = 'ACTIVE';

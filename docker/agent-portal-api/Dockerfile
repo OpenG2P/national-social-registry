@@ -1,9 +1,9 @@
 FROM python:3.12.11-alpine3.22
 
 # build-deps: compilers for psycopg2 (libpq) + any sdist builds.
-# runtime libs: libpq (psycopg2), plus jpeg/zlib/freetype for Pillow (QR/PDF rendering).
+# runtime libs: libpq (psycopg2); jpeg/zlib/freetype for Pillow; cairo for cairosvg (SVG card → PDF).
 RUN apk add --no-cache --virtual .build-deps gcc libc-dev linux-headers make libffi-dev \
- && apk add --no-cache bash git gettext libpq-dev libmagic jpeg-dev zlib-dev freetype-dev
+ && apk add --no-cache bash git gettext libpq-dev libmagic jpeg-dev zlib-dev freetype-dev cairo
 
 WORKDIR /app
 

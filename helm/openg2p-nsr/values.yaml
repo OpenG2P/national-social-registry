@@ -27,6 +27,16 @@ openg2p-registry:
     # chart — its templates key off per-component hostnames, not this value).
     registryVariant: 'nsr'
 
+    # ── VC issuer (env-level — one issuer/authority per environment) ─────────
+    # Set the real issuer DID for this environment (must match the value used at
+    # Inji Certify install). The signing key alias defaults to Ed25519.
+    vcIssuer:
+      did: 'did:web:REPLACE-WITH-ISSUER-DID-HOST'
+      keyManagerAppId: CERTIFY_VC_SIGN_ED25519
+      keyManagerRefId: ED25519_SIGN
+      signatureAlgo: EdDSA
+      signatureCryptoSuite: Ed25519Signature2020
+
   # ==========================================================================
   # Docker image overrides — one per NSR component.
   # Image names match the images produced by this repo's docker workflows:
@@ -61,6 +71,95 @@ openg2p-registry:
       repository: openg2p/openg2p-nsr-agent-portal-api
       tag: "g2p-4929"
       pullPolicy: Always
+
+    # ── NSR's VC definitions (the concrete spec lives HERE, not in the base) ──
+    # One entry per issuable VC type (add more for ID + socio-economic, etc.).
+    #   • API mapping (config_id, credential_types, view, claim_columns) → Agent Portal API
+    #   • certifyConfig → registered into Certify by the credential-config-register Job
+    # `view` (beneficiary_vc_view) is created by the NSR extension (deploys with models).
+    vcDefinitions:
+      - config_id: OpenG2PBeneficiaryCredential
+        credential_types: ["VerifiableCredential", "OpenG2PBeneficiaryCredential"]
+        view: beneficiary_vc_view
+        claim_columns: ["functionalRecordId", "fullName", "dateOfBirth"]
+        # Photo: view column with the MINIO object key; pushed as `face` for the
+        # claim-169 QR + placed on the card. SVG design template (see svgTemplates).
+        photo_key_column: photoKey
+        face_claim: face
+        qr_claim_path: claim169.qrCode
+        svg_template: beneficiary-card.svg
+        certifyConfig:
+          credentialConfigKeyId: OpenG2PBeneficiaryCredential
+          credentialFormat: ldp_vc
+          credentialTypes: ["VerifiableCredential", "OpenG2PBeneficiaryCredential"]
+          contextURLs: ["https://www.w3.org/2018/credentials/v1"]
+          scope: openg2p_beneficiary_vc_ldp
+          # Velocity VC template as READABLE JSON (the register Job base64-encodes
+          # it for Certify). Inline JSON-LD @context; ${_issuer}/${_holderId}/
+          # ${validFrom}/${validUntil} are filled by Certify; claim fields ← pushed claims.
+          vcTemplateJson: |
+            {
+              "@context": [
+                "https://www.w3.org/2018/credentials/v1",
+                {
+                  "OpenG2PBeneficiaryCredential": "https://openg2p.org/ns#OpenG2PBeneficiaryCredential",
+                  "functionalRecordId": "https://schema.org/identifier",
+                  "fullName": "https://schema.org/name",
+                  "dateOfBirth": "https://schema.org/birthDate"
+                },
+                "https://w3id.org/security/suites/ed25519-2020/v1"
+              ],
+              "issuer": "${_issuer}",
+              "type": ["VerifiableCredential", "OpenG2PBeneficiaryCredential"],
+              "issuanceDate": "${validFrom}",
+              "expirationDate": "${validUntil}",
+              "credentialSubject": {
+                "id": "${_holderId}",
+                "functionalRecordId": "${functionalRecordId}",
+                "fullName": "${fullName}",
+                "dateOfBirth": "${dateOfBirth}",
+                "claim169": { "qrCode": "$claim_169_values[0]" }
+              }
+            }
+          displayOrder: ["functionalRecordId", "fullName", "dateOfBirth"]
+          metaDataDisplay:
+            - name: "OpenG2P Beneficiary Credential"
+              locale: en
+          credentialSubjectDefinition:
+            functionalRecordId: { display: [{ name: "Functional Record ID", locale: en }] }
+            fullName: { display: [{ name: "Full Name", locale: en }] }
+            dateOfBirth: { display: [{ name: "Date of Birth", locale: en }] }
+            # `face` is a pushable claim (the base64 thumbnail) used by the QR
+            # Face entry below — declared here so Certify accepts the push; it is
+            # NOT placed in the VC credentialSubject body (kept out of the template).
+            face: { display: [{ name: "Face", locale: en }] }
+          # One claim-169 QR carrying identity + the face (signed CWT) → $claim_169_values[0].
+          qrSettings:
+            - "Full Name": "${fullName}"
+              "Functional ID": "${functionalRecordId}"
+              "Date Of Birth": "${dateOfBirth}"
+              "Face": { "Data": "${face}", "Data format": "Image", "Data sub format": "JPEG" }
+          qrSignatureAlgo: EdDSA
+
+    # SVG card design(s) — mounted into the agent-portal-api at /app/pdf-templates.
+    # Placeholders {{...}} are filled at render time: claim fields, {{photo}} and
+    # {{qr}} (data-URIs), {{title}}, {{issuerName}}. A designer iterates on this SVG.
+    svgTemplates:
+      beneficiary-card.svg: |
+        <svg xmlns="http://www.w3.org/2000/svg" width="600" height="380" viewBox="0 0 600 380">
+          <rect width="600" height="380" fill="#ffffff" stroke="#0b6e4f" stroke-width="4"/>
+          <text x="24" y="44" font-family="Helvetica" font-size="22" font-weight="bold" fill="#0b6e4f">{{title}}</text>
+          <text x="24" y="66" font-family="Helvetica" font-size="12" fill="#555555">Issued by {{issuerName}}</text>
+          <image x="430" y="84" width="140" height="160" href="{{photo}}"/>
+          <text x="24" y="120" font-family="Helvetica" font-size="13" font-weight="bold">Full Name</text>
+          <text x="24" y="138" font-family="Helvetica" font-size="13">{{fullName}}</text>
+          <text x="24" y="168" font-family="Helvetica" font-size="13" font-weight="bold">Functional ID</text>
+          <text x="24" y="186" font-family="Helvetica" font-size="13">{{functionalRecordId}}</text>
+          <text x="24" y="216" font-family="Helvetica" font-size="13" font-weight="bold">Date of Birth</text>
+          <text x="24" y="234" font-family="Helvetica" font-size="13">{{dateOfBirth}}</text>
+          <image x="24" y="250" width="120" height="120" href="{{qr}}"/>
+          <text x="150" y="372" font-family="Helvetica" font-size="9" fill="#777777">Scan to verify offline</text>
+        </svg>
 
   # The base chart defines TWO Celery deployments (celeryBeatProducer +
   # celeryWorker), not one. Our single `openg2p-nsr-celery` image can run
