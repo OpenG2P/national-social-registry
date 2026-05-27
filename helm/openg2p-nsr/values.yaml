@@ -54,6 +54,14 @@ openg2p-registry:
       tag: "develop"
       pullPolicy: Always
 
+  agentPortalApi:
+    # Base chart defaults this to false — turn it on for NSR.
+    enabled: true
+    image:
+      repository: openg2p/openg2p-nsr-agent-portal-api
+      tag: "g2p-4929"
+      pullPolicy: Always
+
   # The base chart defines TWO Celery deployments (celeryBeatProducer +
   # celeryWorker), not one. Our single `openg2p-nsr-celery` image can run
   # either mode — the base chart's values.yaml already sets the right

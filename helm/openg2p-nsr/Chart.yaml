@@ -11,7 +11,7 @@ type: application
 # branch of the NSR registry repo, so the wrapper version carries the
 # `-develop` pre-release tag. Bump to an SemVer release (e.g. 1.0.0) when
 # cutting a tag branch.
-version: 0.0.0-develop
+version: 0.0.0-g2p4929
 appVersion: "develop"
 
 keywords:
@@ -33,7 +33,7 @@ maintainers:
 # sides drop the `-develop` suffix in lockstep.
 dependencies:
   - name: openg2p-registry
-    version: 4.1.0-develop
+    version: 4.1.0-g2p4929
     repository: https://openg2p.github.io/openg2p-helm
 
 # Rancher catalog branding
