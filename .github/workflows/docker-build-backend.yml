@@ -20,6 +20,7 @@ on:
       # Per-service build context (Dockerfile + spec file)
       - 'docker/staff-portal-api/**'
       - 'docker/partner-api/**'
+      - 'docker/agent-portal-api/**'
       - 'docker/celery/**'
       # Shared build tooling
       - 'docker/scripts/**'
@@ -75,6 +76,7 @@ jobs:
                   {"name": "staff-portal-api", "serviceFile": "docker/staff-portal-api/develop.txt", "dockerfile": "docker/staff-portal-api/Dockerfile"},
                   {"name": "celery",           "serviceFile": "docker/celery/develop.txt",           "dockerfile": "docker/celery/Dockerfile"},
                   {"name": "partner-api",      "serviceFile": "docker/partner-api/develop.txt",      "dockerfile": "docker/partner-api/Dockerfile"},
+                  {"name": "agent-portal-api", "serviceFile": "docker/agent-portal-api/g2p-4929.txt", "dockerfile": "docker/agent-portal-api/Dockerfile"},
               ])
 
           matrix = {"include": matrix_include}
