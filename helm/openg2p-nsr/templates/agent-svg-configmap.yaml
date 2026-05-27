@@ -1,0 +1,22 @@
+{{- /*
+  SVG card design templates for the Agent Portal API, built from real .svg files
+  in this chart's files/pdf-templates/ (designer-owned). The base registry chart
+  mounts this ConfigMap (by name, via agentPortalApi.svgConfigMap) at
+  /app/pdf-templates. One ConfigMap per release; keyed by filename.
+*/ -}}
+{{- $files := .Files.Glob "files/pdf-templates/*.svg" }}
+{{- if $files }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-agent-svg-templates
+  labels:
+    app.kubernetes.io/name: agent-portal-api
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+data:
+{{- range $path, $_ := $files }}
+  {{ base $path }}: |-
+{{ $.Files.Get $path | indent 4 }}
+{{- end }}
+{{- end }}

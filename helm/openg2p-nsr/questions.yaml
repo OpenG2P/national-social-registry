@@ -120,6 +120,23 @@ questions:
     group: General
     default: "true"
 
+  # ── VC Issuance (Agent Portal API → Inji Certify) ─────────────────────────
+  - variable: openg2p-registry.agentPortalApi.enabled
+    description: Install the Agent Portal API (Phase-1 VC issuance — pushes claims to Inji Certify)
+    type: boolean
+    label: Agent Portal API (VC issuance)
+    group: VC Issuance
+    default: "true"
+  - variable: openg2p-registry.global.vcIssuer.did
+    description: >-
+      Issuer DID for issued credentials (env-level, one per environment). MUST
+      match the DID set at Inji Certify install (commons-services global.vcIssuerDid).
+      The register Job stamps it onto each credential_config.
+    type: string
+    label: Issuer DID
+    group: VC Issuance
+    show_if: "openg2p-registry.agentPortalApi.enabled=true"
+
   # -------------------------------------------------------------------------
   # Images — per-component tag overrides. Repositories are set to NSR images
   # in values.yaml; override tag here to pin to a released tag (e.g. 1.0.0)
