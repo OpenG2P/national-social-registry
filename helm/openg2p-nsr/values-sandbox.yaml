@@ -1,0 +1,51 @@
+# ---------------------------------------------------------------------------
+# Sandbox overlay — matches live images in the `nsr` namespace (cluster openg2p).
+# Snapshot source: ../../scripts/NSR_DEPLOYED_VERSIONS.md
+#
+#   export KUBECONFIG=/path/to/openg2p2.yaml
+#   helm upgrade --install registry ./helm/openg2p-nsr \
+#     -f helm/openg2p-nsr/values.yaml \
+#     -f helm/openg2p-nsr/values-sandbox.yaml \
+#     -n nsr
+# ---------------------------------------------------------------------------
+
+openg2p-registry:
+
+  staffPortalApi:
+    image:
+      repository: mkumar02/openg2p-nsr-registry-staff-portal-api
+      tag: "develop-3"
+
+  partnerApi:
+    image:
+      repository: asierneb/openg2p-nsr-registry-partner-api
+      tag: "nsr-fix5"
+
+  staffPortalUi:
+    image:
+      repository: qniranjan01/openg2p-registry-gen2-staff-portal-ui
+      tag: "nsr-demo-2"
+
+  celeryBeatProducer:
+    image:
+      repository: mkumar02/openg2p-nsr-registry-celery
+      tag: "develop-2"
+
+  celeryWorker:
+    image:
+      repository: mkumar02/openg2p-nsr-registry-celery
+      tag: "develop-2"
+
+  # NSR configuration only (meta_data + templates). No demo individuals/households.
+  # Base chart defaults to openg2p-farmer-registry-db-seed — must override here.
+  dbSeed:
+    loadSampleData: false
+    image:
+      repository: openg2p/openg2p-nsr-db-seed
+      tag: "develop"
+      pullPolicy: Always
+
+  idgenerator:
+    image:
+      repository: openg2p/openg2p-id-generator
+      tag: "1.0.0"

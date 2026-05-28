@@ -1,10 +1,13 @@
-INSERT INTO "public"."g2p_register_ui_tabs" ("tab_id","register_id","tab_label","tab_order","is_active") VALUES 
-('household_info_tab','a0000000-0000-4000-8000-000000000002','household_info_tab',1,'TRUE'),
-('household_membership_tab','a0000000-0000-4000-8000-000000000002','household_membership_tab',2,'TRUE'),
-('housing_services_tab','a0000000-0000-4000-8000-000000000002','housing_services_tab',3,'TRUE'),
-('household_programs','a0000000-0000-4000-8000-000000000002','household_programs',4,'TRUE'),
-('individual_info_tab','a0000000-0000-4000-8000-000000000001','individual_info',1,'TRUE'),
-('individual_livelihood_tab','a0000000-0000-4000-8000-000000000001','livelihood',2,'TRUE'),
-('individual_vulnerability_tab','a0000000-0000-4000-8000-000000000001','vulnerability',5,'TRUE'),
-('individual_programs_tab','a0000000-0000-4000-8000-000000000001','programs',9,'TRUE'),
-('7bf586e3-ba57-45d0-9093-1747f038da16','a0000000-0000-4000-8000-000000000001','household',2,'TRUE');
+-- Exported from sandbox registry DB (nsr namespace) on 2026-05-28.
+-- Table: g2p_register_ui_tabs
+INSERT INTO public.g2p_register_ui_tabs VALUES ('individual_info_tab', 'a1a4d25a-1cd4-4356-abac-985a0b3c6bcd', 'individual_info', 1, true);
+INSERT INTO public.g2p_register_ui_tabs VALUES ('individual_livelihood_tab', 'a1a4d25a-1cd4-4356-abac-985a0b3c6bcd', 'livelihood', 2, true);
+INSERT INTO public.g2p_register_ui_tabs VALUES ('individual_vulnerability_tab', 'a1a4d25a-1cd4-4356-abac-985a0b3c6bcd', 'vulnerability', 5, true);
+INSERT INTO public.g2p_register_ui_tabs VALUES ('individual_programs_tab', 'a1a4d25a-1cd4-4356-abac-985a0b3c6bcd', 'programs', 9, true);
+INSERT INTO public.g2p_register_ui_tabs VALUES ('household_membership_tab', '9055ab43-c85d-4833-bd00-ca657bb72644', 'household_membership_tab', 2, true);
+INSERT INTO public.g2p_register_ui_tabs VALUES ('housing_services_tab', '9055ab43-c85d-4833-bd00-ca657bb72644', 'housing_services_tab', 3, true);
+INSERT INTO public.g2p_register_ui_tabs VALUES ('household_programs', '9055ab43-c85d-4833-bd00-ca657bb72644', 'household_programs', 4, true);
+INSERT INTO public.g2p_register_ui_tabs VALUES ('household_info_tab', '9055ab43-c85d-4833-bd00-ca657bb72644', 'household_info_tab', 1, true);
+
+
+

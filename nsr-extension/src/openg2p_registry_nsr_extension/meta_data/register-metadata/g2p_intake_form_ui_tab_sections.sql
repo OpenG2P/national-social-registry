@@ -1,26 +1,24 @@
-INSERT INTO "public"."g2p_intake_form_ui_tab_sections" ("tab_section_id","tab_id","section_id","section_order") VALUES 
-('78f15c94-2d9d-4f5f-9913-477a3e9339b2','nsr_form_tab_individual_intake','in_header_info',2),
-('99a993b3-9460-449e-9da8-031c09ee5586','nsr_form_tab_individual_intake','in_contact_details',3),
-('c8e45540-6704-4848-96bc-b50ce008b0d4','nsr_form_tab_individual_intake','in_demographic_details',4),
-('0d79184a-f8a9-4de1-a9c1-03f2f5aeb894','nsr_form_tab_individual_intake','in_table_disabilities',5),
-('92465546-25a1-45c8-a0e5-6a3c4e60c818','nsr_form_tab_individual_intake','d1e81461-ee90-483f-8cf2-19028657bca1',6),
-('fe136ca1-b77a-4dc2-89dc-ec3e409bb931','nsr_form_tab_individual_intake','b47ae24b-340a-4974-a90a-655a3a642b13',7),
-('d7e6058e-3c15-44f1-81ff-a455fcb51598','nsr_form_tab_individual_intake','6d5285d3-fa8d-4753-87cd-822bb2ce7658',8),
-('82276bef-b20f-480d-9235-10fab14281cd','nsr_form_tab_individual_intake','in_identifier',9),
-('a3bc266f-7483-4e4b-9a5a-1c57cc102022','nsr_form_tab_individual_intake','in_table_land',10),
-('9b6e1d20-428f-435c-af10-fa9240114586','nsr_form_tab_individual_intake','in_table_livestock',11),
-('6a8ed231-d6b8-439b-a91e-06a777bee812','nsr_form_tab_individual_intake','in_location_details',12),
-('d84ee82c-9129-4c2a-b719-7ee3675ca83d','nsr_form_tab_individual_intake','in_table_program_enrolments',13),
-('db30b024-af5a-48a0-bcf1-51b9de4cc9c6','nsr_form_tab_individual_intake','in_table_shocks',14),
-('842381f2-cbd4-4128-b269-1d085c2db572','nsr_form_tab_individual_intake','in_livelihood_employment',15),
-('f8bd2e73-7358-48b4-b81b-330936d5ae0d','nsr_form_tab_individual_intake','in_relationship_to_head',16),
-('f44d85f3-800d-4a33-b68b-fa51b02650b5','nsr_form_tab_individual_intake','in_vulnerability_inclusion',17),
-('07e72227-de88-4aab-a5d3-1fb515c0e696','nsr_form_tab_household_intake','hh_composition_headship',1),
-('bb939dca-a7be-409e-b8e3-9ee05abf3905','nsr_form_tab_household_intake','hh_dwelling_services',2),
-('32e31343-525a-4a34-b6c1-aaeea9ec7138','nsr_form_tab_household_intake','hh_table_assets',4),
-('da516474-c65a-4b17-99eb-606c80c1e671','nsr_form_tab_household_intake','hh_header_info',5),
-('b7ecd984-5c54-449a-a37c-65fb880c9dcf','nsr_form_tab_household_intake','hh_table_housing_services',6),
-('6fb0fdf0-476f-4640-a297-20ecf395b093','nsr_form_tab_household_intake','hh_location_details',7),
-('4d197087-c86c-489d-b7ce-18287892ac86','nsr_form_tab_household_intake','hh_members',8),
-('7b0fba3e-97ef-42c0-a9bc-50623c46c4cf','nsr_form_tab_household_intake','hh_table_program_enrolments',9),
-('b6493ee8-27a0-4ee3-9420-cce28e1bb4b1','nsr_form_tab_household_intake','hh_roster',10);
+-- Exported from sandbox registry DB (nsr namespace) on 2026-05-28.
+-- Table: g2p_intake_form_ui_tab_sections
+INSERT INTO public.g2p_intake_form_ui_tab_sections VALUES ('173bad10-f9ac-44fc-8262-e8474409109a', 't2', 'individual_livestock_section', 10);
+INSERT INTO public.g2p_intake_form_ui_tab_sections VALUES ('c5b4235f-98c6-418a-a7f6-46d343893818', 't2', 'individual_livelihood_section', 11);
+INSERT INTO public.g2p_intake_form_ui_tab_sections VALUES ('48a3b60f-1738-4deb-83dd-ad14f86f0cf2', 't2', 'individual_shocks_section', 12);
+INSERT INTO public.g2p_intake_form_ui_tab_sections VALUES ('5gaefd43-1909-4997-a783-36e23fcb8b14', 't2', 'individual_programs_section', 13);
+INSERT INTO public.g2p_intake_form_ui_tab_sections VALUES ('6075b91c-da5f-43a5-b2a4-f12ab6bfb6cf', 't1', 'household_member_section', 8);
+INSERT INTO public.g2p_intake_form_ui_tab_sections VALUES ('b48453a7-debe-43a8-a4e1-328efe7c19a9', 't1', 'household_programs_section', 7);
+INSERT INTO public.g2p_intake_form_ui_tab_sections VALUES ('b2fa01a9-fe63-45d0-85d9-830de5a660f2', 't1', 'housing_and_services_section', 5);
+INSERT INTO public.g2p_intake_form_ui_tab_sections VALUES ('9a07751c-7767-44cb-841c-84b282fe3f9a', 't1', 'household_legacy_programs_section', 2);
+INSERT INTO public.g2p_intake_form_ui_tab_sections VALUES ('061c66ef-f1e8-4142-9db6-aad7214a276e', 't1', 'household_location_section', 3);
+INSERT INTO public.g2p_intake_form_ui_tab_sections VALUES ('7f671f67-28e6-441d-b05e-8a94699d125a', 't1', 'household_roster_section', 1);
+INSERT INTO public.g2p_intake_form_ui_tab_sections VALUES ('3baefd43-1909-4997-a783-36e23fcb8b10', 't2', 'individual_registration_identifier_section', 1);
+INSERT INTO public.g2p_intake_form_ui_tab_sections VALUES ('dedcbd37-6865-4ff5-a882-a7c72705ff3c', 't2', 'individual_household_relationship_section', 2);
+INSERT INTO public.g2p_intake_form_ui_tab_sections VALUES ('7raefd43-1909-4997-a783-36e23fcb8b56', 't2', 'individual_legacy_programs_section_1', 3);
+INSERT INTO public.g2p_intake_form_ui_tab_sections VALUES ('363d3bca-dcfb-4c0f-97cc-140dda29a826', 't2', 'individual_location_section', 4);
+INSERT INTO public.g2p_intake_form_ui_tab_sections VALUES ('39ab630d-43e4-4a5f-8d3d-58f91b22ce10', 't2', 'individual_contact_section', 5);
+INSERT INTO public.g2p_intake_form_ui_tab_sections VALUES ('e2517693-96a8-48e4-98d5-5f6e667c4410', 't2', 'individual_demographic_section', 6);
+INSERT INTO public.g2p_intake_form_ui_tab_sections VALUES ('60e8b7f1-5325-4b2c-aee7-2ae1ce63e192', 't2', 'individual_vulnerability_section', 7);
+INSERT INTO public.g2p_intake_form_ui_tab_sections VALUES ('070beb80-12aa-450f-8894-d964425ff5b6', 't2', 'individual_disability_section', 8);
+INSERT INTO public.g2p_intake_form_ui_tab_sections VALUES ('1c1bc0f9-5310-425e-83a1-7aeb7dc342c3', 't2', 'individual_land_section', 9);
+
+
+

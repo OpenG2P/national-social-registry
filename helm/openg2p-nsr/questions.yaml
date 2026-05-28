@@ -207,7 +207,7 @@ questions:
     default: commons-opensearch
 
   # -------------------------------------------------------------------------
-  # DB Seed — meta_data + optional sample data.
+  # DB Seed — configuration (meta_data) only; no demo register rows.
   # -------------------------------------------------------------------------
   - variable: openg2p-registry.dbSeed.enabled
     description: Run DB seed Job after pods come up (loads register definitions, schemas, tabs, sections, attribute lookups, registry config)
@@ -217,11 +217,11 @@ questions:
     default: "true"
 
   - variable: openg2p-registry.dbSeed.loadSampleData
-    description: Also insert the 5 demo households, 15 demo individuals, and supporting-table demo rows. Use only for dev / test.
+    description: Leave disabled — this chart does not ship demo individuals/households. Loads configuration (register definitions, schemas, UI) only.
     type: boolean
     label: Load Sample Data
     group: DB Seed
-    default: "true"
+    default: "false"
 
   - variable: openg2p-registry.dbSeed.image.repository
     description: Docker image repository for the DB seed container

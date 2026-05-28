@@ -32,13 +32,15 @@ maintainers:
 # tracks the `-develop` pre-release of the base chart; on release, both
 # sides drop the `-develop` suffix in lockstep.
 dependencies:
+  # Matches the base chart revision deployed on sandbox (nsr ns): openg2p-registry-4.0.0-develop
   - name: openg2p-registry
-    version: 4.1.0-develop
+    version: 4.0.0-develop
     repository: https://openg2p.github.io/openg2p-helm
 
 # Rancher catalog branding
 annotations:
   catalog.cattle.io/display-name: "OpenG2P NSR"
+  catalog.cattle.io/release-name: openg2p-nsr
   catalog.cattle.io/certified: partner
   catalog.cattle.io/kube-version: ">=1.23.0-0"
   openg2p.org/add-to-rancher: ""

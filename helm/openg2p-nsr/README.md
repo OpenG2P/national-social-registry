@@ -18,6 +18,18 @@ openg2p-registry (4.0.0-develop, base)    +    openg2p-nsr (0.0.0-develop, wrapp
         └──────────────────────  =  NSR install  ──────┘
 ```
 
+### Sandbox cluster (`nsr` namespace)
+
+Live image tags: `../../scripts/NSR_DEPLOYED_VERSIONS.md` (refresh with `KUBECONFIG=openg2p2.yaml`).
+
+```bash
+export KUBECONFIG=/path/to/openg2p2.yaml
+helm upgrade --install registry ./helm/openg2p-nsr \
+  -f helm/openg2p-nsr/values.yaml \
+  -f helm/openg2p-nsr/values-sandbox.yaml \
+  -n nsr
+```
+
 ## Versioning
 
 Branch-name-equals-version convention:
@@ -103,16 +115,6 @@ helm install nsr openg2p/openg2p-nsr \
   --create-namespace
 ```
 
-### With sample data (dev / test only)
-
-```bash
-helm install nsr . \
-  --set openg2p-registry.dbSeed.loadSampleData=true
-```
-
-Loads the 5 demo households, 15 demo individuals, and supporting-table
-demo rows from `nsr-extension/src/.../sample_data/` into the database.
-
 ## Upgrading
 
 When the base chart releases a new version, bump the dependency in
@@ -141,7 +143,7 @@ The chart ships a `questions.yaml` for Rancher UI installs with fields for:
 
 - Base domain + namespace
 - Per-image tag overrides
-- DB-seeder toggle (and sample-data toggle)
+- DB-seeder toggle (configuration only; sample data disabled)
 - Individual id-type prefix / length
 
 Advanced users should edit `values.yaml` directly.

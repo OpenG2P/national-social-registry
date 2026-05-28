@@ -1,8 +1,7 @@
 name: Build DB Seed Docker Image
 
-# The db-seed image bundles SQL seed content and flat Jinja templates. Rebuild
-# when meta_data/, sample_data/, templates/, docker/db-seed/, or this workflow
-# changes.
+# The db-seed image bundles configuration SQL (meta_data) and flat Jinja templates.
+# Rebuild when meta_data/, templates/, docker/db-seed/, or this workflow changes.
 #
 # The image tag equals the current branch name (master/main → develop).
 on:
@@ -13,7 +12,6 @@ on:
       - '**'
     paths:
       - 'nsr-extension/src/**/meta_data/**'
-      - 'nsr-extension/src/**/sample_data/**'
       - 'nsr-extension/src/**/templates/**'
       - 'docker/db-seed/**'
       - '.github/workflows/docker-build-db-seed.yml'

@@ -3,11 +3,11 @@
 # NSR extension — built from this repo's working tree (copied into local_deps/ by parse_service.py).
 ./nsr-extension
 
-# Dependencies libs
+# Dependencies libs (pinned like other Gen2 sandbox images)
 git://v1.1.6//https://github.com/openg2p/openg2p-fastapi-common#subdirectory=openg2p-fastapi-common
 git://v1.1.6//https://github.com/openg2p/openg2p-fastapi-common#subdirectory=openg2p-fastapi-auth
 
-# Core
-git://v1.1.0//https://github.com/openg2p/openg2p-iam-service#subdirectory=iam-core
-git://v1.1.0//https://github.com/openg2p/openg2p-registry-gen2-core#subdirectory=openg2p-registry-core
-git://v1.1.0//https://github.com/openg2p/openg2p-registry-gen2-apis#subdirectory=openg2p-registry-staff-portal-api
+# Core — sandbox staff API image is built from mkumar-02/develop (see scripts/NSR_DEPLOYED_VERSIONS.md)
+git://develop//https://github.com/mkumar-02/openg2p-iam-service#subdirectory=iam-core
+git://develop//https://github.com/mkumar-02/openg2p-registry-gen2-core#subdirectory=openg2p-registry-core
+git://develop//https://github.com/mkumar-02/openg2p-registry-gen2-apis#subdirectory=openg2p-registry-staff-portal-api

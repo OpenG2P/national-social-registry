@@ -1,8 +1,9 @@
 # NSR DB-seed image.
 #
-# Small Postgres-client image that ships the extension's SQL seed scripts
-# (meta_data + optional sample data), flat Jinja templates, and at container-run
-# time applies SQL against Postgres and optionally uploads templates to MinIO.
+# Small Postgres-client image that ships configuration SQL (meta_data) and flat
+# Jinja templates. Does not bundle demo register rows (individuals/households).
+# At container-run time applies meta_data against Postgres and optionally uploads
+# templates to MinIO.
 #
 # Build context = repo root (so that nsr-extension/ and docker/db-seed/ are
 # both reachable).
@@ -28,12 +29,9 @@ RUN pip3 install --no-cache-dir --break-system-packages -r /tmp/requirements.txt
 # Copy seed SQL scripts and flat templates from the extension source tree.
 COPY ${EXTENSION_FOLDER}/src/ /tmp/ext-src/
 
-RUN mkdir -p /seed/meta_data /seed/sample_data /seed/templates && \
+RUN mkdir -p /seed/meta_data /seed/templates && \
     find /tmp/ext-src -maxdepth 2 -type d -name meta_data | while read d; do \
       cp -r "$d"/* /seed/meta_data/ 2>/dev/null || true; \
-    done && \
-    find /tmp/ext-src -maxdepth 2 -type d -name sample_data | while read d; do \
-      cp -r "$d"/* /seed/sample_data/ 2>/dev/null || true; \
     done && \
     find /tmp/ext-src -maxdepth 2 -type d -name templates | while read d; do \
       find "$d" -maxdepth 1 -type f -name '*.j2' -exec cp {} /seed/templates/ \; ; \

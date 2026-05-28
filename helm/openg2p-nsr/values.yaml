@@ -1,6 +1,10 @@
 # ---------------------------------------------------------------------------
 # openg2p-nsr — values.yaml
 #
+# Default image repos for images built by this repo's CI (openg2p/* on Docker Hub).
+# For the NSR sandbox cluster (nsr namespace), use values-sandbox.yaml instead —
+# see ../../scripts/NSR_DEPLOYED_VERSIONS.md for the live image snapshot.
+#
 # Only NSR-specific overrides live here. Everything else (hostnames,
 # keycloak, postgres, ingress, resources, …) is inherited from the base
 # chart `openg2p-registry` (see Chart.yaml → dependencies).
@@ -71,10 +75,10 @@ openg2p-registry:
       tag: "develop"
       pullPolicy: Always
 
-  # DB-seeder: meta_data + (optionally) sample_data. Job-style deployment.
-  # `loadSampleData` defaults true on the base chart — keep it as-is here so
-  # fresh NSR installs come with demo rows; set to `false` for production.
+  # DB-seeder: NSR configuration only (meta_data + templates). No demo register rows.
+  # Base chart default is openg2p-farmer-registry-db-seed — this override is required.
   dbSeed:
+    loadSampleData: false
     image:
       repository: openg2p/openg2p-nsr-db-seed
       tag: "develop"

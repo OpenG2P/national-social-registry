@@ -50,12 +50,6 @@ Portable INSERT scripts used by the National Social Registry docker DB seed job 
 
 The seed container runs **all** `.sql` files under `meta_data/` in sorted path order.
 
-## Sample register data
-
-Demo rows live under `src/openg2p_registry_nsr_extension/sample_data/register-data/` (`g2p_register_households.sql`, `g2p_register_individuals.sql`, child-table inserts, etc.).
-
-The docker DB seed job loads them in dependency order using `register-data/load_order.txt` (one basename per line; lines starting with `#` are comments). If that file is absent, sample `.sql` files are executed in sorted path order instead.
-
 ## Install (from source)
 
 ```bash
