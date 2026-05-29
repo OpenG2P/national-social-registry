@@ -71,14 +71,19 @@ openg2p-registry:
       tag: "develop"
       pullPolicy: Always
 
-  # DB-seeder: meta_data + (optionally) sample_data. Job-style deployment.
+  # DB-seeder: meta_data SQL (from nsr-extension) + sample data JSON
+  # (from openg2p-data, cloned into the image at build time).
   # `loadSampleData` defaults true on the base chart — keep it as-is here so
   # fresh NSR installs come with demo rows; set to `false` for production.
+  # `loadImages` uploads sample profile avatars to MinIO and links them to
+  # individuals; disabled by default.
   dbSeed:
     image:
       repository: openg2p/openg2p-nsr-db-seed
       tag: "develop"
       pullPolicy: Always
+    loadImages: false
+    openg2pDataBranch: main
 
   # ==========================================================================
   # ID Generator — NSR-specific id_types.

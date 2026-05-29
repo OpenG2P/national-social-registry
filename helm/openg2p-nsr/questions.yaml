@@ -217,11 +217,27 @@ questions:
     default: "true"
 
   - variable: openg2p-registry.dbSeed.loadSampleData
-    description: Also insert the 5 demo households, 15 demo individuals, and supporting-table demo rows. Use only for dev / test.
+    description: Also insert the 100 demo households, 500 demo individuals, and supporting-table demo rows (livelihoods, livestock, land, shocks, disabilities, vulnerability, programs, assets, housing, scores) sourced from openg2p-data. Use only for dev / test.
     type: boolean
     label: Load Sample Data
     group: DB Seed
     default: "true"
+
+  - variable: openg2p-registry.dbSeed.loadImages
+    description: Upload the 500 sample profile avatars from openg2p-data to MinIO and link them to the demo individuals. Requires Load Sample Data and valid MinIO credentials.
+    type: boolean
+    label: Load Sample Images
+    group: DB Seed
+    default: "false"
+    show_if: openg2p-registry.dbSeed.loadSampleData=true
+
+  - variable: openg2p-registry.dbSeed.openg2pDataBranch
+    description: Branch of openg2p-data cloned into the DB seed image (contains demography JSON, NSR sub-table JSON, and profile images).
+    type: string
+    label: openg2p-data Branch
+    group: DB Seed
+    default: main
+    show_if: openg2p-registry.dbSeed.loadSampleData=true
 
   - variable: openg2p-registry.dbSeed.image.repository
     description: Docker image repository for the DB seed container
