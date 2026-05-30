@@ -1,300 +1,206 @@
-# ---------------------------------------------------------------------------
-# questions.yaml — Rancher UI form for installing the NSR wrapper chart.
-#
-# Variable paths are prefixed with `openg2p-registry.` because all base-chart
-# values live under that subchart alias in this wrapper's values.yaml.
-#
-# Rancher resolves a field's prefilled value by walking the *parent* chart's
-# values.yaml at the variable path. It does NOT recurse into the subchart's
-# values.yaml — so for every base-chart default that we want the form to
-# show, we must mirror it here via an explicit `default:` (or set it in this
-# wrapper's values.yaml). We use explicit `default:` so the wrapper stays a
-# thin pass-through and the base chart remains the single source of behaviour.
-#
-# Defaults below mirror the base chart `openg2p-registry` 4.1.x. Templated
-# defaults (e.g. those that resolve `{{ .Release.Name }}`) are intentionally
-# left without a literal default — Rancher would render the raw template in
-# the input field, which is ugly. The description explains how they resolve.
-#
-# Structure mirrors the base chart's own questions.yaml so operators get a
-# familiar layout; the only NSR-specific differences are:
-#   - image defaults point at openg2p/openg2p-nsr-*:develop
-#   - an informational note explains that NSR's default idTypes are
-#     individual (12) and household (10), not farmer+household.
-#
-# Advanced users should edit values.yaml directly — the Rancher form only
-# exposes the commonly-changed knobs.
-# ---------------------------------------------------------------------------
-
-categories:
-  - Social Protection
-  - OpenG2P
-
-labels:
-  io.cattle.field/appName: OpenG2P NSR
-
 questions:
 
-  # -------------------------------------------------------------------------
-  # General — hostnames, external dependencies, component toggles.
-  # -------------------------------------------------------------------------
-  - variable: openg2p-registry.global.registryHostname
-    description: |
-      Base hostname under which all NSR services are exposed.
-      Default (auto-computed): "<release-name>.<namespace>.openg2p.org".
-      Individual components derive their own hostnames from this:
-        - Staff Portal UI:  {registryHostname}
-        - Staff Portal API: staff-{registryHostname}
-        - Partner API:      partner-{registryHostname}
-        - ID Generator:     idgenerator-{release-name}.{namespace}.openg2p.org
-    type: string
-    label: Registry Hostname
-    group: General
+# General
+- variable: global.registryHostname
+  description: Hostname under which all Registry services will be accessed
+  type: string
+  label: Registry Hostname
+  group: General
 
-  - variable: openg2p-registry.global.postgresqlHost
-    description: PostgreSQL server host (cluster-internal service name)
-    type: string
-    label: PostgreSQL Server Host
-    group: General
-    default: commons-postgresql
+- variable: global.postgresqlHost
+  description: PostgreSQL server host
+  type: string
+  label: PostgreSQL Server Host
+  group: General
 
-  - variable: openg2p-registry.global.keycloakBaseUrl
-    description: |
-      Keycloak Base URL used by all components for OIDC.
-      Default (auto-computed): "https://keycloak.<namespace>.openg2p.org".
-    type: string
-    label: Keycloak Base URL
-    group: General
+- variable: global.keycloakBaseUrl
+  description: Keycloak Base URL used in all components
+  type: string
+  label: Keycloak Base URL
+  group: General
 
-  - variable: openg2p-registry.global.minioHost
-    description: |
-      External MinIO S3 API endpoint reachable from end-user browsers (the
-      registry generates pre-signed S3 URLs that browsers follow directly).
-      Use the API hostname exposed by commons-base, NOT the Console hostname.
-      Example: minio-api.<namespace>.openg2p.org (do not include scheme or
-      trailing slash). MinIO is assumed to be served over HTTPS via the Istio
-      gateway. Default (auto-computed): "minio-api.<namespace>.openg2p.org".
-    type: string
-    label: MinIO S3 API Host
-    group: General
+- variable: global.minioHost
+  description: "External MinIO S3 API endpoint reachable from end-user browsers (the registry generates pre-signed S3 URLs that browsers follow directly). Use the API hostname exposed by commons-base, NOT the Console hostname. Example: minio-api.<namespace>.openg2p.org (do not include scheme or trailing slash). MinIO is assumed to be served over HTTPS via the Istio gateway."
+  type: string
+  label: MinIO S3 API Host
+  group: General
 
-  - variable: openg2p-registry.keycloak-init.enabled
-    description: Run Keycloak Init Job to create realm and OIDC client
-    type: boolean
-    label: Keycloak Init
-    group: General
-    default: "true"
+- variable: keycloak-init.enabled
+  description: Run Keycloak Init to create realm and OIDC client
+  type: boolean
+  label: Keycloak Init
+  group: General
 
-  - variable: openg2p-registry.staffPortalApi.enabled
-    description: Install Staff Portal API
-    type: boolean
-    label: Staff Portal API
-    group: General
-    default: "true"
+- variable: staffPortalApi.enabled
+  description: Install Staff Portal API
+  type: boolean
+  label: Staff Portal API
+  group: General
 
-  - variable: openg2p-registry.staffPortalUi.enabled
-    description: Install Staff Portal UI
-    type: boolean
-    label: Staff Portal UI
-    group: General
-    default: "true"
+- variable: staffPortalUi.enabled
+  description: Install Staff Portal UI
+  type: boolean
+  label: Staff Portal UI
+  group: General
 
-  - variable: openg2p-registry.partnerApi.enabled
-    description: Install Partner API
-    type: boolean
-    label: Partner API
-    group: General
-    default: "true"
+- variable: partnerApi.enabled
+  description: Install Partner API
+  type: boolean
+  label: Partner API
+  group: General
 
-  - variable: openg2p-registry.benePortalApi.enabled
-    description: Install Beneficiary Portal API (off by default for NSR)
-    type: boolean
-    label: Beneficiary Portal API
-    group: General
-    default: "false"
+- variable: benePortalApi.enabled
+  description: Install Beneficiary Portal API
+  type: boolean
+  label: Beneficiary Portal API
+  group: General
 
-  - variable: openg2p-registry.idgenerator.enabled
-    description: Install ID Generator service (produces foundational IDs for Individual and Household)
-    type: boolean
-    label: ID Generator
-    group: General
-    default: "true"
+- variable: idgenerator.enabled
+  description: Install ID Generator service
+  type: boolean
+  label: ID Generator
+  group: General
 
-  # -------------------------------------------------------------------------
-  # Images — per-component tag overrides. Repositories are set to NSR images
-  # in values.yaml; override tag here to pin to a released tag (e.g. 1.0.0)
-  # instead of tracking `develop`.
-  # -------------------------------------------------------------------------
-  - variable: openg2p-registry.staffPortalApi.image.repository
-    description: Docker image repository for Staff Portal API
-    type: string
-    label: Staff Portal API Image Repository
-    group: Images
-    default: openg2p/openg2p-nsr-staff-portal-api
-  - variable: openg2p-registry.staffPortalApi.image.tag
-    description: Docker image tag for Staff Portal API
-    type: string
-    label: Staff Portal API Image Tag
-    group: Images
-    default: develop
+# Images
+- variable: staffPortalApi.image.repository
+  description: Docker image repository for Staff Portal API
+  type: string
+  label: Staff Portal API Image Repository
+  group: Images
 
-  - variable: openg2p-registry.staffPortalUi.image.repository
-    description: Docker image repository for Staff Portal UI
-    type: string
-    label: Staff Portal UI Image Repository
-    group: Images
-    default: openg2p/openg2p-registry-staff-portal-ui
-  - variable: openg2p-registry.staffPortalUi.image.tag
-    description: Docker image tag for Staff Portal UI
-    type: string
-    label: Staff Portal UI Image Tag
-    group: Images
-    default: develop
+- variable: staffPortalApi.image.tag
+  description: Docker image tag for Staff Portal API
+  type: string
+  label: Staff Portal API Image Tag
+  group: Images
 
-  - variable: openg2p-registry.partnerApi.image.repository
-    description: Docker image repository for Partner API
-    type: string
-    label: Partner API Image Repository
-    group: Images
-    default: openg2p/openg2p-nsr-partner-api
-  - variable: openg2p-registry.partnerApi.image.tag
-    description: Docker image tag for Partner API
-    type: string
-    label: Partner API Image Tag
-    group: Images
-    default: develop
+- variable: staffPortalUi.image.repository
+  description: Docker image repository for Staff Portal UI
+  type: string
+  label: Staff Portal UI Image Repository
+  group: Images
 
-  - variable: openg2p-registry.celeryBeatProducer.image.repository
-    description: Docker image repository for Celery Beat Producer (shares image with Celery Worker)
-    type: string
-    label: Celery Beat Producer Image Repository
-    group: Images
-    default: openg2p/openg2p-nsr-celery
-  - variable: openg2p-registry.celeryBeatProducer.image.tag
-    description: Docker image tag for Celery Beat Producer
-    type: string
-    label: Celery Beat Producer Image Tag
-    group: Images
-    default: develop
+- variable: staffPortalUi.image.tag
+  description: Docker image tag for Staff Portal UI
+  type: string
+  label: Staff Portal UI Image Tag
+  group: Images
 
-  - variable: openg2p-registry.celeryWorker.image.repository
-    description: Docker image repository for Celery Worker
-    type: string
-    label: Celery Worker Image Repository
-    group: Images
-    default: openg2p/openg2p-nsr-celery
-  - variable: openg2p-registry.celeryWorker.image.tag
-    description: Docker image tag for Celery Worker
-    type: string
-    label: Celery Worker Image Tag
-    group: Images
-    default: develop
+- variable: partnerApi.image.repository
+  description: Docker image repository for Partner API
+  type: string
+  label: Partner API Image Repository
+  group: Images
 
-  # -------------------------------------------------------------------------
-  # Logging
-  # -------------------------------------------------------------------------
-  - variable: openg2p-registry.logging.enabled
-    description: Ship NSR pod logs (JSON) to the OpenSearch Output configured by commons-base
-    type: boolean
-    label: Enable Logging
-    group: Logging
-    default: "true"
-  - variable: openg2p-registry.logging.outputRef
-    description: Name of the namespace-scoped Fluent Output resource (created by commons-base) to route logs to
-    type: string
-    label: Fluent Output Name
-    group: Logging
-    default: commons-opensearch
+- variable: partnerApi.image.tag
+  description: Docker image tag for Partner API
+  type: string
+  label: Partner API Image Tag
+  group: Images
 
-  # -------------------------------------------------------------------------
-  # DB Seed — meta_data + optional sample data.
-  # -------------------------------------------------------------------------
-  - variable: openg2p-registry.dbSeed.enabled
-    description: Run DB seed Job after pods come up (loads register definitions, schemas, tabs, sections, attribute lookups, registry config)
-    type: boolean
-    label: Enable DB Seed
-    group: DB Seed
-    default: "true"
+- variable: benePortalApi.image.repository
+  description: Docker image repository for Beneficiary Portal API
+  type: string
+  label: Beneficiary Portal API Image Repository
+  group: Images
 
-  - variable: openg2p-registry.dbSeed.loadSampleData
-    description: Also insert the 100 demo households, 500 demo individuals, and supporting-table demo rows (livelihoods, livestock, land, shocks, disabilities, vulnerability, programs, assets, housing, scores) sourced from openg2p-data. Use only for dev / test.
-    type: boolean
-    label: Load Sample Data
-    group: DB Seed
-    default: "true"
+- variable: benePortalApi.image.tag
+  description: Docker image tag for Beneficiary Portal API
+  type: string
+  label: Beneficiary Portal API Image Tag
+  group: Images
 
-  - variable: openg2p-registry.dbSeed.loadImages
-    description: Upload the 500 sample profile avatars from openg2p-data to MinIO and link them to the demo individuals. Requires Load Sample Data and valid MinIO credentials.
-    type: boolean
-    label: Load Sample Images
-    group: DB Seed
-    default: "false"
-    show_if: openg2p-registry.dbSeed.loadSampleData=true
+- variable: celeryBeatProducer.image.repository
+  description: Docker image repository for Celery Beat Producer
+  type: string
+  label: Celery Beat Producer Image Repository
+  group: Images
 
-  - variable: openg2p-registry.dbSeed.openg2pDataBranch
-    description: Branch of openg2p-data cloned into the DB seed image (contains demography JSON, NSR sub-table JSON, and profile images).
-    type: string
-    label: openg2p-data Branch
-    group: DB Seed
-    default: main
-    show_if: openg2p-registry.dbSeed.loadSampleData=true
+- variable: celeryBeatProducer.image.tag
+  description: Docker image tag for Celery Beat Producer
+  type: string
+  label: Celery Beat Producer Image Tag
+  group: Images
 
-  - variable: openg2p-registry.dbSeed.image.repository
-    description: Docker image repository for the DB seed container
-    type: string
-    label: DB Seed Image Repository
-    group: DB Seed
-    default: openg2p/openg2p-nsr-db-seed
-  - variable: openg2p-registry.dbSeed.image.tag
-    description: Docker image tag for the DB seed container
-    type: string
-    label: DB Seed Image Tag
-    group: DB Seed
-    default: develop
+- variable: celeryWorker.image.repository
+  description: Docker image repository for Celery Worker
+  type: string
+  label: Celery Worker Image Repository
+  group: Images
 
-  # -------------------------------------------------------------------------
-  # ID Generator — informational note only. The `idTypes` field is a map
-  # keyed by id-type name, which Rancher form widgets cannot meaningfully
-  # render as a tree of editable fields. Operators who need to change
-  # id-length/prefix should switch to "Edit YAML" and modify
-  # `openg2p-registry.idgenerator.idGenerator.appConfig.idTypes` directly.
-  # -------------------------------------------------------------------------
-  - variable: openg2p-registry.idgenerator.idGenerator.appConfig.idTypesNote
-    description: |
-      NSR default id types:
-        - individual (12 digits)  — issued for persons
-        - household  (10 digits)  — issued for household units
-      (A `farmer` entry is inherited from the base chart and is unused by NSR.)
-      To add, remove, or change id-length/prefix, switch to 'Edit YAML' and
-      update `openg2p-registry.idgenerator.idGenerator.appConfig.idTypes`.
-    type: string
-    label: ID Types Configuration
-    group: ID Generator
-    default: "See description — edit YAML to configure"
+- variable: celeryWorker.image.tag
+  description: Docker image tag for Celery Worker
+  type: string
+  label: Celery Worker Image Tag
+  group: Images
 
-  # -------------------------------------------------------------------------
-  # Audit Manager — emits audit events to OpenG2P Audit Manager. Available
-  # from staff-portal-api 1.1.x (base chart 4.1.x).
-  # -------------------------------------------------------------------------
-  - variable: openg2p-registry.global.auditEnabled
-    description: |
-      Master switch for emitting audit events to OpenG2P Audit Manager. Must
-      be true AND global.auditManagerUrl must be set for any audits to flow.
-    type: boolean
-    label: Audit Enabled
-    group: Audit Manager
-    default: "true"
+# Logging
+- variable: logging.enabled
+  description: Ship openg2p pod logs (JSON) to the OpenSearch Output configured by commons-base
+  type: boolean
+  label: Enable Logging
+  group: Logging
 
-  - variable: openg2p-registry.global.auditManagerUrl
-    description: Internal URL of the OpenG2P Audit Manager service (e.g. http://commons-services-auditmanager:80 when in the same namespace).
-    type: string
-    label: Audit Manager URL
-    group: Audit Manager
-    default: http://commons-services-auditmanager:80
+- variable: logging.outputRef
+  description: Name of the namespace-scoped Fluent Output resource (created by commons-base) to route logs to
+  type: string
+  label: Fluent Output Name
+  group: Logging
 
-  - variable: openg2p-registry.global.auditAnonymousFailures
-    description: When true, also audit rejected anonymous calls (401/403). Set false to skip them and only audit authenticated user calls.
-    type: boolean
-    label: Audit Anonymous Failures
-    group: Audit Manager
-    default: "true"
+# DB Seed
+- variable: dbSeed.enabled
+  description: Run DB seed Job to load configuration SQL scripts after pods start
+  type: boolean
+  label: Enable DB Seed
+  group: DB Seed
+
+- variable: dbSeed.loadSampleData
+  description: Also load sample/demo data into the registry (off by default)
+  type: boolean
+  label: Load Sample Data
+  group: DB Seed
+
+- variable: dbSeed.loadTemplates
+  description: Upload Jinja templates from the db-seed image to MinIO after SQL seed (object key = filename). Requires MinIO to be reachable at global.minioHost.
+  type: boolean
+  label: Load Templates to MinIO
+  group: DB Seed
+
+- variable: dbSeed.image.repository
+  description: Docker image repository for the DB seed container
+  type: string
+  label: DB Seed Image Repository
+  group: DB Seed
+
+- variable: dbSeed.image.tag
+  description: Docker image tag for the DB seed container
+  type: string
+  label: DB Seed Image Tag
+  group: DB Seed
+
+# ID Generator
+- variable: idgenerator.idGenerator.appConfig.idTypesNote
+  description: "Default ID types: individual (12 digits), household (10 digits). To add, remove, or modify ID types, switch to 'Edit YAML' and update the idgenerator.idGenerator.appConfig.idTypes section."
+  type: string
+  label: ID Types Configuration
+  group: ID Generator
+  default: "See description — edit YAML to configure"
+
+# Audit Manager
+- variable: global.auditEnabled
+  description: Master switch for emitting audit events to OpenG2P Audit Manager. Must be true AND global.auditManagerUrl must be set for any audits to flow. Available from staff-portal-api 1.1.x.
+  type: boolean
+  label: Audit Enabled
+  group: Audit Manager
+
+- variable: global.auditManagerUrl
+  description: Internal URL of the OpenG2P Audit Manager service (e.g. http://audit-manager:80 when in the same namespace).
+  type: string
+  label: Audit Manager URL
+  group: Audit Manager
+
+- variable: global.auditAnonymousFailures
+  description: When true, also audit rejected anonymous calls (401/403). Set false to skip them and only audit authenticated user calls.
+  type: boolean
+  label: Audit Anonymous Failures
+  group: Audit Manager
