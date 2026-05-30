@@ -143,7 +143,7 @@ questions:
     type: string
     label: Staff Portal UI Image Repository
     group: Images
-    default: openg2p/openg2p-nsr-staff-portal-ui
+    default: openg2p/openg2p-registry-staff-portal-ui
   - variable: openg2p-registry.staffPortalUi.image.tag
     description: Docker image tag for Staff Portal UI
     type: string

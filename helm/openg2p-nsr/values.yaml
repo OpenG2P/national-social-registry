@@ -50,7 +50,7 @@ openg2p-registry:
 
   staffPortalUi:
     image:
-      repository: openg2p/openg2p-nsr-staff-portal-ui
+      repository: openg2p/openg2p-registry-staff-portal-ui
       tag: "develop"
       pullPolicy: Always
 

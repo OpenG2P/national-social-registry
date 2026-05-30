@@ -38,7 +38,7 @@ drop the `-develop` suffix together.
 |---|---|
 | staffPortalApi | `openg2p/openg2p-nsr-staff-portal-api:develop` |
 | partnerApi | `openg2p/openg2p-nsr-partner-api:develop` |
-| staffPortalUi | `openg2p/openg2p-nsr-staff-portal-ui:develop` |
+| staffPortalUi | `openg2p/openg2p-registry-staff-portal-ui:develop` *(built by the `registry-platform` repo, not this one)* |
 | celeryWorker / celeryBeat | `openg2p/openg2p-nsr-celery:develop` *(same image — mode picked by env vars)* |
 | dbSeed | `openg2p/openg2p-nsr-db-seed:develop` |
 

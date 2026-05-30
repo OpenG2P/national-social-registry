@@ -66,7 +66,6 @@ DEFAULT_SERVICES=(
   "staff-portal-api/develop.txt"
   "celery/develop.txt"
   "partner-api/develop.txt"
-  "staff-portal-ui/develop.txt"
 )
 
 # ---------------------------------------------------------------------------
@@ -186,7 +185,6 @@ for SERVICE_FILE in "${SERVICE_FILES[@]}"; do
   log "Context    : ${SVC_CONTEXT}"
   log "REPO_URL   : ${SVC_REPO_URL}"
   log "GIT_BRANCH : ${SVC_GIT_BRANCH}"
-  log "SUBDIR     : ${SVC_SUBDIR:-<none>}"
 
   # List staged local packages (exclude dotfiles like .gitignore)
   LOCAL_PKGS=$(find "${REPO_ROOT}/local_deps" -mindepth 1 -maxdepth 1 -not -name ".*" -type d 2>/dev/null || true)
@@ -205,10 +203,6 @@ for SERVICE_FILE in "${SERVICE_FILES[@]}"; do
     -t "${SVC_IMAGE}"
     --build-arg "REPO_URL=${SVC_REPO_URL}"
     --build-arg "GIT_BRANCH=${SVC_GIT_BRANCH}"
-    # Subdirectory inside a consolidated repo (e.g. registry-platform) the
-    # clone-based UI build should build from. Defaults to "." (repo root) so
-    # backend Dockerfiles that don't declare this ARG simply ignore it.
-    --build-arg "BUILD_SUBDIR=${SVC_SUBDIR:-.}"
     --label "org.opencontainers.image.created=${SVC_CREATED}"
     --label "org.opencontainers.image.revision=${SVC_COMMIT}"
     --label "org.opencontainers.image.vendor=${SVC_VENDOR}"

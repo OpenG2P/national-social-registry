@@ -222,7 +222,6 @@ jobs:
             echo "version=${SVC_VERSION}"
             echo "repo_url=${SVC_REPO_URL}"
             echo "git_branch=${SVC_GIT_BRANCH}"
-            echo "subdir=${SVC_SUBDIR:-.}"
           } >> "${GITHUB_OUTPUT}"
 
           echo "---- docker/adapters.requirements.txt ----"
@@ -243,7 +242,6 @@ jobs:
           build-args: |
             REPO_URL=${{ steps.parse.outputs.repo_url }}
             GIT_BRANCH=${{ steps.parse.outputs.git_branch }}
-            BUILD_SUBDIR=${{ steps.parse.outputs.subdir }}
           labels: |
             org.opencontainers.image.created=${{ steps.parse.outputs.created }}
             org.opencontainers.image.authors=${{ github.repository_owner }}
