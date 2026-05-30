@@ -142,8 +142,6 @@ dbSeed:
   # to 256Mi to safely cover larger seed SQL bundles; request 64Mi reflects
   # the tiny psql baseline.
   resources:
-    limits:
-      memory: 256Mi
     requests:
       cpu: 50m
       memory: 64Mi
@@ -341,8 +339,6 @@ partnerApi:
   # Limit raised to 1Gi to absorb peak ingest bursts (lesser value was causing
   # OOM); request 256Mi gives the scheduler a realistic footprint to plan around.
   resources:
-    limits:
-      memory: 1Gi
     requests:
       cpu: 50m
       memory: 256Mi
@@ -483,8 +479,6 @@ benePortalApi:
   # Disabled by default (enabled: false above) — sizing assumes it will
   # be turned on in production deployments that surface a beneficiary UI.
   resources:
-    limits:
-      memory: 768Mi
     requests:
       cpu: 50m
       memory: 256Mi
@@ -648,8 +642,6 @@ staffPortalApi:
   # JSON size). Limit raised to 1Gi to absorb large listing spikes safely;
   # request 256Mi reflects steady-state baseline.
   resources:
-    limits:
-      memory: 1Gi
     requests:
       cpu: 50m
       memory: 256Mi
@@ -696,8 +688,6 @@ staffPortalUi:
   # matches typical Next.js production sizing. CPU is mostly idle between
   # user actions — 50m request is enough; bursts handled by un-capped limit.
   resources:
-    limits:
-      memory: 1Gi
     requests:
       cpu: 50m
       memory: 256Mi
@@ -805,8 +795,6 @@ celeryBeatProducer:
   # limit. 768Mi gives ~3x headroom over a fully-loaded tick. Lower the
   # BATCH_SIZE or NO_OF_TASKS_TO_PROCESS knobs if you need to shrink this.
   resources:
-    limits:
-      memory: 768Mi
     requests:
       cpu: 20m
       memory: 256Mi
@@ -884,8 +872,6 @@ celeryWorker:
   # baseline; bursts allowed up to node capacity. If workloads grow,
   # prefer horizontal scaling (replicaCount) before raising per-pod limits.
   resources:
-    limits:
-      memory: 1.5Gi
     requests:
       cpu: 100m
       memory: 768Mi
