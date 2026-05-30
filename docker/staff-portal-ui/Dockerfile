@@ -6,7 +6,14 @@ FROM base AS builder
 RUN apk add --no-cache git
 ARG REPO_URL
 ARG GIT_BRANCH
-RUN git clone --branch ${GIT_BRANCH} --depth 1 ${REPO_URL} .
+# BUILD_SUBDIR = path of the UI package inside the (possibly consolidated)
+# repo. Defaults to "." so a single-purpose repo still works unchanged; for
+# registry-platform it is "ui/staff-portal-ui". The clone lands in /tmp/src
+# and we copy only the package subtree into the /app build dir.
+ARG BUILD_SUBDIR=.
+RUN git clone --branch ${GIT_BRANCH} --depth 1 ${REPO_URL} /tmp/src \
+ && cp -a /tmp/src/${BUILD_SUBDIR}/. /app/ \
+ && rm -rf /tmp/src
 
 RUN npm ci
 ENV NEXT_TELEMETRY_DISABLED=1

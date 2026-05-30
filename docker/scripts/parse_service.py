@@ -167,6 +167,11 @@ def parse_service_file(service_file: str, override_dockerfile: str | None, repo_
     local_pkgs = []
     repo_url = ""
     git_branch = ""
+    # Subdirectory of the FIRST remote git dep (its #subdirectory= fragment, if
+    # any). Used by clone-based Dockerfiles (e.g. the UI) that build from a
+    # nested package inside a consolidated repo such as registry-platform.
+    # Empty for top-level repos. Carried through to the build as BUILD_SUBDIR.
+    git_subdir = ""
 
     for line in lines:
         if line.startswith("#"):
@@ -190,6 +195,13 @@ def parse_service_file(service_file: str, override_dockerfile: str | None, repo_
             if not repo_url:
                 repo_url = url_full.split("#")[0] if "#" in url_full else url_full
                 git_branch = tag
+                # Capture the subdirectory fragment of this first git dep so
+                # clone-based builds (UI) can build from a nested package.
+                if "#" in url_full:
+                    frag_first = url_full.split("#", 1)[1]
+                    sm = re.search(r"subdirectory=([^&]+)", frag_first)
+                    if sm:
+                        git_subdir = sm.group(1)
             if "#" in url_full:
                 base, frag = url_full.split("#", 1)
                 deps.append(f"git+{base}@{tag}#{frag}")
@@ -275,6 +287,7 @@ def parse_service_file(service_file: str, override_dockerfile: str | None, repo_
         "SVC_CONTEXT":    repo_root,
         "SVC_REPO_URL":   repo_url,
         "SVC_GIT_BRANCH": git_branch,
+        "SVC_SUBDIR":     git_subdir,
         "SVC_CREATED":    created,
         "SVC_COMMIT":     commit_hash,
         "SVC_VENDOR":     vendor,
