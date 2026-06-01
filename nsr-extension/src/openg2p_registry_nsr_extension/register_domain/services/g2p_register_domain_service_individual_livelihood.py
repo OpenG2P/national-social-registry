@@ -1,17 +1,26 @@
 import logging
 
-from openg2p_registry_core.schemas import ChangeRequestRequestPayload
 from openg2p_registry_core.services import G2PRegisterDomainService
+
+from .domain_validation_utils import is_blank, validation_error
 
 _logger = logging.getLogger("g2p-register-individual-livelihood-service")
 
 
 class G2PRegisterDomainServiceIndividualLivelihood(G2PRegisterDomainService):
-    async def validate_domain_attributes(
-        self, change_request_request_payload: ChangeRequestRequestPayload
-    ):
-        _logger.info("Validating individual livelihood domain attributes")
-        return
+    async def validate_domain_attributes(self, records: list[dict]):
+        for record in records:
+            self._validate_livelihood_distinct(record)
+
+    def _validate_livelihood_distinct(self, record: dict) -> None:
+        primary = record.get("primary_livelihood")
+        secondary = record.get("secondary_livelihood")
+        if (
+            not is_blank(primary)
+            and not is_blank(secondary)
+            and str(primary).strip() == str(secondary).strip()
+        ):
+            validation_error("primary_livelihood and secondary_livelihood must be different")
 
     def construct_search_text(self, payload: dict, extra: list[str] = None) -> str:
         _logger.info("Constructing search text for individual livelihood")
