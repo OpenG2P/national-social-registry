@@ -1,20 +1,41 @@
 import logging
 from datetime import date
 
-from openg2p_registry_core.schemas import ChangeRequestRequestPayload
 from openg2p_registry_core.models import G2PRegisterChangeRequest
 from openg2p_registry_core.services import G2PRegisterDomainService
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from .domain_validation_utils import as_int, is_blank, parse_date, validation_error
 
 _logger = logging.getLogger("g2p-register-domain-service")
 
 
 class G2PRegisterDomainServiceIndividual(G2PRegisterDomainService):
-    async def validate_domain_attributes(
-        self, change_request_request_payload: ChangeRequestRequestPayload
-    ):
-        _logger.info("Validating individual domain attributes")
-        return
+    async def validate_domain_attributes(self, records: list[dict]):
+        for record in records:
+            self._validate_middle_name(record)
+            self._validate_birth_date(record)
+            self._validate_estimated_age(record)
+
+    def _validate_middle_name(self, record: dict) -> None:
+        if is_blank(record.get("middle_name")):
+            validation_error("middle_name is required")
+
+    def _validate_birth_date(self, record: dict) -> None:
+        birth_date = parse_date(record.get("birth_date"))
+        if birth_date is not None and birth_date > date.today():
+            validation_error("birth_date must not be in the future")
+
+    def _validate_estimated_age(self, record: dict) -> None:
+        birth_date = parse_date(record.get("birth_date"))
+        estimated_age = as_int(record.get("estimated_age"))
+        if birth_date is None or estimated_age is None:
+            return
+        computed_age = self._calculate_age(birth_date)
+        if computed_age is not None and abs(estimated_age - computed_age) > 1:
+            validation_error(
+                "estimated_age must be consistent with birth_date within one year"
+            )
 
     def construct_search_text(self, payload: dict, extra: list[str] = None) -> str:
         _logger.info("Constructing search text for individual")
