@@ -24,7 +24,6 @@ Running `build.sh` does exactly what the workflow does:
 docker/
 ├── staff-portal-api/
 ├── partner-api/
-├── staff-portal-ui/
 ├── celery/
 ├── local_deps/          ← Staging for local-path deps (git-tracked via .gitignore)
 ├── test/
@@ -67,8 +66,10 @@ cd /path/to/national-social-registry
 ./docker/scripts/build.sh staff-portal-api/develop.txt
 ./docker/scripts/build.sh celery/develop.txt
 ./docker/scripts/build.sh partner-api/develop.txt
-./docker/scripts/build.sh staff-portal-ui/develop.txt
 ```
+
+> The Staff Portal UI image was moved to the `registry-platform` repo (built as
+> `openg2p/openg2p-registry-staff-portal-ui`), since its source lives there.
 
 > Paths are relative to `docker/`. Do **not** prefix with `docker/`.
 
@@ -188,7 +189,6 @@ When called with no arguments, `build.sh` builds all four services:
 | staff-portal-api | `staff-portal-api/develop.txt` | `openg2p/openg2p-nsr-staff-portal-api:develop` |
 | celery | `celery/develop.txt` | `openg2p/openg2p-nsr-celery:develop` |
 | partner-api | `partner-api/develop.txt` | `openg2p/openg2p-nsr-partner-api:develop` |
-| staff-portal-ui | `staff-portal-ui/develop.txt` | `openg2p/openg2p-nsr-staff-portal-ui:develop` |
 
 ---
 
