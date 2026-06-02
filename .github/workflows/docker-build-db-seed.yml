@@ -13,6 +13,7 @@ on:
       - '**'
     paths:
       - 'nsr-extension/src/**/meta_data/**'
+      - 'nsr-extension/src/**/awe_meta_data/**'
       - 'nsr-extension/src/**/sample_data/**'
       - 'nsr-extension/src/**/templates/**'
       - 'docker/db-seed/**'

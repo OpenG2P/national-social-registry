@@ -29,7 +29,7 @@ ENV GIT_COMMIT=${GIT_COMMIT} \
     EXTENSION_FOLDER=${EXTENSION_FOLDER} \
     OPENG2P_DATA_DIR=/openg2p-data
 
-RUN apk add --no-cache python3 py3-pip git
+RUN apk add --no-cache python3 py3-pip git gettext
 
 COPY docker/db-seed/requirements.txt /tmp/requirements.txt
 RUN pip3 install --no-cache-dir --break-system-packages -r /tmp/requirements.txt && \
@@ -39,9 +39,12 @@ RUN pip3 install --no-cache-dir --break-system-packages -r /tmp/requirements.txt
 # (sample_data/ no longer exists in the extension — data lives in openg2p-data.)
 COPY ${EXTENSION_FOLDER}/src/ /tmp/ext-src/
 
-RUN mkdir -p /seed/meta_data /seed/templates && \
+RUN mkdir -p /seed/meta_data /seed/awe_meta_data /seed/templates && \
     find /tmp/ext-src -maxdepth 2 -type d -name meta_data | while read d; do \
       cp -r "$d"/* /seed/meta_data/ 2>/dev/null || true; \
+    done && \
+    find /tmp/ext-src -maxdepth 2 -type d -name awe_meta_data | while read d; do \
+      cp -r "$d"/* /seed/awe_meta_data/ 2>/dev/null || true; \
     done && \
     find /tmp/ext-src -maxdepth 2 -type d -name templates | while read d; do \
       find "$d" -maxdepth 1 -type f -name '*.j2' -exec cp {} /seed/templates/ \; ; \

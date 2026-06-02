@@ -184,6 +184,49 @@ questions:
   label: DB Seed Image Tag
   group: DB Seed
 
+# AWE
+- variable: global.aweEnabled
+  description: Enable AWE integration on staff-portal-api and seed AWE DB from db-seed job
+  type: boolean
+  label: Enable AWE Integration
+  group: AWE
+
+- variable: global.aweBaseUrl
+  description: Public AWE API base URL (host only, no /v1/awe path)
+  type: string
+  label: AWE Base URL
+  group: AWE
+
+- variable: global.aweCallbackSecretId
+  description: callback_secret.id in AWE DB (must match seeded row)
+  type: string
+  label: AWE Callback Secret ID
+  group: AWE
+
+- variable: global.aweHttpTimeoutSeconds
+  description: HTTP timeout (seconds) for outbound AWE API calls
+  type: int
+  label: AWE HTTP Timeout (s)
+  group: AWE
+
+- variable: global.aweWebhookTimestampToleranceSeconds
+  description: Max clock skew (seconds) for inbound AWE webhook signatures
+  type: int
+  label: AWE Webhook Timestamp Tolerance (s)
+  group: AWE
+
+- variable: global.aweApproverUserPassword
+  description: Initial Keycloak password for seeded approver users
+  type: string
+  label: AWE Approver User Password
+  group: AWE
+
+- variable: openg2p-awe.enabled
+  description: Install AWE subchart (required for AWE seeding and staff-portal integration)
+  type: boolean
+  label: Enable AWE Subchart
+  group: AWE
+
 # ID Generator
 - variable: idgenerator.idGenerator.appConfig.idTypesNote
   description: "Default ID types: individual (12 digits), household (10 digits). To add, remove, or modify ID types, switch to 'Edit YAML' and update the idgenerator.idGenerator.appConfig.idTypes section."
