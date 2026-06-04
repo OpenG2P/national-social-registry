@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-"""Load sample data from openg2p-data JSON files into NSR Postgres.
+"""Load sample data into NSR Postgres.
 
-Reads JSON from /openg2p-data (cloned in Dockerfile), maps to NSR schema,
-executes parameterised INSERTs via psycopg2.
+Reads:
+- /openg2p-data/demography/{individuals,households}.csv (core+geo, shared)
+- /seed/seed-data/*.json (NSR sub-tables, shipped in the db-seed image)
 """
 
+import csv
 import json
 import os
 import sys
@@ -16,7 +18,6 @@ from psycopg2.extras import Json
 
 
 def to_json(value):
-    """Wrap a Python value for a JSON/JSONB column; None passes through."""
     return None if value is None else Json(value)
 
 
@@ -25,7 +26,7 @@ CREATED_AT = "2026-04-01 00:00:00"
 
 OPENG2P_DATA_DIR = Path(os.environ.get("OPENG2P_DATA_DIR", "/openg2p-data"))
 DEMO_DIR = OPENG2P_DATA_DIR / "demography"
-DATA_DIR = OPENG2P_DATA_DIR / "national-social-registry"
+NSR_DATA_DIR = Path(os.environ.get("NSR_SEED_DATA_DIR", "/seed/seed-data"))
 
 
 def env(name: str) -> str:
@@ -43,14 +44,41 @@ def load_json(path: Path):
     return json.loads(path.read_text())
 
 
+JSON_COLUMNS_INDIVIDUAL = {"phone_numbers", "geo_hierarchy_json"}
+JSON_COLUMNS_HOUSEHOLD = {"member_ids", "geo_hierarchy_json"}
+
+
+def _read_csv_rows(path: Path, json_columns: set[str]) -> list[dict]:
+    if not path.is_file():
+        print(f"[load-sample-data] Missing file: {path}", file=sys.stderr)
+        sys.exit(1)
+    with path.open(newline="", encoding="utf-8") as f:
+        out = []
+        for row in csv.DictReader(f):
+            parsed = {}
+            for k, v in row.items():
+                if v == "":
+                    parsed[k] = None
+                elif k in json_columns:
+                    parsed[k] = json.loads(v)
+                else:
+                    parsed[k] = v
+            out.append(parsed)
+        return out
+
+
+def _as_int(v):
+    return int(v) if v not in (None, "") else None
+
+
 def search_text_individual(ind: dict) -> str:
     parts = [
         ind["functional_record_id"],
         ind["full_name"],
-        ind["foundational_id"] or "",
-        ind["foundational_id_masked"] or "",
-        ind["gender"] or "",
-        ind["birth_date"] or "",
+        ind.get("foundational_id") or "",
+        ind.get("foundational_id_masked") or "",
+        ind.get("gender") or "",
+        ind.get("birth_date") or "",
         str(ind.get("estimated_age") or ""),
         ind.get("marital_status") or "",
     ]
@@ -69,51 +97,21 @@ def search_text_household(hh: dict) -> str:
 
 def insert_individuals(cur, individuals: list[dict]) -> None:
     columns = [
-        "internal_record_id",
-        "functional_record_id",
-        "link_internal_record_id",
-        "link_foundational_id",
-        "record_name",
-        "record_image_storage_id",
-        "created_by",
-        "created_at",
-        "last_approved_at",
-        "last_approved_by",
-        "search_text",
-        "record_status",
-        "record_status_reason",
-        "foundational_id",
-        "first_name",
-        "middle_name",
-        "last_name",
-        "given_name",
-        "prefix",
-        "suffix",
-        "gender",
-        "birth_date",
-        "phone_numbers",
-        "emails",
-        "marital_status",
-        "occupation",
-        "income_level",
-        "language_code",
-        "education_level",
-        "registration_date",
-        "latitude",
-        "longitude",
-        "altitude",
-        "plus_code",
-        "address_line_1",
-        "address_line_2",
-        "postal_code",
-        "country_code",
-        "geo_lowest_level_value_id",
-        "geo_code_hierarchy_json",
-        "foundational_id_masked",
-        "foundational_id_verification_status",
-        "full_name",
-        "estimated_age",
-        "age_method",
+        "internal_record_id", "functional_record_id",
+        "link_internal_record_id", "link_foundational_id",
+        "record_name", "record_image_storage_id",
+        "created_by", "created_at", "last_approved_at", "last_approved_by",
+        "search_text", "record_status", "record_status_reason",
+        "foundational_id", "first_name", "middle_name", "last_name",
+        "given_name", "prefix", "suffix",
+        "gender", "birth_date", "phone_numbers", "emails",
+        "marital_status", "occupation", "income_level",
+        "language_code", "education_level", "registration_date",
+        "latitude", "longitude", "altitude", "plus_code",
+        "address_line_1", "address_line_2", "postal_code", "country_code",
+        "geo_lowest_level_value_id", "geo_code_hierarchy_json",
+        "foundational_id_masked", "foundational_id_verification_status",
+        "full_name", "estimated_age", "age_method",
     ]
     rows = []
     for ind in individuals:
@@ -132,7 +130,7 @@ def insert_individuals(cur, individuals: list[dict]) -> None:
                 search_text_individual(ind),
                 "ACTIVE",
                 None,
-                ind["foundational_id"],
+                ind.get("foundational_id"),
                 ind["first_name"],
                 ind.get("middle_name"),
                 ind["last_name"],
@@ -162,7 +160,7 @@ def insert_individuals(cur, individuals: list[dict]) -> None:
                 ind["foundational_id_masked"],
                 "VERIFIED",
                 ind["full_name"],
-                ind["estimated_age"],
+                _as_int(ind.get("estimated_age")),
                 "DOCUMENTED",
             )
         )
@@ -177,43 +175,23 @@ def insert_individuals(cur, individuals: list[dict]) -> None:
 
 def insert_households(cur, households: list[dict]) -> None:
     columns = [
-        "internal_record_id",
-        "functional_record_id",
-        "link_internal_record_id",
-        "link_foundational_id",
-        "record_name",
-        "record_image_storage_id",
-        "created_by",
-        "created_at",
-        "last_approved_at",
-        "last_approved_by",
-        "search_text",
-        "record_status",
-        "record_status_reason",
-        "latitude",
-        "longitude",
-        "altitude",
-        "plus_code",
-        "address_line_1",
-        "address_line_2",
-        "postal_code",
-        "country_code",
-        "geo_lowest_level_value_id",
-        "geo_code_hierarchy_json",
-        "household_head_internal_record_id",
-        "household_head_name",
-        "headship_type",
-        "size_total",
-        "size_adults",
-        "size_children_u5",
-        "size_school_age",
-        "size_elderly",
-        "number_of_female_members",
-        "number_of_male_members",
+        "internal_record_id", "functional_record_id",
+        "link_internal_record_id", "link_foundational_id",
+        "record_name", "record_image_storage_id",
+        "created_by", "created_at", "last_approved_at", "last_approved_by",
+        "search_text", "record_status", "record_status_reason",
+        "latitude", "longitude", "altitude", "plus_code",
+        "address_line_1", "address_line_2", "postal_code", "country_code",
+        "geo_lowest_level_value_id", "geo_code_hierarchy_json",
+        "household_head_internal_record_id", "household_head_name",
+        "headship_type", "size_total", "size_adults", "size_children_u5",
+        "size_school_age", "size_elderly",
+        "number_of_female_members", "number_of_male_members",
         "elderly_member_present",
     ]
     rows = []
     for hh in households:
+        size_elderly = _as_int(hh.get("size_elderly")) or 0
         rows.append(
             (
                 hh["internal_record_id"],
@@ -242,14 +220,14 @@ def insert_households(cur, households: list[dict]) -> None:
                 hh["head_individual_id"],
                 hh["head_name"],
                 hh["headship_type"],
-                hh["size_total"],
-                hh["size_adults"],
-                hh["size_children_u5"],
-                hh["size_school_age"],
-                hh["size_elderly"],
-                hh["number_of_female_members"],
-                hh["number_of_male_members"],
-                "TRUE" if hh["size_elderly"] > 0 else "FALSE",
+                _as_int(hh.get("size_total")),
+                _as_int(hh.get("size_adults")),
+                _as_int(hh.get("size_children_u5")),
+                _as_int(hh.get("size_school_age")),
+                size_elderly,
+                _as_int(hh.get("number_of_female_members")),
+                _as_int(hh.get("number_of_male_members")),
+                "TRUE" if size_elderly > 0 else "FALSE",
             )
         )
     sql = (
@@ -261,7 +239,6 @@ def insert_households(cur, households: list[dict]) -> None:
     print(f"[load-sample-data]   -> g2p_register_households: {len(rows)}")
 
 
-# Sub-table mappings: (table_name, json_filename, extra_columns_in_order)
 SUB_TABLES = [
     (
         "g2p_register_individual_livelihoods",
@@ -292,14 +269,9 @@ SUB_TABLES = [
         "g2p_register_individual_vulnerability",
         "individual_vulnerability.json",
         [
-            "disability_status",
-            "orphanhood_flag",
-            "chronic_illness_flag",
-            "displacement_status",
-            "pastoralist_classification",
-            "high_mobility_indicator",
-            "plw_status",
-            "plw_status_date",
+            "disability_status", "orphanhood_flag", "chronic_illness_flag",
+            "displacement_status", "pastoralist_classification",
+            "high_mobility_indicator", "plw_status", "plw_status_date",
         ],
     ),
     (
@@ -316,16 +288,9 @@ SUB_TABLES = [
         "g2p_register_household_housing_and_services",
         "household_housing_and_services.json",
         [
-            "dwelling_type",
-            "roof_material",
-            "wall_material",
-            "floor_material",
-            "tenure_status",
-            "water_source_type",
-            "water_distance_minutes",
-            "sanitation_type",
-            "lighting_source",
-            "cooking_fuel_type",
+            "dwelling_type", "roof_material", "wall_material", "floor_material",
+            "tenure_status", "water_source_type", "water_distance_minutes",
+            "sanitation_type", "lighting_source", "cooking_fuel_type",
         ],
     ),
     (
@@ -336,19 +301,11 @@ SUB_TABLES = [
 ]
 
 COMMON_COLUMNS = [
-    "internal_record_id",
-    "functional_record_id",
-    "link_internal_record_id",
-    "link_foundational_id",
-    "record_name",
-    "record_image_storage_id",
-    "created_by",
-    "created_at",
-    "last_approved_at",
-    "last_approved_by",
-    "search_text",
-    "record_status",
-    "record_status_reason",
+    "internal_record_id", "functional_record_id",
+    "link_internal_record_id", "link_foundational_id",
+    "record_name", "record_image_storage_id",
+    "created_by", "created_at", "last_approved_at", "last_approved_by",
+    "search_text", "record_status", "record_status_reason",
 ]
 
 
@@ -390,15 +347,9 @@ def insert_scores(cur, scores: list[dict]) -> None:
     if not scores:
         return
     columns = [
-        "internal_record_id",
-        "register_id",
-        "score_type",
-        "score_definition_id",
-        "link_internal_record_id",
-        "triggered_by_cr_id",
-        "triggered_by_submission_id",
-        "computed_score",
-        "computed_at",
+        "internal_record_id", "register_id", "score_type", "score_definition_id",
+        "link_internal_record_id", "triggered_by_cr_id", "triggered_by_submission_id",
+        "computed_score", "computed_at",
     ]
     rows = [tuple(r.get(c) for c in columns) for r in scores]
     sql = (
@@ -413,9 +364,10 @@ def insert_scores(cur, scores: list[dict]) -> None:
 def main() -> None:
     print("[load-sample-data] Starting…")
     print(f"[load-sample-data] OPENG2P_DATA_DIR = {OPENG2P_DATA_DIR}")
+    print(f"[load-sample-data] NSR_SEED_DATA_DIR = {NSR_DATA_DIR}")
 
-    individuals = load_json(DEMO_DIR / "individuals.json")
-    households = load_json(DEMO_DIR / "households.json")
+    individuals = _read_csv_rows(DEMO_DIR / "individuals.csv", JSON_COLUMNS_INDIVIDUAL)
+    households = _read_csv_rows(DEMO_DIR / "households.csv", JSON_COLUMNS_HOUSEHOLD)
 
     conn = psycopg2.connect(
         host=env("PGHOST"),
@@ -431,9 +383,9 @@ def main() -> None:
         insert_individuals(cur, individuals)
         insert_households(cur, households)
         for table, fname, extras in SUB_TABLES:
-            rows = load_json(DATA_DIR / fname)
+            rows = load_json(NSR_DATA_DIR / fname)
             insert_sub_table(cur, table, rows, extras)
-        scores = load_json(DATA_DIR / "scores.json")
+        scores = load_json(NSR_DATA_DIR / "scores.json")
         insert_scores(cur, scores)
         conn.commit()
         print("[load-sample-data] Done.")

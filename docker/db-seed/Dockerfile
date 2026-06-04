@@ -52,6 +52,7 @@ RUN mkdir -p /seed/meta_data /seed/templates && \
 RUN git clone --depth 1 -b ${OPENG2P_DATA_BRANCH} ${OPENG2P_DATA_REPO} /openg2p-data \
     && rm -rf /openg2p-data/.git
 
+COPY docker/db-seed/seed-data/ /seed/seed-data/
 COPY docker/db-seed/entrypoint.sh /seed/entrypoint.sh
 COPY docker/db-seed/upload_templates.py /seed/upload_templates.py
 COPY docker/db-seed/upload_images.py /seed/upload_images.py
