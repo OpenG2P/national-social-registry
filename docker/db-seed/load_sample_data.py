@@ -12,6 +12,12 @@ from pathlib import Path
 
 import psycopg2
 import psycopg2.extras
+from psycopg2.extras import Json
+
+
+def to_json(value):
+    """Wrap a Python value for a JSON/JSONB column; None passes through."""
+    return None if value is None else Json(value)
 
 
 SEEDER = "seeder"
@@ -135,8 +141,8 @@ def insert_individuals(cur, individuals: list[dict]) -> None:
                 None,
                 ind["gender"],
                 ind["birth_date"],
-                json.dumps(ind["phone_numbers"]),
-                ind.get("emails"),
+                to_json(ind.get("phone_numbers")),
+                to_json([ind["emails"]] if ind.get("emails") else None),
                 ind["marital_status"],
                 None,
                 None,
@@ -152,7 +158,7 @@ def insert_individuals(cur, individuals: list[dict]) -> None:
                 ind["postal_code"],
                 ind["country_code"],
                 ind["geo_village_id"],
-                json.dumps(ind["geo_hierarchy_json"]),
+                to_json(ind.get("geo_hierarchy_json")),
                 ind["foundational_id_masked"],
                 "VERIFIED",
                 ind["full_name"],
@@ -232,7 +238,7 @@ def insert_households(cur, households: list[dict]) -> None:
                 hh["postal_code"],
                 hh["country_code"],
                 hh["geo_village_id"],
-                json.dumps(hh["geo_hierarchy_json"]),
+                to_json(hh.get("geo_hierarchy_json")),
                 hh["head_individual_id"],
                 hh["head_name"],
                 hh["headship_type"],
