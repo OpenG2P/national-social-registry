@@ -155,9 +155,15 @@ questions:
   group: DB Seed
 
 - variable: dbSeed.loadSampleData
-  description: Also load sample/demo data into the registry (off by default)
+  description: Also load sample/demo data into the registry (100 households + 500 individuals plus NSR sub-tables). Off by default.
   type: boolean
   label: Load Sample Data
+  group: DB Seed
+
+- variable: dbSeed.loadImages
+  description: Upload 500 sample profile images to MinIO and link them to the seeded individuals. Requires Load Sample Data to be enabled.
+  type: boolean
+  label: Load Sample Images
   group: DB Seed
 
 - variable: dbSeed.loadTemplates

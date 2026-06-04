@@ -21,7 +21,7 @@ FROM postgres:16-alpine
 ARG EXTENSION_FOLDER
 ARG GIT_COMMIT=dev
 ARG BUILD_TIME=dev
-ARG OPENG2P_DATA_REPO=https://github.com/psnappz/openg2p-data.git
+ARG OPENG2P_DATA_REPO=https://github.com/openg2p/openg2p-data.git
 ARG OPENG2P_DATA_BRANCH=2.0
 
 ENV GIT_COMMIT=${GIT_COMMIT} \
