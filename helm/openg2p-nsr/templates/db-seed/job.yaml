@@ -95,6 +95,8 @@ spec:
                   key: {{ include "common.tplvalues.render" (dict "value" .Values.global.registryDBUserPasswordKey "context" $) | quote }}
             - name: LOAD_SAMPLE_DATA
               value: {{ .Values.dbSeed.loadSampleData | quote }}
+            - name: LOAD_IMAGES
+              value: {{ .Values.dbSeed.loadImages | quote }}
             - name: LOAD_TEMPLATES
               value: {{ .Values.dbSeed.loadTemplates | quote }}
             - name: MINIO_ENDPOINT

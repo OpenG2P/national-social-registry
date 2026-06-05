@@ -21,8 +21,8 @@ FROM postgres:16-alpine
 ARG EXTENSION_FOLDER
 ARG GIT_COMMIT=dev
 ARG BUILD_TIME=dev
-ARG OPENG2P_DATA_REPO=https://github.com/OpenG2P/openg2p-data.git
-ARG OPENG2P_DATA_BRANCH=main
+ARG OPENG2P_DATA_REPO=https://github.com/openg2p/openg2p-data.git
+ARG OPENG2P_DATA_BRANCH=2.0
 
 ENV GIT_COMMIT=${GIT_COMMIT} \
     BUILD_TIME=${BUILD_TIME} \
@@ -52,6 +52,7 @@ RUN mkdir -p /seed/meta_data /seed/templates && \
 RUN git clone --depth 1 -b ${OPENG2P_DATA_BRANCH} ${OPENG2P_DATA_REPO} /openg2p-data \
     && rm -rf /openg2p-data/.git
 
+COPY docker/db-seed/seed-data/ /seed/seed-data/
 COPY docker/db-seed/entrypoint.sh /seed/entrypoint.sh
 COPY docker/db-seed/upload_templates.py /seed/upload_templates.py
 COPY docker/db-seed/upload_images.py /seed/upload_images.py
