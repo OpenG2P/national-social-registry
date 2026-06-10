@@ -39,6 +39,7 @@ global:
   minioHost: 'minio-api.{{ .Release.Namespace }}.openg2p.org'
   defaultBucketName: "default"
   templateBucketName: "template"
+  imageBucketName: "registrant-photos"
   minioSecure: true
 
   # Security & Authentication
@@ -562,7 +563,7 @@ staffPortalApi:
     REGISTRY_STAFF_PORTAL_API_KEYCLOAK_CLIENT_ID: '{{ tpl .Values.global.authClientId $ }}'
     REGISTRY_STAFF_PORTAL_API_MINIO_ENDPOINT: '{{ tpl .Values.global.minioHost $ }}'
     REGISTRY_STAFF_PORTAL_API_MINIO_SECURE: '{{ .Values.global.minioSecure }}'
-    REGISTRY_STAFF_PORTAL_API_MINIO_BUCKET_NAME: "{{ .Values.global.defaultBucketName }}"
+    REGISTRY_STAFF_PORTAL_API_MINIO_BUCKET_NAME: "{{ .Values.global.imageBucketName }}"
     REGISTRY_STAFF_PORTAL_API_TEMPLATE_BUCKET_NAME: "{{ .Values.global.templateBucketName }}"
 
     # OpenG2P Audit Manager integration. No-op unless both AUDIT_ENABLED=true
