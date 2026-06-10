@@ -99,6 +99,8 @@ spec:
               value: {{ .Values.dbSeed.loadImages | quote }}
             - name: LOAD_TEMPLATES
               value: {{ .Values.dbSeed.loadTemplates | quote }}
+            - name: IMAGE_BUCKET_NAME
+              value: {{ .Values.global.imageBucketName | quote }}
             - name: MINIO_ENDPOINT
               value: {{ tpl .Values.global.minioHost $ | quote }}
             - name: MINIO_SECURE
