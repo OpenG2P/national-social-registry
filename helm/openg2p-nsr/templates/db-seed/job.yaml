@@ -102,7 +102,7 @@ spec:
             - name: MINIO_SECURE
               value: {{ .Values.global.minioSecure | quote }}
             - name: TEMPLATE_BUCKET_NAME
-              value: {{ .Values.global.templateBucketName | quote }}
+              value: {{ tpl .Values.global.templateBucketName $ | quote }}
             - name: MINIO_ACCESS_KEY
               valueFrom:
                 secretKeyRef:

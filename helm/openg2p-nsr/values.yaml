@@ -37,22 +37,31 @@ global:
   # file to match their actual base domain. NOTE: `minio.<basedomain>` is
   # the *Console* UI — do NOT point S3 clients at it.
   minioHost: 'minio-api.{{ .Release.Namespace }}.openg2p.org'
-  defaultBucketName: "default"
-  templateBucketName: "template"
+  # MinIO buckets — per-release so two registry instances in the same
+  # namespace don't share object namespaces. The db-seed image auto-creates
+  # missing buckets on first run (see docker/db-seed/upload_templates.py).
+  defaultBucketName: '{{ .Release.Name }}-default'
+  templateBucketName: '{{ .Release.Name }}-template'
   minioSecure: true
 
   # Security & Authentication
   keymanagerInstallationName: commons-services-keymanager
   keycloakBaseUrl: 'https://keycloak.{{ .Release.Namespace }}.openg2p.org'
+  # Single shared `staff` realm per namespace — all registry releases (and
+  # other apps like AWE) authenticate against the same realm; each release
+  # gets its OWN client (clientId below) inside that shared realm.
   keycloakRealm: 'staff'
   keycloakIssuerUrl: '{{ tpl .Values.global.keycloakBaseUrl $ }}/realms/{{ tpl .Values.global.keycloakRealm $ }}'
 
   registryKeymanagerAuthEnabled: false
-  registryKeymanagerAppId: REGISTRY
-  # OIDC client ID — must match the clientId in keycloak-init.realms
-  authClientId: 'registry-staff-portal'
-  # K8s Secret name holding the client password (created by keycloak-init)
-  authClientSecret: 'registry-staff-portal'
+  # Per-release keymanager app id (uppercased Release.Name) so signature
+  # scopes don't collide across registry instances in the same environment.
+  registryKeymanagerAppId: '{{ .Release.Name | upper }}'
+  # OIDC client ID — per-release; MUST equal the clientId in keycloak-init.realms below.
+  authClientId: '{{ .Release.Name }}-staff-portal'
+  # K8s Secret name holding the client password (keycloak-init names the
+  # Secret after the clientId, so this must match authClientId above).
+  authClientSecret: '{{ .Release.Name }}-staff-portal'
   # Key inside the secret containing the client password
   authClientSecretKey: 'client_secret'
 
@@ -241,13 +250,13 @@ partnerApi:
     REGISTRY_PARTNER_API_KEYMANAGER_AUTH_ENABLED: '{{ .Values.global.registryKeymanagerAuthEnabled }}'
     REGISTRY_PARTNER_API_KEYMANAGER_AUTH_URL: "{{ tpl .Values.global.keycloakIssuerUrl $ }}/protocol/openid-connect/token"
     REGISTRY_PARTNER_API_KEYMANAGER_AUTH_CLIENT_ID: '{{ tpl .Values.global.authClientId $ }}'
-    REGISTRY_PARTNER_API_KEYMANAGER_SIGN_APP_ID: '{{ .Values.global.registryKeymanagerAppId }}'
+    REGISTRY_PARTNER_API_KEYMANAGER_SIGN_APP_ID: '{{ tpl .Values.global.registryKeymanagerAppId $ }}'
     REGISTRY_PARTNER_API_KEYMANAGER_SIGN_REF_ID: ""
 
     REGISTRY_PARTNER_API_MINIO_ENDPOINT: '{{ tpl .Values.global.minioHost $ }}'
     REGISTRY_PARTNER_API_MINIO_SECURE: '{{ .Values.global.minioSecure }}'
-    REGISTRY_PARTNER_API_MINIO_BUCKET_NAME: "{{ .Values.global.defaultBucketName }}"
-    REGISTRY_PARTNER_API_TEMPLATE_BUCKET_NAME: "{{ .Values.global.templateBucketName }}"
+    REGISTRY_PARTNER_API_MINIO_BUCKET_NAME: '{{ tpl .Values.global.defaultBucketName $ }}'
+    REGISTRY_PARTNER_API_TEMPLATE_BUCKET_NAME: '{{ tpl .Values.global.templateBucketName $ }}'
 
     # OpenG2P Audit Manager integration. No-op unless both AUDIT_ENABLED=true
     # and AUDIT_MANAGER_URL are set (controlled via global.auditEnabled and
@@ -410,6 +419,14 @@ benePortalApi:
 
     REGISTRY_BENE_PORTAL_API_MINIO_ENDPOINT: '{{ tpl .Values.global.minioHost $ }}'
     REGISTRY_BENE_PORTAL_API_MINIO_SECURE: '{{ .Values.global.minioSecure }}'
+    # TODO: bene-portal-api is disabled by default for NSR, so this hardcoded
+    # bucket isn't biting today — but it (a) doesn't follow the per-release
+    # bucket naming the other components use (global.defaultBucketName /
+    # global.templateBucketName) and (b) uses the plural "templates" while
+    # the rest of the chart standardised on singular "template". When/if
+    # bene-portal is enabled, switch to:
+    #   '{{ tpl .Values.global.templateBucketName $ }}'
+    # so two registry instances in the same namespace don't share buckets.
     REGISTRY_BENE_PORTAL_API_MINIO_BUCKET_NAME: "templates"
   envVarsFrom:
     REGISTRY_BENE_PORTAL_API_DB_PASSWORD:
@@ -558,8 +575,8 @@ staffPortalApi:
     REGISTRY_STAFF_PORTAL_API_KEYCLOAK_CLIENT_ID: '{{ tpl .Values.global.authClientId $ }}'
     REGISTRY_STAFF_PORTAL_API_MINIO_ENDPOINT: '{{ tpl .Values.global.minioHost $ }}'
     REGISTRY_STAFF_PORTAL_API_MINIO_SECURE: '{{ .Values.global.minioSecure }}'
-    REGISTRY_STAFF_PORTAL_API_MINIO_BUCKET_NAME: "{{ .Values.global.defaultBucketName }}"
-    REGISTRY_STAFF_PORTAL_API_TEMPLATE_BUCKET_NAME: "{{ .Values.global.templateBucketName }}"
+    REGISTRY_STAFF_PORTAL_API_MINIO_BUCKET_NAME: '{{ tpl .Values.global.defaultBucketName $ }}'
+    REGISTRY_STAFF_PORTAL_API_TEMPLATE_BUCKET_NAME: '{{ tpl .Values.global.templateBucketName $ }}'
 
     # OpenG2P Audit Manager integration. No-op unless both AUDIT_ENABLED=true
     # and AUDIT_MANAGER_URL are set (controlled via global.auditEnabled and
@@ -720,9 +737,12 @@ staffPortalUi:
   vpPurpose: "Digital identity verification for registry onboarding"
 
   envVars:
-    APP_MNEMONIC: registry-ui
+    # Per-release identifiers so two registry installs in the same namespace
+    # don't share UI/audit identity. APPLICATION_MNEMONIC must equal the
+    # Keycloak clientId verbatim (global.authClientId).
+    APP_MNEMONIC: '{{ .Release.Name }}-ui'
     APP_URL: 'https://{{ tpl .Values.global.registryHostname $ }}'
-    APPLICATION_MNEMONIC: 'registry-staff-portal'
+    APPLICATION_MNEMONIC: '{{ tpl .Values.global.authClientId $ }}'
     # Server-side calls from the Next.js Staff Portal UI pod to the Staff
     # Portal API stay inside the cluster — sibling K8s Service is named
     # "<release>-staff-portal-api" on port 80. Browser-side calls from the
@@ -897,8 +917,8 @@ celeryWorker:
 
     REGISTRY_CELERY_WORKERS_MINIO_ENDPOINT: '{{ tpl .Values.global.minioHost $ }}'
     REGISTRY_CELERY_WORKERS_MINIO_SECURE: '{{ .Values.global.minioSecure }}'
-    REGISTRY_CELERY_WORKERS_MINIO_BUCKET_NAME: "{{ .Values.global.defaultBucketName }}"
-    REGISTRY_CELERY_WORKERS_TEMPLATE_BUCKET_NAME: "{{ .Values.global.templateBucketName }}"
+    REGISTRY_CELERY_WORKERS_MINIO_BUCKET_NAME: '{{ tpl .Values.global.defaultBucketName $ }}'
+    REGISTRY_CELERY_WORKERS_TEMPLATE_BUCKET_NAME: '{{ tpl .Values.global.templateBucketName $ }}'
     REGISTRY_CELERY_WORKERS_FUNCTIONAL_ID_GENERATION_URL: '{{ tpl .Values.global.idGeneratorInternalUrl $ }}'
     REGISTRY_CELERY_WORKERS_ID_GENERATION_ALLOCATION_PATH: '/idgenerator/{id_type}/id'
     CELERY_APP: "openg2p_registry_celery_workers.main.celery_app"
@@ -977,7 +997,11 @@ keycloak-init:
   realms:
     staff:
       clients:
-        - clientId: registry-staff-portal
+        # Per-release client inside the shared `staff` realm. clientId is
+        # templated so two registry installs in the same namespace each get
+        # their own OIDC client (and their own client_secret Secret named
+        # after the clientId — see global.authClientSecret above).
+        - clientId: '{{ .Release.Name }}-staff-portal'
           name: Registry Staff Portal
           # Host-scoped redirect URIs — restricted to the Staff Portal UI's
           # public hostname. Covers all paths under it (root, OIDC callback,
@@ -1004,7 +1028,10 @@ keycloak-init:
         # of commons layer
         - username: admin
           clientRoleMappings:
-            registry-staff-portal:
+            # Key must equal the per-release clientId above. keycloak-init
+            # renders this whole block through `tpl`, so the Go-template
+            # expression in the YAML key is resolved at install time.
+            '{{ .Release.Name }}-staff-portal':
               - "Operations Administrator"
               - "Technical Administrator"
 
