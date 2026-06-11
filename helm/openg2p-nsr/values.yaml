@@ -105,6 +105,18 @@ global:
   aweDBSecret: '{{ .Release.Name }}-awe'
   aweDBUserPasswordKey: '{{ .Release.Name }}-awe-db-user'
 
+  # Staff-portal-api AWE client + db-seed AWE database seeding
+  aweEnabled: true
+  aweBaseUrl: 'https://{{ tpl .Values.global.aweHostname $ }}'
+  aweCallbackSecretId: 'registry'
+  aweHttpTimeoutSeconds: 30
+  aweWebhookTimestampToleranceSeconds: 300
+  aweCallbackHmacSecretName: '{{ .Release.Name }}-awe-callback-hmac'
+  aweCallbackHmacSecretKey: 'hmac-secret'
+  aweApproverUserPassword: 'Changeme123!'
+  # AWE subchart runs under the same Helm release (service: <release>-awe)
+  aweReleaseName: '{{ .Release.Name }}'
+
 # Logging — ships openg2p pod logs (as JSON) to the OpenSearch Output
 # installed by openg2p-commons-base via Fluent Operator.
 logging:
@@ -165,6 +177,11 @@ postgres-init:
       secretUserPasswordKey: '{{ tpl .Values.global.registryDBUserPasswordKey $ }}'
       extensions:
         - 'pg_trgm'
+    # Provision AWE webhook HMAC secret on the registry DB (idempotent).
+    - name: '{{ tpl .Values.global.registryDB $ }}'
+      user: '{{ tpl .Values.global.registryDBUser $ }}'
+      secret: '{{ tpl .Values.global.aweCallbackHmacSecretName $ }}'
+      secretUserPasswordKey: '{{ .Values.global.aweCallbackHmacSecretKey }}'
 
 partnerApi:
   enabled: true
@@ -574,6 +591,13 @@ staffPortalApi:
     REGISTRY_STAFF_PORTAL_API_AUDIT_MANAGER_URL: '{{ .Values.global.auditManagerUrl }}'
     REGISTRY_STAFF_PORTAL_API_AUDIT_ANONYMOUS_FAILURES: '{{ .Values.global.auditAnonymousFailures }}'
 
+    REGISTRY_STAFF_PORTAL_API_AWE_ENABLED: '{{ .Values.global.aweEnabled }}'
+    REGISTRY_STAFF_PORTAL_API_AWE_BASE_URL: '{{ tpl .Values.global.aweBaseUrl $ }}'
+    REGISTRY_STAFF_PORTAL_API_AWE_HTTP_TIMEOUT_SECONDS: '{{ .Values.global.aweHttpTimeoutSeconds }}'
+    REGISTRY_STAFF_PORTAL_API_AWE_DEFAULT_CALLBACK_URL: 'https://{{ tpl .Values.staffPortalApi.hostname $ }}/awe/webhooks/decision'
+    REGISTRY_STAFF_PORTAL_API_AWE_CALLBACK_SECRET_ID: '{{ .Values.global.aweCallbackSecretId }}'
+    REGISTRY_STAFF_PORTAL_API_AWE_WEBHOOK_TIMESTAMP_TOLERANCE_SECONDS: '{{ .Values.global.aweWebhookTimestampToleranceSeconds }}'
+
   envVarsFrom:
     REGISTRY_STAFF_PORTAL_API_DB_PASSWORD:
       secretKeyRef:
@@ -591,6 +615,10 @@ staffPortalApi:
       secretKeyRef:
         name: '{{ tpl .Values.global.minioSecret $ }}'
         key: '{{ tpl .Values.global.minioSecretKey $ }}'
+    REGISTRY_STAFF_PORTAL_API_AWE_CALLBACK_HMAC_SECRET:
+      secretKeyRef:
+        name: '{{ tpl .Values.global.aweCallbackHmacSecretName $ }}'
+        key: '{{ .Values.global.aweCallbackHmacSecretKey }}'
 
   startupProbe:
     enabled: true
@@ -1008,6 +1036,86 @@ keycloak-init:
         # IMPORTANT: It is assumed that admin has already been created as part
         # of commons layer
         - username: admin
+          clientRoleMappings:
+            registry-staff-portal:
+              - "Operations Administrator"
+              - "Technical Administrator"
+        - username: alex.carter
+          email: alex.carter@email.com
+          password: '{{ .Values.global.aweApproverUserPassword }}'
+          enabled: true
+          clientRoleMappings:
+            registry-staff-portal:
+              - "Operations Administrator"
+              - "Technical Administrator"
+        - username: maya.reed
+          email: maya.reed@email.com
+          password: '{{ .Values.global.aweApproverUserPassword }}'
+          enabled: true
+          clientRoleMappings:
+            registry-staff-portal:
+              - "Operations Administrator"
+              - "Technical Administrator"
+        - username: nina.patel
+          email: nina.patel@email.com
+          password: '{{ .Values.global.aweApproverUserPassword }}'
+          enabled: true
+          clientRoleMappings:
+            registry-staff-portal:
+              - "Operations Administrator"
+              - "Technical Administrator"
+        - username: omar.sheikh
+          email: omar.sheikh@email.com
+          password: '{{ .Values.global.aweApproverUserPassword }}'
+          enabled: true
+          clientRoleMappings:
+            registry-staff-portal:
+              - "Operations Administrator"
+              - "Technical Administrator"
+        - username: zara.khan
+          email: zara.khan@email.com
+          password: '{{ .Values.global.aweApproverUserPassword }}'
+          enabled: true
+          clientRoleMappings:
+            registry-staff-portal:
+              - "Operations Administrator"
+              - "Technical Administrator"
+        - username: chipo.banda
+          email: chipo.banda@email.com
+          password: '{{ .Values.global.aweApproverUserPassword }}'
+          enabled: true
+          clientRoleMappings:
+            registry-staff-portal:
+              - "Operations Administrator"
+              - "Technical Administrator"
+        - username: tendai.moyo
+          email: tendai.moyo@email.com
+          password: '{{ .Values.global.aweApproverUserPassword }}'
+          enabled: true
+          clientRoleMappings:
+            registry-staff-portal:
+              - "Operations Administrator"
+              - "Technical Administrator"
+        - username: hana.bekele
+          email: hana.bekele@email.com
+          password: '{{ .Values.global.aweApproverUserPassword }}'
+          enabled: true
+          clientRoleMappings:
+            registry-staff-portal:
+              - "Operations Administrator"
+              - "Technical Administrator"
+        - username: tesfaye.mekonnen
+          email: tesfaye.mekonnen@email.com
+          password: '{{ .Values.global.aweApproverUserPassword }}'
+          enabled: true
+          clientRoleMappings:
+            registry-staff-portal:
+              - "Operations Administrator"
+              - "Technical Administrator"
+        - username: mwansa.tembo
+          email: mwansa.tembo@email.com
+          password: '{{ .Values.global.aweApproverUserPassword }}'
+          enabled: true
           clientRoleMappings:
             registry-staff-portal:
               - "Operations Administrator"
