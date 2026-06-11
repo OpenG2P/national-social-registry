@@ -232,15 +232,19 @@ partnerApi:
     enabled: true
     virtualservice:
       enabled: true
-      host: '{{ tpl .Values.partnerApi.hostname $ }}'
+      # Hostname inlined (not `tpl .Values.hostname $`) — the component templates
+      # rebind `.Values` to staffPortalApi/partnerApi sub-tree via deepCopy,
+      # which boxes string values as interface{} and breaks nested `tpl`.
+      # `.Values.global.*` is preserved un-boxed in the rebound context.
+      host: 'partner-{{ tpl .Values.global.registryHostname $ }}'
       gateway: "internal"
       destination: '{{ .Release.Name }}-partner-api'
-      destinationPort: '{{ .Values.partnerApi.service.port }}'
+      destinationPort: '{{ .Values.service.port }}'
       prefix: '{{ .Values.openapiRootPath }}/'
       rewriteUri: "/"
     gateway:
       enabled: false
-      host: '{{ tpl .Values.partnerApi.hostname $ }}'
+      host: 'partner-{{ tpl .Values.global.registryHostname $ }}'
       ingressController:
         istio: ingressgateway
       httpTlsRedirect: false
@@ -416,7 +420,7 @@ benePortalApi:
       host: ""
       gateway: "internal"
       destination: '{{ .Release.Name }}-bene-portal-api'
-      destinationPort: '{{ .Values.benePortalApi.service.port }}'
+      destinationPort: '{{ .Values.service.port }}'
       prefix: '{{ .Values.openapiRootPath }}/'
       rewriteUri: "/"
     gateway:
@@ -561,15 +565,16 @@ staffPortalApi:
     enabled: true
     virtualservice:
       enabled: true
-      host: '{{ tpl .Values.staffPortalApi.hostname $ }}'
+      # Hostname inlined — see comment under partnerApi.istio for rationale.
+      host: 'staff-{{ tpl .Values.global.registryHostname $ }}'
       gateway: "internal"
       destination: '{{ .Release.Name }}-staff-portal-api'
-      destinationPort: '{{ .Values.staffPortalApi.service.port }}'
+      destinationPort: '{{ .Values.service.port }}'
       prefix: '{{ .Values.openapiRootPath }}/'
       rewriteUri: "/"
     gateway:
       enabled: false
-      host: '{{ tpl .Values.staffPortalApi.hostname $ }}'
+      host: 'staff-{{ tpl .Values.global.registryHostname $ }}'
       ingressController:
         istio: ingressgateway
       httpTlsRedirect: false
@@ -611,7 +616,7 @@ staffPortalApi:
     REGISTRY_STAFF_PORTAL_API_AWE_ENABLED: '{{ .Values.global.aweEnabled }}'
     REGISTRY_STAFF_PORTAL_API_AWE_BASE_URL: '{{ tpl .Values.global.aweBaseUrl $ }}'
     REGISTRY_STAFF_PORTAL_API_AWE_HTTP_TIMEOUT_SECONDS: '{{ .Values.global.aweHttpTimeoutSeconds }}'
-    REGISTRY_STAFF_PORTAL_API_AWE_DEFAULT_CALLBACK_URL: 'https://{{ tpl .Values.staffPortalApi.hostname $ }}/awe/webhooks/decision'
+    REGISTRY_STAFF_PORTAL_API_AWE_DEFAULT_CALLBACK_URL: 'https://staff-{{ tpl .Values.global.registryHostname $ }}/awe/webhooks/decision'
     REGISTRY_STAFF_PORTAL_API_AWE_CALLBACK_SECRET_ID: '{{ .Values.global.aweCallbackSecretId }}'
     REGISTRY_STAFF_PORTAL_API_AWE_WEBHOOK_TIMESTAMP_TOLERANCE_SECONDS: '{{ .Values.global.aweWebhookTimestampToleranceSeconds }}'
 
