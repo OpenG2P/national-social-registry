@@ -75,6 +75,12 @@ spec:
               echo "  celery-worker has no HTTP endpoint; assuming ready after APIs."
               {{- end }}
               echo "All application services are ready."
+              {{- if and .Values.global.aweEnabled .Values.openg2p-awe.enabled }}
+              until wget -qO- --timeout=5 http://{{ include "common.tplvalues.render" (dict "value" .Values.global.aweReleaseName "context" $) }}-awe:80/v1/awe/health >/dev/null 2>&1; do
+                echo "  waiting for awe API..."; sleep 5
+              done
+              echo "  awe API is ready."
+              {{- end }}
       containers:
         - name: db-seed
           image: {{ include "common.tplvalues.render" (dict "value" .Values.dbSeed.image.repository "context" $) }}:{{ .Values.dbSeed.image.tag }}
@@ -95,8 +101,34 @@ spec:
                   key: {{ include "common.tplvalues.render" (dict "value" .Values.global.registryDBUserPasswordKey "context" $) | quote }}
             - name: LOAD_SAMPLE_DATA
               value: {{ .Values.dbSeed.loadSampleData | quote }}
+            - name: LOAD_IMAGES
+              value: {{ .Values.dbSeed.loadImages | quote }}
             - name: LOAD_TEMPLATES
               value: {{ .Values.dbSeed.loadTemplates | quote }}
+            - name: IMAGE_BUCKET_NAME
+              value: {{ .Values.global.imageBucketName | quote }}
+            - name: AWE_DB_SEED_ENABLED
+              value: {{ .Values.global.aweEnabled | quote }}
+            - name: AWE_PGHOST
+              value: {{ .Values.global.postgresqlHost | quote }}
+            - name: AWE_PGPORT
+              value: {{ .Values.global.aweDBPort | default 5432 | quote }}
+            - name: AWE_PGDATABASE
+              value: {{ include "common.tplvalues.render" (dict "value" .Values.global.aweDB "context" $) | quote }}
+            - name: AWE_PGUSER
+              value: {{ include "common.tplvalues.render" (dict "value" .Values.global.aweDBUser "context" $) | quote }}
+            - name: AWE_PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "common.tplvalues.render" (dict "value" .Values.global.aweDBSecret "context" $) | quote }}
+                  key: {{ include "common.tplvalues.render" (dict "value" .Values.global.aweDBUserPasswordKey "context" $) | quote }}
+            {{- if .Values.global.aweEnabled }}
+            - name: AWE_CALLBACK_HMAC_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ tpl .Values.global.aweCallbackHmacSecretName $ | quote }}
+                  key: {{ .Values.global.aweCallbackHmacSecretKey | quote }}
+            {{- end }}
             - name: MINIO_ENDPOINT
               value: {{ tpl .Values.global.minioHost $ | quote }}
             - name: MINIO_SECURE

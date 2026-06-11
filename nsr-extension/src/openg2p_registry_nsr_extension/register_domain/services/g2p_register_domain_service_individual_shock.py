@@ -1,15 +1,12 @@
 import logging
 
-from openg2p_registry_core.schemas import ChangeRequestRequestPayload
 from openg2p_registry_core.services import G2PRegisterDomainService
 
 _logger = logging.getLogger("g2p-register-domain-service")
 
 
 class G2PRegisterDomainServiceIndividualShock(G2PRegisterDomainService):
-    async def validate_domain_attributes(
-        self, change_request_request_payload: ChangeRequestRequestPayload
-    ):
+    async def validate_domain_attributes(self, records: list[dict]):
         _logger.info("Validating individual shock domain attributes")
         return
 

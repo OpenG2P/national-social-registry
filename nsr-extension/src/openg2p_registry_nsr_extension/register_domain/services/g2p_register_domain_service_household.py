@@ -1,17 +1,57 @@
 import logging
 
-from openg2p_registry_core.schemas import ChangeRequestRequestPayload
 from openg2p_registry_core.services import G2PRegisterDomainService
+
+from .domain_validation_utils import as_bool, as_float, as_int, validation_error
 
 _logger = logging.getLogger("g2p-register-domain-service")
 
 
 class G2PRegisterDomainServiceHousehold(G2PRegisterDomainService):
-    async def validate_domain_attributes(
-        self, change_request_request_payload: ChangeRequestRequestPayload
-    ):
-        _logger.info("Validating household domain attributes")
-        return
+    async def validate_domain_attributes(self, records: list[dict]):
+        for record in records:
+            self._validate_household_size(record)
+            self._validate_overcrowding(record)
+            self._validate_elderly_member(record)
+
+    def _validate_household_size(self, record: dict) -> None:
+        size_total = as_int(record.get("size_total"))
+        male = as_int(record.get("number_of_male_members"))
+        female = as_int(record.get("number_of_female_members"))
+        if size_total is not None and male is not None and female is not None:
+            if size_total != male + female:
+                validation_error(
+                    "size_total must equal number_of_male_members + number_of_female_members"
+                )
+
+        category_fields = (
+            "size_adults",
+            "size_children_u5",
+            "size_school_age",
+            "size_elderly",
+        )
+        category_values = [as_int(record.get(field)) for field in category_fields]
+        if size_total is not None and all(value is not None for value in category_values):
+            category_sum = sum(category_values)
+            if size_total != category_sum:
+                validation_error(
+                    "size_total must equal size_adults + size_children_u5 + "
+                    "size_school_age + size_elderly"
+                )
+
+    def _validate_overcrowding(self, record: dict) -> None:
+        overcrowding = as_float(record.get("overcrowding_indicator"))
+        size_total = as_int(record.get("size_total"))
+        if overcrowding is not None and size_total is not None and overcrowding > size_total:
+            validation_error("overcrowding_indicator must not exceed size_total")
+
+    def _validate_elderly_member(self, record: dict) -> None:
+        elderly_present = as_bool(record.get("elderly_member_present"))
+        size_elderly = as_int(record.get("size_elderly"))
+        if elderly_present is False and size_elderly not in (None, 0):
+            validation_error(
+                "size_elderly must be empty or zero when elderly_member_present is false"
+            )
 
     def construct_search_text(self, payload: dict, extra: list[str] = None) -> str:
         _logger.info("Constructing search text for household")
