@@ -12,7 +12,7 @@ only NSR-specific differences from the base defaults are:
 3. ID Generator `idTypes`: `individual` (12) + `household` (10).
 
 Everything else (deployments, services, gateways/virtualservices, db-seed Job,
-logging, helper subcharts, …) comes from the inlined base-chart templates.
+helper subcharts, …) comes from the inlined base-chart templates.
 
 ## Sub-dependencies
 
