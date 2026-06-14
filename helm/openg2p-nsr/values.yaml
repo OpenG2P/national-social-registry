@@ -1005,6 +1005,12 @@ redis:
   master:
     persistence:
       enabled: false
+    # The bundled Bitnami redis subchart defaults master.resourcesPreset to
+    # "nano", which injects limits (cpu 150m / memory 192Mi / ephemeral-storage
+    # 2Gi). Disable the preset and pass empty resources so no limits/requests
+    # are set on the redis master container.
+    resourcesPreset: "none"
+    resources: {}
   auth:
     enabled: false
 
