@@ -1087,7 +1087,11 @@ keycloak-init:
           password: '{{ .Values.global.aweApproverUserPassword }}'
           enabled: true
           clientRoleMappings:
-            registry-staff-portal:
+            # Templated per-release — keycloak-init renders users through `tpl`,
+            # so this resolves to the same client as global.authClientId. A bare
+            # `registry-staff-portal` would point at a non-existent client for
+            # any release not literally named `registry`.
+            '{{ .Release.Name }}-staff-portal':
               - "Operations Administrator"
               - "Technical Administrator"
         - username: maya.reed
@@ -1095,7 +1099,11 @@ keycloak-init:
           password: '{{ .Values.global.aweApproverUserPassword }}'
           enabled: true
           clientRoleMappings:
-            registry-staff-portal:
+            # Templated per-release — keycloak-init renders users through `tpl`,
+            # so this resolves to the same client as global.authClientId. A bare
+            # `registry-staff-portal` would point at a non-existent client for
+            # any release not literally named `registry`.
+            '{{ .Release.Name }}-staff-portal':
               - "Operations Administrator"
               - "Technical Administrator"
         - username: nina.patel
@@ -1103,7 +1111,11 @@ keycloak-init:
           password: '{{ .Values.global.aweApproverUserPassword }}'
           enabled: true
           clientRoleMappings:
-            registry-staff-portal:
+            # Templated per-release — keycloak-init renders users through `tpl`,
+            # so this resolves to the same client as global.authClientId. A bare
+            # `registry-staff-portal` would point at a non-existent client for
+            # any release not literally named `registry`.
+            '{{ .Release.Name }}-staff-portal':
               - "Operations Administrator"
               - "Technical Administrator"
         - username: omar.sheikh
@@ -1111,7 +1123,11 @@ keycloak-init:
           password: '{{ .Values.global.aweApproverUserPassword }}'
           enabled: true
           clientRoleMappings:
-            registry-staff-portal:
+            # Templated per-release — keycloak-init renders users through `tpl`,
+            # so this resolves to the same client as global.authClientId. A bare
+            # `registry-staff-portal` would point at a non-existent client for
+            # any release not literally named `registry`.
+            '{{ .Release.Name }}-staff-portal':
               - "Operations Administrator"
               - "Technical Administrator"
         - username: zara.khan
@@ -1119,7 +1135,11 @@ keycloak-init:
           password: '{{ .Values.global.aweApproverUserPassword }}'
           enabled: true
           clientRoleMappings:
-            registry-staff-portal:
+            # Templated per-release — keycloak-init renders users through `tpl`,
+            # so this resolves to the same client as global.authClientId. A bare
+            # `registry-staff-portal` would point at a non-existent client for
+            # any release not literally named `registry`.
+            '{{ .Release.Name }}-staff-portal':
               - "Operations Administrator"
               - "Technical Administrator"
         - username: chipo.banda
@@ -1127,7 +1147,11 @@ keycloak-init:
           password: '{{ .Values.global.aweApproverUserPassword }}'
           enabled: true
           clientRoleMappings:
-            registry-staff-portal:
+            # Templated per-release — keycloak-init renders users through `tpl`,
+            # so this resolves to the same client as global.authClientId. A bare
+            # `registry-staff-portal` would point at a non-existent client for
+            # any release not literally named `registry`.
+            '{{ .Release.Name }}-staff-portal':
               - "Operations Administrator"
               - "Technical Administrator"
         - username: tendai.moyo
@@ -1135,7 +1159,11 @@ keycloak-init:
           password: '{{ .Values.global.aweApproverUserPassword }}'
           enabled: true
           clientRoleMappings:
-            registry-staff-portal:
+            # Templated per-release — keycloak-init renders users through `tpl`,
+            # so this resolves to the same client as global.authClientId. A bare
+            # `registry-staff-portal` would point at a non-existent client for
+            # any release not literally named `registry`.
+            '{{ .Release.Name }}-staff-portal':
               - "Operations Administrator"
               - "Technical Administrator"
         - username: hana.bekele
@@ -1143,7 +1171,11 @@ keycloak-init:
           password: '{{ .Values.global.aweApproverUserPassword }}'
           enabled: true
           clientRoleMappings:
-            registry-staff-portal:
+            # Templated per-release — keycloak-init renders users through `tpl`,
+            # so this resolves to the same client as global.authClientId. A bare
+            # `registry-staff-portal` would point at a non-existent client for
+            # any release not literally named `registry`.
+            '{{ .Release.Name }}-staff-portal':
               - "Operations Administrator"
               - "Technical Administrator"
         - username: tesfaye.mekonnen
@@ -1151,7 +1183,11 @@ keycloak-init:
           password: '{{ .Values.global.aweApproverUserPassword }}'
           enabled: true
           clientRoleMappings:
-            registry-staff-portal:
+            # Templated per-release — keycloak-init renders users through `tpl`,
+            # so this resolves to the same client as global.authClientId. A bare
+            # `registry-staff-portal` would point at a non-existent client for
+            # any release not literally named `registry`.
+            '{{ .Release.Name }}-staff-portal':
               - "Operations Administrator"
               - "Technical Administrator"
         - username: mwansa.tembo
@@ -1159,7 +1195,11 @@ keycloak-init:
           password: '{{ .Values.global.aweApproverUserPassword }}'
           enabled: true
           clientRoleMappings:
-            registry-staff-portal:
+            # Templated per-release — keycloak-init renders users through `tpl`,
+            # so this resolves to the same client as global.authClientId. A bare
+            # `registry-staff-portal` would point at a non-existent client for
+            # any release not literally named `registry`.
+            '{{ .Release.Name }}-staff-portal':
               - "Operations Administrator"
               - "Technical Administrator"
 
