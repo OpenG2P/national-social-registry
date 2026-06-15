@@ -379,16 +379,28 @@ def get_register_id(cur, mnemonic: str):
 
 
 def qualifying_sections(cur, register_id: str) -> list[str]:
-    """Sections enqueued for completion scoring: own-register sections plus
-    any list section (mirrors enqueue_completion_score_computations)."""
+    """Sections enqueued for completion scoring: own-register sections plus any
+    list section, EXCLUDING sections backed by a CORE_TABLE register (e.g. the
+    Score section).
+
+    The completion-score worker resolves each section's model as
+    G2PRegister<section_register_mnemonic> from the extensions
+    register_domain.models. CORE_TABLE registers (e.g. Score) have no such
+    generated model — their model lives in registry-core — so enqueuing them
+    makes the worker fail with "has no attribute 'G2PRegisterScore'"."""
     cur.execute(
-        'SELECT section_id, section_register_id, is_list '
-        'FROM "public"."g2p_register_sections" WHERE register_id = %s',
+        "SELECT s.section_id, s.section_register_id, s.is_list, d.register_purpose "
+        'FROM "public"."g2p_register_sections" s '
+        'LEFT JOIN "public"."g2p_register_definitions" d '
+        "  ON d.register_id = s.section_register_id "
+        "WHERE s.register_id = %s",
         (register_id,),
     )
     out = []
-    for section_id, section_register_id, is_list in cur.fetchall():
+    for section_id, section_register_id, is_list, purpose in cur.fetchall():
         if section_register_id != register_id and not is_list:
+            continue
+        if purpose == "CORE_TABLE":
             continue
         out.append(section_id)
     return out
