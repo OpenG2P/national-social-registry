@@ -10,6 +10,7 @@ import csv
 import json
 import os
 import sys
+import uuid
 from pathlib import Path
 
 import psycopg2
@@ -45,7 +46,7 @@ def load_json(path: Path):
 
 
 JSON_COLUMNS_INDIVIDUAL = {"phone_numbers", "geo_hierarchy_json"}
-JSON_COLUMNS_HOUSEHOLD = {"member_ids", "geo_hierarchy_json"}
+JSON_COLUMNS_HOUSEHOLD = {"geo_hierarchy_json"}
 
 
 def _read_csv_rows(path: Path, json_columns: set[str]) -> list[dict]:
@@ -119,7 +120,7 @@ def insert_individuals(cur, individuals: list[dict]) -> None:
             (
                 ind["internal_record_id"],
                 ind["functional_record_id"],
-                None,
+                ind.get("household_id"),  # link to master Household register
                 None,
                 ind["full_name"],
                 None,
@@ -361,6 +362,70 @@ def insert_scores(cur, scores: list[dict]) -> None:
     print(f"[load-sample-data]   -> g2p_register_scores: {len(rows)}")
 
 
+# Stable namespace so re-running the seed produces the same queue_id per
+# (register, record, section) — combined with ON CONFLICT DO NOTHING this
+# makes completion-score enqueueing idempotent.
+_QUEUE_NS = uuid.UUID("a1b2c3d4-0000-4000-8000-000000000001")
+
+
+def get_register_id(cur, mnemonic: str):
+    cur.execute(
+        'SELECT register_id FROM "public"."g2p_register_definitions" '
+        "WHERE register_mnemonic = %s",
+        (mnemonic,),
+    )
+    row = cur.fetchone()
+    return row[0] if row else None
+
+
+def qualifying_sections(cur, register_id: str) -> list[str]:
+    """Sections enqueued for completion scoring: own-register sections plus
+    any list section (mirrors enqueue_completion_score_computations)."""
+    cur.execute(
+        'SELECT section_id, section_register_id, is_list '
+        'FROM "public"."g2p_register_sections" WHERE register_id = %s',
+        (register_id,),
+    )
+    out = []
+    for section_id, section_register_id, is_list in cur.fetchall():
+        if section_register_id != register_id and not is_list:
+            continue
+        out.append(section_id)
+    return out
+
+
+def enqueue_completion_scores(cur, register_id: str, record_ids: list[str]) -> None:
+    """Seed PENDING g2p_completion_score_computation_queue rows for each
+    (record, qualifying section) so the worker computes scores later."""
+    if not register_id:
+        print("[load-sample-data]   -> completion-score queue: register not found, skipped")
+        return
+    sections = qualifying_sections(cur, register_id)
+    if not sections:
+        print(f"[load-sample-data]   -> completion-score queue ({register_id}): no sections")
+        return
+    rows = []
+    for rid in record_ids:
+        for sid in sections:
+            queue_id = str(uuid.uuid5(_QUEUE_NS, f"{register_id}:{rid}:{sid}"))
+            rows.append((queue_id, register_id, rid, sid, None, None, "PENDING", 0))
+    columns = [
+        "queue_id", "register_id", "internal_record_id", "section_id",
+        "change_request_id", "submission_id",
+        "compute_status", "compute_number_of_attempts",
+    ]
+    sql = (
+        'INSERT INTO "public"."g2p_completion_score_computation_queue" ('
+        + ", ".join(f'"{c}"' for c in columns)
+        + ") VALUES %s ON CONFLICT (queue_id) DO NOTHING"
+    )
+    psycopg2.extras.execute_values(cur, sql, rows, template=None, page_size=500)
+    print(
+        f"[load-sample-data]   -> completion-score queue: {len(rows)} rows "
+        f"({len(record_ids)} records x {len(sections)} sections)"
+    )
+
+
 def main() -> None:
     print("[load-sample-data] Starting…")
     print(f"[load-sample-data] OPENG2P_DATA_DIR = {OPENG2P_DATA_DIR}")
@@ -387,6 +452,20 @@ def main() -> None:
             insert_sub_table(cur, table, rows, extras)
         scores = load_json(NSR_DATA_DIR / "scores.json")
         insert_scores(cur, scores)
+
+        # Seed completion-score computation queue so the worker can compute
+        # section completion scores for every seeded individual and household.
+        enqueue_completion_scores(
+            cur,
+            get_register_id(cur, "Individual"),
+            [ind["internal_record_id"] for ind in individuals],
+        )
+        enqueue_completion_scores(
+            cur,
+            get_register_id(cur, "Household"),
+            [hh["internal_record_id"] for hh in households],
+        )
+
         conn.commit()
         print("[load-sample-data] Done.")
     except Exception as exc:

@@ -1,8 +1,8 @@
 [
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000001",
+    "internal_record_id": "lnd0001",
     "functional_record_id": "LND-NSR-0001",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000002",
+    "link_internal_record_id": "i0002",
     "link_foundational_id": null,
     "record_name": "Land plot 1",
     "record_image_storage_id": null,
@@ -18,9 +18,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000002",
+    "internal_record_id": "lnd0002",
     "functional_record_id": "LND-NSR-0002",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000003",
+    "link_internal_record_id": "i0003",
     "link_foundational_id": null,
     "record_name": "Land plot 2",
     "record_image_storage_id": null,
@@ -36,9 +36,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000003",
+    "internal_record_id": "lnd0003",
     "functional_record_id": "LND-NSR-0003",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000003",
+    "link_internal_record_id": "i0003",
     "link_foundational_id": null,
     "record_name": "Land plot 3",
     "record_image_storage_id": null,
@@ -54,9 +54,9 @@
     "productive_assets": "[\"OTHER\", \"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000004",
+    "internal_record_id": "lnd0004",
     "functional_record_id": "LND-NSR-0004",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000004",
+    "link_internal_record_id": "i0004",
     "link_foundational_id": null,
     "record_name": "Land plot 4",
     "record_image_storage_id": null,
@@ -72,9 +72,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000005",
+    "internal_record_id": "lnd0005",
     "functional_record_id": "LND-NSR-0005",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000004",
+    "link_internal_record_id": "i0004",
     "link_foundational_id": null,
     "record_name": "Land plot 5",
     "record_image_storage_id": null,
@@ -90,9 +90,9 @@
     "productive_assets": "[\"OTHER\", \"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000006",
+    "internal_record_id": "lnd0006",
     "functional_record_id": "LND-NSR-0006",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000009",
+    "link_internal_record_id": "i0009",
     "link_foundational_id": null,
     "record_name": "Land plot 6",
     "record_image_storage_id": null,
@@ -108,9 +108,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000007",
+    "internal_record_id": "lnd0007",
     "functional_record_id": "LND-NSR-0007",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000009",
+    "link_internal_record_id": "i0009",
     "link_foundational_id": null,
     "record_name": "Land plot 7",
     "record_image_storage_id": null,
@@ -126,9 +126,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000008",
+    "internal_record_id": "lnd0008",
     "functional_record_id": "LND-NSR-0008",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000012",
+    "link_internal_record_id": "i0012",
     "link_foundational_id": null,
     "record_name": "Land plot 8",
     "record_image_storage_id": null,
@@ -144,9 +144,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000009",
+    "internal_record_id": "lnd0009",
     "functional_record_id": "LND-NSR-0009",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000014",
+    "link_internal_record_id": "i0014",
     "link_foundational_id": null,
     "record_name": "Land plot 9",
     "record_image_storage_id": null,
@@ -162,9 +162,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000010",
+    "internal_record_id": "lnd0010",
     "functional_record_id": "LND-NSR-0010",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000014",
+    "link_internal_record_id": "i0014",
     "link_foundational_id": null,
     "record_name": "Land plot 10",
     "record_image_storage_id": null,
@@ -180,9 +180,9 @@
     "productive_assets": "[\"TRACTOR\", \"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000011",
+    "internal_record_id": "lnd0011",
     "functional_record_id": "LND-NSR-0011",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000014",
+    "link_internal_record_id": "i0014",
     "link_foundational_id": null,
     "record_name": "Land plot 11",
     "record_image_storage_id": null,
@@ -198,9 +198,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000012",
+    "internal_record_id": "lnd0012",
     "functional_record_id": "LND-NSR-0012",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000015",
+    "link_internal_record_id": "i0015",
     "link_foundational_id": null,
     "record_name": "Land plot 12",
     "record_image_storage_id": null,
@@ -216,9 +216,9 @@
     "productive_assets": "[\"OTHER\", \"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000013",
+    "internal_record_id": "lnd0013",
     "functional_record_id": "LND-NSR-0013",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000015",
+    "link_internal_record_id": "i0015",
     "link_foundational_id": null,
     "record_name": "Land plot 13",
     "record_image_storage_id": null,
@@ -234,9 +234,9 @@
     "productive_assets": "[\"OTHER\", \"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000014",
+    "internal_record_id": "lnd0014",
     "functional_record_id": "LND-NSR-0014",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000015",
+    "link_internal_record_id": "i0015",
     "link_foundational_id": null,
     "record_name": "Land plot 14",
     "record_image_storage_id": null,
@@ -252,9 +252,9 @@
     "productive_assets": "[\"PLOUGH\", \"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000015",
+    "internal_record_id": "lnd0015",
     "functional_record_id": "LND-NSR-0015",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000017",
+    "link_internal_record_id": "i0017",
     "link_foundational_id": null,
     "record_name": "Land plot 15",
     "record_image_storage_id": null,
@@ -270,9 +270,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000016",
+    "internal_record_id": "lnd0016",
     "functional_record_id": "LND-NSR-0016",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000017",
+    "link_internal_record_id": "i0017",
     "link_foundational_id": null,
     "record_name": "Land plot 16",
     "record_image_storage_id": null,
@@ -288,9 +288,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000017",
+    "internal_record_id": "lnd0017",
     "functional_record_id": "LND-NSR-0017",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000017",
+    "link_internal_record_id": "i0017",
     "link_foundational_id": null,
     "record_name": "Land plot 17",
     "record_image_storage_id": null,
@@ -306,9 +306,9 @@
     "productive_assets": "[\"PLOUGH\", \"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000018",
+    "internal_record_id": "lnd0018",
     "functional_record_id": "LND-NSR-0018",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000018",
+    "link_internal_record_id": "i0018",
     "link_foundational_id": null,
     "record_name": "Land plot 18",
     "record_image_storage_id": null,
@@ -324,9 +324,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000019",
+    "internal_record_id": "lnd0019",
     "functional_record_id": "LND-NSR-0019",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000018",
+    "link_internal_record_id": "i0018",
     "link_foundational_id": null,
     "record_name": "Land plot 19",
     "record_image_storage_id": null,
@@ -342,9 +342,9 @@
     "productive_assets": "[\"TRACTOR\", \"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000020",
+    "internal_record_id": "lnd0020",
     "functional_record_id": "LND-NSR-0020",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000018",
+    "link_internal_record_id": "i0018",
     "link_foundational_id": null,
     "record_name": "Land plot 20",
     "record_image_storage_id": null,
@@ -360,9 +360,9 @@
     "productive_assets": "[\"PLOUGH\", \"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000021",
+    "internal_record_id": "lnd0021",
     "functional_record_id": "LND-NSR-0021",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000026",
+    "link_internal_record_id": "i0026",
     "link_foundational_id": null,
     "record_name": "Land plot 21",
     "record_image_storage_id": null,
@@ -378,9 +378,9 @@
     "productive_assets": "[\"OTHER\", \"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000022",
+    "internal_record_id": "lnd0022",
     "functional_record_id": "LND-NSR-0022",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000031",
+    "link_internal_record_id": "i0031",
     "link_foundational_id": null,
     "record_name": "Land plot 22",
     "record_image_storage_id": null,
@@ -396,9 +396,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000023",
+    "internal_record_id": "lnd0023",
     "functional_record_id": "LND-NSR-0023",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000032",
+    "link_internal_record_id": "i0032",
     "link_foundational_id": null,
     "record_name": "Land plot 23",
     "record_image_storage_id": null,
@@ -414,9 +414,9 @@
     "productive_assets": "[\"TRACTOR\", \"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000024",
+    "internal_record_id": "lnd0024",
     "functional_record_id": "LND-NSR-0024",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000040",
+    "link_internal_record_id": "i0040",
     "link_foundational_id": null,
     "record_name": "Land plot 24",
     "record_image_storage_id": null,
@@ -432,9 +432,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000025",
+    "internal_record_id": "lnd0025",
     "functional_record_id": "LND-NSR-0025",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000040",
+    "link_internal_record_id": "i0040",
     "link_foundational_id": null,
     "record_name": "Land plot 25",
     "record_image_storage_id": null,
@@ -450,9 +450,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000026",
+    "internal_record_id": "lnd0026",
     "functional_record_id": "LND-NSR-0026",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000040",
+    "link_internal_record_id": "i0040",
     "link_foundational_id": null,
     "record_name": "Land plot 26",
     "record_image_storage_id": null,
@@ -468,9 +468,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000027",
+    "internal_record_id": "lnd0027",
     "functional_record_id": "LND-NSR-0027",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000041",
+    "link_internal_record_id": "i0041",
     "link_foundational_id": null,
     "record_name": "Land plot 27",
     "record_image_storage_id": null,
@@ -486,9 +486,9 @@
     "productive_assets": "[\"PLOUGH\", \"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000028",
+    "internal_record_id": "lnd0028",
     "functional_record_id": "LND-NSR-0028",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000041",
+    "link_internal_record_id": "i0041",
     "link_foundational_id": null,
     "record_name": "Land plot 28",
     "record_image_storage_id": null,
@@ -504,9 +504,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000029",
+    "internal_record_id": "lnd0029",
     "functional_record_id": "LND-NSR-0029",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000041",
+    "link_internal_record_id": "i0041",
     "link_foundational_id": null,
     "record_name": "Land plot 29",
     "record_image_storage_id": null,
@@ -522,9 +522,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000030",
+    "internal_record_id": "lnd0030",
     "functional_record_id": "LND-NSR-0030",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000042",
+    "link_internal_record_id": "i0042",
     "link_foundational_id": null,
     "record_name": "Land plot 30",
     "record_image_storage_id": null,
@@ -540,9 +540,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000031",
+    "internal_record_id": "lnd0031",
     "functional_record_id": "LND-NSR-0031",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000042",
+    "link_internal_record_id": "i0042",
     "link_foundational_id": null,
     "record_name": "Land plot 31",
     "record_image_storage_id": null,
@@ -558,9 +558,9 @@
     "productive_assets": "[\"TRACTOR\", \"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000032",
+    "internal_record_id": "lnd0032",
     "functional_record_id": "LND-NSR-0032",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000043",
+    "link_internal_record_id": "i0043",
     "link_foundational_id": null,
     "record_name": "Land plot 32",
     "record_image_storage_id": null,
@@ -576,9 +576,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000033",
+    "internal_record_id": "lnd0033",
     "functional_record_id": "LND-NSR-0033",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000044",
+    "link_internal_record_id": "i0044",
     "link_foundational_id": null,
     "record_name": "Land plot 33",
     "record_image_storage_id": null,
@@ -594,9 +594,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000034",
+    "internal_record_id": "lnd0034",
     "functional_record_id": "LND-NSR-0034",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000045",
+    "link_internal_record_id": "i0045",
     "link_foundational_id": null,
     "record_name": "Land plot 34",
     "record_image_storage_id": null,
@@ -612,9 +612,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000035",
+    "internal_record_id": "lnd0035",
     "functional_record_id": "LND-NSR-0035",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000045",
+    "link_internal_record_id": "i0045",
     "link_foundational_id": null,
     "record_name": "Land plot 35",
     "record_image_storage_id": null,
@@ -630,9 +630,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000036",
+    "internal_record_id": "lnd0036",
     "functional_record_id": "LND-NSR-0036",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000049",
+    "link_internal_record_id": "i0049",
     "link_foundational_id": null,
     "record_name": "Land plot 36",
     "record_image_storage_id": null,
@@ -648,9 +648,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000037",
+    "internal_record_id": "lnd0037",
     "functional_record_id": "LND-NSR-0037",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000049",
+    "link_internal_record_id": "i0049",
     "link_foundational_id": null,
     "record_name": "Land plot 37",
     "record_image_storage_id": null,
@@ -666,9 +666,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000038",
+    "internal_record_id": "lnd0038",
     "functional_record_id": "LND-NSR-0038",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000049",
+    "link_internal_record_id": "i0049",
     "link_foundational_id": null,
     "record_name": "Land plot 38",
     "record_image_storage_id": null,
@@ -684,9 +684,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000039",
+    "internal_record_id": "lnd0039",
     "functional_record_id": "LND-NSR-0039",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000051",
+    "link_internal_record_id": "i0051",
     "link_foundational_id": null,
     "record_name": "Land plot 39",
     "record_image_storage_id": null,
@@ -702,9 +702,9 @@
     "productive_assets": "[\"PLOUGH\", \"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000040",
+    "internal_record_id": "lnd0040",
     "functional_record_id": "LND-NSR-0040",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000051",
+    "link_internal_record_id": "i0051",
     "link_foundational_id": null,
     "record_name": "Land plot 40",
     "record_image_storage_id": null,
@@ -720,9 +720,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000041",
+    "internal_record_id": "lnd0041",
     "functional_record_id": "LND-NSR-0041",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000052",
+    "link_internal_record_id": "i0052",
     "link_foundational_id": null,
     "record_name": "Land plot 41",
     "record_image_storage_id": null,
@@ -738,9 +738,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000042",
+    "internal_record_id": "lnd0042",
     "functional_record_id": "LND-NSR-0042",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000052",
+    "link_internal_record_id": "i0052",
     "link_foundational_id": null,
     "record_name": "Land plot 42",
     "record_image_storage_id": null,
@@ -756,9 +756,9 @@
     "productive_assets": "[\"TRACTOR\", \"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000043",
+    "internal_record_id": "lnd0043",
     "functional_record_id": "LND-NSR-0043",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000052",
+    "link_internal_record_id": "i0052",
     "link_foundational_id": null,
     "record_name": "Land plot 43",
     "record_image_storage_id": null,
@@ -774,9 +774,9 @@
     "productive_assets": "[\"OTHER\", \"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000044",
+    "internal_record_id": "lnd0044",
     "functional_record_id": "LND-NSR-0044",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000055",
+    "link_internal_record_id": "i0055",
     "link_foundational_id": null,
     "record_name": "Land plot 44",
     "record_image_storage_id": null,
@@ -792,9 +792,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000045",
+    "internal_record_id": "lnd0045",
     "functional_record_id": "LND-NSR-0045",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000055",
+    "link_internal_record_id": "i0055",
     "link_foundational_id": null,
     "record_name": "Land plot 45",
     "record_image_storage_id": null,
@@ -810,9 +810,9 @@
     "productive_assets": "[\"PLOUGH\", \"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000046",
+    "internal_record_id": "lnd0046",
     "functional_record_id": "LND-NSR-0046",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000065",
+    "link_internal_record_id": "i0065",
     "link_foundational_id": null,
     "record_name": "Land plot 46",
     "record_image_storage_id": null,
@@ -828,9 +828,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000047",
+    "internal_record_id": "lnd0047",
     "functional_record_id": "LND-NSR-0047",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000065",
+    "link_internal_record_id": "i0065",
     "link_foundational_id": null,
     "record_name": "Land plot 47",
     "record_image_storage_id": null,
@@ -846,9 +846,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000048",
+    "internal_record_id": "lnd0048",
     "functional_record_id": "LND-NSR-0048",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000066",
+    "link_internal_record_id": "i0066",
     "link_foundational_id": null,
     "record_name": "Land plot 48",
     "record_image_storage_id": null,
@@ -864,9 +864,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000049",
+    "internal_record_id": "lnd0049",
     "functional_record_id": "LND-NSR-0049",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000066",
+    "link_internal_record_id": "i0066",
     "link_foundational_id": null,
     "record_name": "Land plot 49",
     "record_image_storage_id": null,
@@ -882,9 +882,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000050",
+    "internal_record_id": "lnd0050",
     "functional_record_id": "LND-NSR-0050",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000066",
+    "link_internal_record_id": "i0066",
     "link_foundational_id": null,
     "record_name": "Land plot 50",
     "record_image_storage_id": null,
@@ -900,9 +900,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000051",
+    "internal_record_id": "lnd0051",
     "functional_record_id": "LND-NSR-0051",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000068",
+    "link_internal_record_id": "i0068",
     "link_foundational_id": null,
     "record_name": "Land plot 51",
     "record_image_storage_id": null,
@@ -918,9 +918,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000052",
+    "internal_record_id": "lnd0052",
     "functional_record_id": "LND-NSR-0052",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000068",
+    "link_internal_record_id": "i0068",
     "link_foundational_id": null,
     "record_name": "Land plot 52",
     "record_image_storage_id": null,
@@ -936,9 +936,9 @@
     "productive_assets": "[\"TRACTOR\", \"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000053",
+    "internal_record_id": "lnd0053",
     "functional_record_id": "LND-NSR-0053",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000069",
+    "link_internal_record_id": "i0069",
     "link_foundational_id": null,
     "record_name": "Land plot 53",
     "record_image_storage_id": null,
@@ -954,9 +954,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000054",
+    "internal_record_id": "lnd0054",
     "functional_record_id": "LND-NSR-0054",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000073",
+    "link_internal_record_id": "i0073",
     "link_foundational_id": null,
     "record_name": "Land plot 54",
     "record_image_storage_id": null,
@@ -972,9 +972,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000055",
+    "internal_record_id": "lnd0055",
     "functional_record_id": "LND-NSR-0055",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000073",
+    "link_internal_record_id": "i0073",
     "link_foundational_id": null,
     "record_name": "Land plot 55",
     "record_image_storage_id": null,
@@ -990,9 +990,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000056",
+    "internal_record_id": "lnd0056",
     "functional_record_id": "LND-NSR-0056",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000073",
+    "link_internal_record_id": "i0073",
     "link_foundational_id": null,
     "record_name": "Land plot 56",
     "record_image_storage_id": null,
@@ -1008,9 +1008,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000057",
+    "internal_record_id": "lnd0057",
     "functional_record_id": "LND-NSR-0057",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000077",
+    "link_internal_record_id": "i0077",
     "link_foundational_id": null,
     "record_name": "Land plot 57",
     "record_image_storage_id": null,
@@ -1026,9 +1026,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000058",
+    "internal_record_id": "lnd0058",
     "functional_record_id": "LND-NSR-0058",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000077",
+    "link_internal_record_id": "i0077",
     "link_foundational_id": null,
     "record_name": "Land plot 58",
     "record_image_storage_id": null,
@@ -1044,9 +1044,9 @@
     "productive_assets": "[\"PLOUGH\", \"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000059",
+    "internal_record_id": "lnd0059",
     "functional_record_id": "LND-NSR-0059",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000077",
+    "link_internal_record_id": "i0077",
     "link_foundational_id": null,
     "record_name": "Land plot 59",
     "record_image_storage_id": null,
@@ -1062,9 +1062,9 @@
     "productive_assets": "[\"TRACTOR\", \"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000060",
+    "internal_record_id": "lnd0060",
     "functional_record_id": "LND-NSR-0060",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000079",
+    "link_internal_record_id": "i0079",
     "link_foundational_id": null,
     "record_name": "Land plot 60",
     "record_image_storage_id": null,
@@ -1080,9 +1080,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000061",
+    "internal_record_id": "lnd0061",
     "functional_record_id": "LND-NSR-0061",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000079",
+    "link_internal_record_id": "i0079",
     "link_foundational_id": null,
     "record_name": "Land plot 61",
     "record_image_storage_id": null,
@@ -1098,9 +1098,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000062",
+    "internal_record_id": "lnd0062",
     "functional_record_id": "LND-NSR-0062",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000087",
+    "link_internal_record_id": "i0087",
     "link_foundational_id": null,
     "record_name": "Land plot 62",
     "record_image_storage_id": null,
@@ -1116,9 +1116,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000063",
+    "internal_record_id": "lnd0063",
     "functional_record_id": "LND-NSR-0063",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000087",
+    "link_internal_record_id": "i0087",
     "link_foundational_id": null,
     "record_name": "Land plot 63",
     "record_image_storage_id": null,
@@ -1134,9 +1134,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000064",
+    "internal_record_id": "lnd0064",
     "functional_record_id": "LND-NSR-0064",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000087",
+    "link_internal_record_id": "i0087",
     "link_foundational_id": null,
     "record_name": "Land plot 64",
     "record_image_storage_id": null,
@@ -1152,9 +1152,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000065",
+    "internal_record_id": "lnd0065",
     "functional_record_id": "LND-NSR-0065",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000095",
+    "link_internal_record_id": "i0095",
     "link_foundational_id": null,
     "record_name": "Land plot 65",
     "record_image_storage_id": null,
@@ -1170,9 +1170,9 @@
     "productive_assets": "[\"PLOUGH\", \"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000066",
+    "internal_record_id": "lnd0066",
     "functional_record_id": "LND-NSR-0066",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000095",
+    "link_internal_record_id": "i0095",
     "link_foundational_id": null,
     "record_name": "Land plot 66",
     "record_image_storage_id": null,
@@ -1188,9 +1188,9 @@
     "productive_assets": "[\"TRACTOR\", \"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000067",
+    "internal_record_id": "lnd0067",
     "functional_record_id": "LND-NSR-0067",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000096",
+    "link_internal_record_id": "i0096",
     "link_foundational_id": null,
     "record_name": "Land plot 67",
     "record_image_storage_id": null,
@@ -1206,9 +1206,9 @@
     "productive_assets": "[\"PLOUGH\", \"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000068",
+    "internal_record_id": "lnd0068",
     "functional_record_id": "LND-NSR-0068",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000096",
+    "link_internal_record_id": "i0096",
     "link_foundational_id": null,
     "record_name": "Land plot 68",
     "record_image_storage_id": null,
@@ -1224,9 +1224,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000069",
+    "internal_record_id": "lnd0069",
     "functional_record_id": "LND-NSR-0069",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000096",
+    "link_internal_record_id": "i0096",
     "link_foundational_id": null,
     "record_name": "Land plot 69",
     "record_image_storage_id": null,
@@ -1242,9 +1242,9 @@
     "productive_assets": "[\"TRACTOR\", \"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000070",
+    "internal_record_id": "lnd0070",
     "functional_record_id": "LND-NSR-0070",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000098",
+    "link_internal_record_id": "i0098",
     "link_foundational_id": null,
     "record_name": "Land plot 70",
     "record_image_storage_id": null,
@@ -1260,9 +1260,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000071",
+    "internal_record_id": "lnd0071",
     "functional_record_id": "LND-NSR-0071",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000098",
+    "link_internal_record_id": "i0098",
     "link_foundational_id": null,
     "record_name": "Land plot 71",
     "record_image_storage_id": null,
@@ -1278,9 +1278,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000072",
+    "internal_record_id": "lnd0072",
     "functional_record_id": "LND-NSR-0072",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000101",
+    "link_internal_record_id": "i0101",
     "link_foundational_id": null,
     "record_name": "Land plot 72",
     "record_image_storage_id": null,
@@ -1296,9 +1296,9 @@
     "productive_assets": "[\"PLOUGH\", \"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000073",
+    "internal_record_id": "lnd0073",
     "functional_record_id": "LND-NSR-0073",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000101",
+    "link_internal_record_id": "i0101",
     "link_foundational_id": null,
     "record_name": "Land plot 73",
     "record_image_storage_id": null,
@@ -1314,9 +1314,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000074",
+    "internal_record_id": "lnd0074",
     "functional_record_id": "LND-NSR-0074",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000102",
+    "link_internal_record_id": "i0102",
     "link_foundational_id": null,
     "record_name": "Land plot 74",
     "record_image_storage_id": null,
@@ -1332,9 +1332,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000075",
+    "internal_record_id": "lnd0075",
     "functional_record_id": "LND-NSR-0075",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000102",
+    "link_internal_record_id": "i0102",
     "link_foundational_id": null,
     "record_name": "Land plot 75",
     "record_image_storage_id": null,
@@ -1350,9 +1350,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000076",
+    "internal_record_id": "lnd0076",
     "functional_record_id": "LND-NSR-0076",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000104",
+    "link_internal_record_id": "i0104",
     "link_foundational_id": null,
     "record_name": "Land plot 76",
     "record_image_storage_id": null,
@@ -1368,9 +1368,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000077",
+    "internal_record_id": "lnd0077",
     "functional_record_id": "LND-NSR-0077",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000104",
+    "link_internal_record_id": "i0104",
     "link_foundational_id": null,
     "record_name": "Land plot 77",
     "record_image_storage_id": null,
@@ -1386,9 +1386,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000078",
+    "internal_record_id": "lnd0078",
     "functional_record_id": "LND-NSR-0078",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000105",
+    "link_internal_record_id": "i0105",
     "link_foundational_id": null,
     "record_name": "Land plot 78",
     "record_image_storage_id": null,
@@ -1404,9 +1404,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000079",
+    "internal_record_id": "lnd0079",
     "functional_record_id": "LND-NSR-0079",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000105",
+    "link_internal_record_id": "i0105",
     "link_foundational_id": null,
     "record_name": "Land plot 79",
     "record_image_storage_id": null,
@@ -1422,9 +1422,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000080",
+    "internal_record_id": "lnd0080",
     "functional_record_id": "LND-NSR-0080",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000109",
+    "link_internal_record_id": "i0109",
     "link_foundational_id": null,
     "record_name": "Land plot 80",
     "record_image_storage_id": null,
@@ -1440,9 +1440,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000081",
+    "internal_record_id": "lnd0081",
     "functional_record_id": "LND-NSR-0081",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000109",
+    "link_internal_record_id": "i0109",
     "link_foundational_id": null,
     "record_name": "Land plot 81",
     "record_image_storage_id": null,
@@ -1458,9 +1458,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000082",
+    "internal_record_id": "lnd0082",
     "functional_record_id": "LND-NSR-0082",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000109",
+    "link_internal_record_id": "i0109",
     "link_foundational_id": null,
     "record_name": "Land plot 82",
     "record_image_storage_id": null,
@@ -1476,9 +1476,9 @@
     "productive_assets": "[\"TRACTOR\", \"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000083",
+    "internal_record_id": "lnd0083",
     "functional_record_id": "LND-NSR-0083",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000110",
+    "link_internal_record_id": "i0110",
     "link_foundational_id": null,
     "record_name": "Land plot 83",
     "record_image_storage_id": null,
@@ -1494,9 +1494,9 @@
     "productive_assets": "[\"PLOUGH\", \"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000084",
+    "internal_record_id": "lnd0084",
     "functional_record_id": "LND-NSR-0084",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000113",
+    "link_internal_record_id": "i0113",
     "link_foundational_id": null,
     "record_name": "Land plot 84",
     "record_image_storage_id": null,
@@ -1512,9 +1512,9 @@
     "productive_assets": "[\"PLOUGH\", \"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000085",
+    "internal_record_id": "lnd0085",
     "functional_record_id": "LND-NSR-0085",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000113",
+    "link_internal_record_id": "i0113",
     "link_foundational_id": null,
     "record_name": "Land plot 85",
     "record_image_storage_id": null,
@@ -1530,9 +1530,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000086",
+    "internal_record_id": "lnd0086",
     "functional_record_id": "LND-NSR-0086",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000113",
+    "link_internal_record_id": "i0113",
     "link_foundational_id": null,
     "record_name": "Land plot 86",
     "record_image_storage_id": null,
@@ -1548,9 +1548,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000087",
+    "internal_record_id": "lnd0087",
     "functional_record_id": "LND-NSR-0087",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000118",
+    "link_internal_record_id": "i0118",
     "link_foundational_id": null,
     "record_name": "Land plot 87",
     "record_image_storage_id": null,
@@ -1566,9 +1566,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000088",
+    "internal_record_id": "lnd0088",
     "functional_record_id": "LND-NSR-0088",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000119",
+    "link_internal_record_id": "i0119",
     "link_foundational_id": null,
     "record_name": "Land plot 88",
     "record_image_storage_id": null,
@@ -1584,9 +1584,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000089",
+    "internal_record_id": "lnd0089",
     "functional_record_id": "LND-NSR-0089",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000120",
+    "link_internal_record_id": "i0120",
     "link_foundational_id": null,
     "record_name": "Land plot 89",
     "record_image_storage_id": null,
@@ -1602,9 +1602,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000090",
+    "internal_record_id": "lnd0090",
     "functional_record_id": "LND-NSR-0090",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000120",
+    "link_internal_record_id": "i0120",
     "link_foundational_id": null,
     "record_name": "Land plot 90",
     "record_image_storage_id": null,
@@ -1620,9 +1620,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000091",
+    "internal_record_id": "lnd0091",
     "functional_record_id": "LND-NSR-0091",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000122",
+    "link_internal_record_id": "i0122",
     "link_foundational_id": null,
     "record_name": "Land plot 91",
     "record_image_storage_id": null,
@@ -1638,9 +1638,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000092",
+    "internal_record_id": "lnd0092",
     "functional_record_id": "LND-NSR-0092",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000122",
+    "link_internal_record_id": "i0122",
     "link_foundational_id": null,
     "record_name": "Land plot 92",
     "record_image_storage_id": null,
@@ -1656,9 +1656,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000093",
+    "internal_record_id": "lnd0093",
     "functional_record_id": "LND-NSR-0093",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000124",
+    "link_internal_record_id": "i0124",
     "link_foundational_id": null,
     "record_name": "Land plot 93",
     "record_image_storage_id": null,
@@ -1674,9 +1674,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000094",
+    "internal_record_id": "lnd0094",
     "functional_record_id": "LND-NSR-0094",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000124",
+    "link_internal_record_id": "i0124",
     "link_foundational_id": null,
     "record_name": "Land plot 94",
     "record_image_storage_id": null,
@@ -1692,9 +1692,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000095",
+    "internal_record_id": "lnd0095",
     "functional_record_id": "LND-NSR-0095",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000128",
+    "link_internal_record_id": "i0128",
     "link_foundational_id": null,
     "record_name": "Land plot 95",
     "record_image_storage_id": null,
@@ -1710,9 +1710,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000096",
+    "internal_record_id": "lnd0096",
     "functional_record_id": "LND-NSR-0096",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000128",
+    "link_internal_record_id": "i0128",
     "link_foundational_id": null,
     "record_name": "Land plot 96",
     "record_image_storage_id": null,
@@ -1728,9 +1728,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000097",
+    "internal_record_id": "lnd0097",
     "functional_record_id": "LND-NSR-0097",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000134",
+    "link_internal_record_id": "i0134",
     "link_foundational_id": null,
     "record_name": "Land plot 97",
     "record_image_storage_id": null,
@@ -1746,9 +1746,9 @@
     "productive_assets": "[\"PLOUGH\", \"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000098",
+    "internal_record_id": "lnd0098",
     "functional_record_id": "LND-NSR-0098",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000134",
+    "link_internal_record_id": "i0134",
     "link_foundational_id": null,
     "record_name": "Land plot 98",
     "record_image_storage_id": null,
@@ -1764,9 +1764,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000099",
+    "internal_record_id": "lnd0099",
     "functional_record_id": "LND-NSR-0099",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000134",
+    "link_internal_record_id": "i0134",
     "link_foundational_id": null,
     "record_name": "Land plot 99",
     "record_image_storage_id": null,
@@ -1782,9 +1782,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000100",
+    "internal_record_id": "lnd0100",
     "functional_record_id": "LND-NSR-0100",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000139",
+    "link_internal_record_id": "i0139",
     "link_foundational_id": null,
     "record_name": "Land plot 100",
     "record_image_storage_id": null,
@@ -1800,9 +1800,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000101",
+    "internal_record_id": "lnd0101",
     "functional_record_id": "LND-NSR-0101",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000148",
+    "link_internal_record_id": "i0148",
     "link_foundational_id": null,
     "record_name": "Land plot 101",
     "record_image_storage_id": null,
@@ -1818,9 +1818,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000102",
+    "internal_record_id": "lnd0102",
     "functional_record_id": "LND-NSR-0102",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000153",
+    "link_internal_record_id": "i0153",
     "link_foundational_id": null,
     "record_name": "Land plot 102",
     "record_image_storage_id": null,
@@ -1836,9 +1836,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000103",
+    "internal_record_id": "lnd0103",
     "functional_record_id": "LND-NSR-0103",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000153",
+    "link_internal_record_id": "i0153",
     "link_foundational_id": null,
     "record_name": "Land plot 103",
     "record_image_storage_id": null,
@@ -1854,9 +1854,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000104",
+    "internal_record_id": "lnd0104",
     "functional_record_id": "LND-NSR-0104",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000153",
+    "link_internal_record_id": "i0153",
     "link_foundational_id": null,
     "record_name": "Land plot 104",
     "record_image_storage_id": null,
@@ -1872,9 +1872,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000105",
+    "internal_record_id": "lnd0105",
     "functional_record_id": "LND-NSR-0105",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000157",
+    "link_internal_record_id": "i0157",
     "link_foundational_id": null,
     "record_name": "Land plot 105",
     "record_image_storage_id": null,
@@ -1890,9 +1890,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000106",
+    "internal_record_id": "lnd0106",
     "functional_record_id": "LND-NSR-0106",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000157",
+    "link_internal_record_id": "i0157",
     "link_foundational_id": null,
     "record_name": "Land plot 106",
     "record_image_storage_id": null,
@@ -1908,9 +1908,9 @@
     "productive_assets": "[\"OTHER\", \"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000107",
+    "internal_record_id": "lnd0107",
     "functional_record_id": "LND-NSR-0107",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000161",
+    "link_internal_record_id": "i0161",
     "link_foundational_id": null,
     "record_name": "Land plot 107",
     "record_image_storage_id": null,
@@ -1926,9 +1926,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000108",
+    "internal_record_id": "lnd0108",
     "functional_record_id": "LND-NSR-0108",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000163",
+    "link_internal_record_id": "i0163",
     "link_foundational_id": null,
     "record_name": "Land plot 108",
     "record_image_storage_id": null,
@@ -1944,9 +1944,9 @@
     "productive_assets": "[\"PLOUGH\", \"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000109",
+    "internal_record_id": "lnd0109",
     "functional_record_id": "LND-NSR-0109",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000163",
+    "link_internal_record_id": "i0163",
     "link_foundational_id": null,
     "record_name": "Land plot 109",
     "record_image_storage_id": null,
@@ -1962,9 +1962,9 @@
     "productive_assets": "[\"TRACTOR\", \"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000110",
+    "internal_record_id": "lnd0110",
     "functional_record_id": "LND-NSR-0110",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000163",
+    "link_internal_record_id": "i0163",
     "link_foundational_id": null,
     "record_name": "Land plot 110",
     "record_image_storage_id": null,
@@ -1980,9 +1980,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000111",
+    "internal_record_id": "lnd0111",
     "functional_record_id": "LND-NSR-0111",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000164",
+    "link_internal_record_id": "i0164",
     "link_foundational_id": null,
     "record_name": "Land plot 111",
     "record_image_storage_id": null,
@@ -1998,9 +1998,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000112",
+    "internal_record_id": "lnd0112",
     "functional_record_id": "LND-NSR-0112",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000164",
+    "link_internal_record_id": "i0164",
     "link_foundational_id": null,
     "record_name": "Land plot 112",
     "record_image_storage_id": null,
@@ -2016,9 +2016,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000113",
+    "internal_record_id": "lnd0113",
     "functional_record_id": "LND-NSR-0113",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000165",
+    "link_internal_record_id": "i0165",
     "link_foundational_id": null,
     "record_name": "Land plot 113",
     "record_image_storage_id": null,
@@ -2034,9 +2034,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000114",
+    "internal_record_id": "lnd0114",
     "functional_record_id": "LND-NSR-0114",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000165",
+    "link_internal_record_id": "i0165",
     "link_foundational_id": null,
     "record_name": "Land plot 114",
     "record_image_storage_id": null,
@@ -2052,9 +2052,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000115",
+    "internal_record_id": "lnd0115",
     "functional_record_id": "LND-NSR-0115",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000168",
+    "link_internal_record_id": "i0168",
     "link_foundational_id": null,
     "record_name": "Land plot 115",
     "record_image_storage_id": null,
@@ -2070,9 +2070,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000116",
+    "internal_record_id": "lnd0116",
     "functional_record_id": "LND-NSR-0116",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000169",
+    "link_internal_record_id": "i0169",
     "link_foundational_id": null,
     "record_name": "Land plot 116",
     "record_image_storage_id": null,
@@ -2088,9 +2088,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000117",
+    "internal_record_id": "lnd0117",
     "functional_record_id": "LND-NSR-0117",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000177",
+    "link_internal_record_id": "i0177",
     "link_foundational_id": null,
     "record_name": "Land plot 117",
     "record_image_storage_id": null,
@@ -2106,9 +2106,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000118",
+    "internal_record_id": "lnd0118",
     "functional_record_id": "LND-NSR-0118",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000177",
+    "link_internal_record_id": "i0177",
     "link_foundational_id": null,
     "record_name": "Land plot 118",
     "record_image_storage_id": null,
@@ -2124,9 +2124,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000119",
+    "internal_record_id": "lnd0119",
     "functional_record_id": "LND-NSR-0119",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000177",
+    "link_internal_record_id": "i0177",
     "link_foundational_id": null,
     "record_name": "Land plot 119",
     "record_image_storage_id": null,
@@ -2142,9 +2142,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000120",
+    "internal_record_id": "lnd0120",
     "functional_record_id": "LND-NSR-0120",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000183",
+    "link_internal_record_id": "i0183",
     "link_foundational_id": null,
     "record_name": "Land plot 120",
     "record_image_storage_id": null,
@@ -2160,9 +2160,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000121",
+    "internal_record_id": "lnd0121",
     "functional_record_id": "LND-NSR-0121",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000183",
+    "link_internal_record_id": "i0183",
     "link_foundational_id": null,
     "record_name": "Land plot 121",
     "record_image_storage_id": null,
@@ -2178,9 +2178,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000122",
+    "internal_record_id": "lnd0122",
     "functional_record_id": "LND-NSR-0122",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000183",
+    "link_internal_record_id": "i0183",
     "link_foundational_id": null,
     "record_name": "Land plot 122",
     "record_image_storage_id": null,
@@ -2196,9 +2196,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000123",
+    "internal_record_id": "lnd0123",
     "functional_record_id": "LND-NSR-0123",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000186",
+    "link_internal_record_id": "i0186",
     "link_foundational_id": null,
     "record_name": "Land plot 123",
     "record_image_storage_id": null,
@@ -2214,9 +2214,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000124",
+    "internal_record_id": "lnd0124",
     "functional_record_id": "LND-NSR-0124",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000186",
+    "link_internal_record_id": "i0186",
     "link_foundational_id": null,
     "record_name": "Land plot 124",
     "record_image_storage_id": null,
@@ -2232,9 +2232,9 @@
     "productive_assets": "[\"TRACTOR\", \"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000125",
+    "internal_record_id": "lnd0125",
     "functional_record_id": "LND-NSR-0125",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000186",
+    "link_internal_record_id": "i0186",
     "link_foundational_id": null,
     "record_name": "Land plot 125",
     "record_image_storage_id": null,
@@ -2250,9 +2250,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000126",
+    "internal_record_id": "lnd0126",
     "functional_record_id": "LND-NSR-0126",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000191",
+    "link_internal_record_id": "i0191",
     "link_foundational_id": null,
     "record_name": "Land plot 126",
     "record_image_storage_id": null,
@@ -2268,9 +2268,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000127",
+    "internal_record_id": "lnd0127",
     "functional_record_id": "LND-NSR-0127",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000191",
+    "link_internal_record_id": "i0191",
     "link_foundational_id": null,
     "record_name": "Land plot 127",
     "record_image_storage_id": null,
@@ -2286,9 +2286,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000128",
+    "internal_record_id": "lnd0128",
     "functional_record_id": "LND-NSR-0128",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000191",
+    "link_internal_record_id": "i0191",
     "link_foundational_id": null,
     "record_name": "Land plot 128",
     "record_image_storage_id": null,
@@ -2304,9 +2304,9 @@
     "productive_assets": "[\"PLOUGH\", \"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000129",
+    "internal_record_id": "lnd0129",
     "functional_record_id": "LND-NSR-0129",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000202",
+    "link_internal_record_id": "i0202",
     "link_foundational_id": null,
     "record_name": "Land plot 129",
     "record_image_storage_id": null,
@@ -2322,9 +2322,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000130",
+    "internal_record_id": "lnd0130",
     "functional_record_id": "LND-NSR-0130",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000202",
+    "link_internal_record_id": "i0202",
     "link_foundational_id": null,
     "record_name": "Land plot 130",
     "record_image_storage_id": null,
@@ -2340,9 +2340,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000131",
+    "internal_record_id": "lnd0131",
     "functional_record_id": "LND-NSR-0131",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000203",
+    "link_internal_record_id": "i0203",
     "link_foundational_id": null,
     "record_name": "Land plot 131",
     "record_image_storage_id": null,
@@ -2358,9 +2358,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000132",
+    "internal_record_id": "lnd0132",
     "functional_record_id": "LND-NSR-0132",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000211",
+    "link_internal_record_id": "i0211",
     "link_foundational_id": null,
     "record_name": "Land plot 132",
     "record_image_storage_id": null,
@@ -2376,9 +2376,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000133",
+    "internal_record_id": "lnd0133",
     "functional_record_id": "LND-NSR-0133",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000211",
+    "link_internal_record_id": "i0211",
     "link_foundational_id": null,
     "record_name": "Land plot 133",
     "record_image_storage_id": null,
@@ -2394,9 +2394,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000134",
+    "internal_record_id": "lnd0134",
     "functional_record_id": "LND-NSR-0134",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000215",
+    "link_internal_record_id": "i0215",
     "link_foundational_id": null,
     "record_name": "Land plot 134",
     "record_image_storage_id": null,
@@ -2412,9 +2412,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000135",
+    "internal_record_id": "lnd0135",
     "functional_record_id": "LND-NSR-0135",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000215",
+    "link_internal_record_id": "i0215",
     "link_foundational_id": null,
     "record_name": "Land plot 135",
     "record_image_storage_id": null,
@@ -2430,9 +2430,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000136",
+    "internal_record_id": "lnd0136",
     "functional_record_id": "LND-NSR-0136",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000215",
+    "link_internal_record_id": "i0215",
     "link_foundational_id": null,
     "record_name": "Land plot 136",
     "record_image_storage_id": null,
@@ -2448,9 +2448,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000137",
+    "internal_record_id": "lnd0137",
     "functional_record_id": "LND-NSR-0137",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000219",
+    "link_internal_record_id": "i0219",
     "link_foundational_id": null,
     "record_name": "Land plot 137",
     "record_image_storage_id": null,
@@ -2466,9 +2466,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000138",
+    "internal_record_id": "lnd0138",
     "functional_record_id": "LND-NSR-0138",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000221",
+    "link_internal_record_id": "i0221",
     "link_foundational_id": null,
     "record_name": "Land plot 138",
     "record_image_storage_id": null,
@@ -2484,9 +2484,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000139",
+    "internal_record_id": "lnd0139",
     "functional_record_id": "LND-NSR-0139",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000221",
+    "link_internal_record_id": "i0221",
     "link_foundational_id": null,
     "record_name": "Land plot 139",
     "record_image_storage_id": null,
@@ -2502,9 +2502,9 @@
     "productive_assets": "[\"OTHER\", \"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000140",
+    "internal_record_id": "lnd0140",
     "functional_record_id": "LND-NSR-0140",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000221",
+    "link_internal_record_id": "i0221",
     "link_foundational_id": null,
     "record_name": "Land plot 140",
     "record_image_storage_id": null,
@@ -2520,9 +2520,9 @@
     "productive_assets": "[\"PLOUGH\", \"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000141",
+    "internal_record_id": "lnd0141",
     "functional_record_id": "LND-NSR-0141",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000226",
+    "link_internal_record_id": "i0226",
     "link_foundational_id": null,
     "record_name": "Land plot 141",
     "record_image_storage_id": null,
@@ -2538,9 +2538,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000142",
+    "internal_record_id": "lnd0142",
     "functional_record_id": "LND-NSR-0142",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000227",
+    "link_internal_record_id": "i0227",
     "link_foundational_id": null,
     "record_name": "Land plot 142",
     "record_image_storage_id": null,
@@ -2556,9 +2556,9 @@
     "productive_assets": "[\"OTHER\", \"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000143",
+    "internal_record_id": "lnd0143",
     "functional_record_id": "LND-NSR-0143",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000227",
+    "link_internal_record_id": "i0227",
     "link_foundational_id": null,
     "record_name": "Land plot 143",
     "record_image_storage_id": null,
@@ -2574,9 +2574,9 @@
     "productive_assets": "[\"TRACTOR\", \"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000144",
+    "internal_record_id": "lnd0144",
     "functional_record_id": "LND-NSR-0144",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000227",
+    "link_internal_record_id": "i0227",
     "link_foundational_id": null,
     "record_name": "Land plot 144",
     "record_image_storage_id": null,
@@ -2592,9 +2592,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000145",
+    "internal_record_id": "lnd0145",
     "functional_record_id": "LND-NSR-0145",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000228",
+    "link_internal_record_id": "i0228",
     "link_foundational_id": null,
     "record_name": "Land plot 145",
     "record_image_storage_id": null,
@@ -2610,9 +2610,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000146",
+    "internal_record_id": "lnd0146",
     "functional_record_id": "LND-NSR-0146",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000228",
+    "link_internal_record_id": "i0228",
     "link_foundational_id": null,
     "record_name": "Land plot 146",
     "record_image_storage_id": null,
@@ -2628,9 +2628,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000147",
+    "internal_record_id": "lnd0147",
     "functional_record_id": "LND-NSR-0147",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000228",
+    "link_internal_record_id": "i0228",
     "link_foundational_id": null,
     "record_name": "Land plot 147",
     "record_image_storage_id": null,
@@ -2646,9 +2646,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000148",
+    "internal_record_id": "lnd0148",
     "functional_record_id": "LND-NSR-0148",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000229",
+    "link_internal_record_id": "i0229",
     "link_foundational_id": null,
     "record_name": "Land plot 148",
     "record_image_storage_id": null,
@@ -2664,9 +2664,9 @@
     "productive_assets": "[\"OTHER\", \"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000149",
+    "internal_record_id": "lnd0149",
     "functional_record_id": "LND-NSR-0149",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000232",
+    "link_internal_record_id": "i0232",
     "link_foundational_id": null,
     "record_name": "Land plot 149",
     "record_image_storage_id": null,
@@ -2682,9 +2682,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000150",
+    "internal_record_id": "lnd0150",
     "functional_record_id": "LND-NSR-0150",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000232",
+    "link_internal_record_id": "i0232",
     "link_foundational_id": null,
     "record_name": "Land plot 150",
     "record_image_storage_id": null,
@@ -2700,9 +2700,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000151",
+    "internal_record_id": "lnd0151",
     "functional_record_id": "LND-NSR-0151",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000232",
+    "link_internal_record_id": "i0232",
     "link_foundational_id": null,
     "record_name": "Land plot 151",
     "record_image_storage_id": null,
@@ -2718,9 +2718,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000152",
+    "internal_record_id": "lnd0152",
     "functional_record_id": "LND-NSR-0152",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000233",
+    "link_internal_record_id": "i0233",
     "link_foundational_id": null,
     "record_name": "Land plot 152",
     "record_image_storage_id": null,
@@ -2736,9 +2736,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000153",
+    "internal_record_id": "lnd0153",
     "functional_record_id": "LND-NSR-0153",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000241",
+    "link_internal_record_id": "i0241",
     "link_foundational_id": null,
     "record_name": "Land plot 153",
     "record_image_storage_id": null,
@@ -2754,9 +2754,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000154",
+    "internal_record_id": "lnd0154",
     "functional_record_id": "LND-NSR-0154",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000242",
+    "link_internal_record_id": "i0242",
     "link_foundational_id": null,
     "record_name": "Land plot 154",
     "record_image_storage_id": null,
@@ -2772,9 +2772,9 @@
     "productive_assets": "[\"PLOUGH\", \"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000155",
+    "internal_record_id": "lnd0155",
     "functional_record_id": "LND-NSR-0155",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000247",
+    "link_internal_record_id": "i0247",
     "link_foundational_id": null,
     "record_name": "Land plot 155",
     "record_image_storage_id": null,
@@ -2790,9 +2790,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000156",
+    "internal_record_id": "lnd0156",
     "functional_record_id": "LND-NSR-0156",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000247",
+    "link_internal_record_id": "i0247",
     "link_foundational_id": null,
     "record_name": "Land plot 156",
     "record_image_storage_id": null,
@@ -2808,9 +2808,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000157",
+    "internal_record_id": "lnd0157",
     "functional_record_id": "LND-NSR-0157",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000247",
+    "link_internal_record_id": "i0247",
     "link_foundational_id": null,
     "record_name": "Land plot 157",
     "record_image_storage_id": null,
@@ -2826,9 +2826,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000158",
+    "internal_record_id": "lnd0158",
     "functional_record_id": "LND-NSR-0158",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000253",
+    "link_internal_record_id": "i0253",
     "link_foundational_id": null,
     "record_name": "Land plot 158",
     "record_image_storage_id": null,
@@ -2844,9 +2844,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000159",
+    "internal_record_id": "lnd0159",
     "functional_record_id": "LND-NSR-0159",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000255",
+    "link_internal_record_id": "i0255",
     "link_foundational_id": null,
     "record_name": "Land plot 159",
     "record_image_storage_id": null,
@@ -2862,9 +2862,9 @@
     "productive_assets": "[\"OTHER\", \"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000160",
+    "internal_record_id": "lnd0160",
     "functional_record_id": "LND-NSR-0160",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000255",
+    "link_internal_record_id": "i0255",
     "link_foundational_id": null,
     "record_name": "Land plot 160",
     "record_image_storage_id": null,
@@ -2880,9 +2880,9 @@
     "productive_assets": "[\"OTHER\", \"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000161",
+    "internal_record_id": "lnd0161",
     "functional_record_id": "LND-NSR-0161",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000259",
+    "link_internal_record_id": "i0259",
     "link_foundational_id": null,
     "record_name": "Land plot 161",
     "record_image_storage_id": null,
@@ -2898,9 +2898,9 @@
     "productive_assets": "[\"PLOUGH\", \"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000162",
+    "internal_record_id": "lnd0162",
     "functional_record_id": "LND-NSR-0162",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000259",
+    "link_internal_record_id": "i0259",
     "link_foundational_id": null,
     "record_name": "Land plot 162",
     "record_image_storage_id": null,
@@ -2916,9 +2916,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000163",
+    "internal_record_id": "lnd0163",
     "functional_record_id": "LND-NSR-0163",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000259",
+    "link_internal_record_id": "i0259",
     "link_foundational_id": null,
     "record_name": "Land plot 163",
     "record_image_storage_id": null,
@@ -2934,9 +2934,9 @@
     "productive_assets": "[\"TRACTOR\", \"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000164",
+    "internal_record_id": "lnd0164",
     "functional_record_id": "LND-NSR-0164",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000263",
+    "link_internal_record_id": "i0263",
     "link_foundational_id": null,
     "record_name": "Land plot 164",
     "record_image_storage_id": null,
@@ -2952,9 +2952,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000165",
+    "internal_record_id": "lnd0165",
     "functional_record_id": "LND-NSR-0165",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000264",
+    "link_internal_record_id": "i0264",
     "link_foundational_id": null,
     "record_name": "Land plot 165",
     "record_image_storage_id": null,
@@ -2970,9 +2970,9 @@
     "productive_assets": "[\"OTHER\", \"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000166",
+    "internal_record_id": "lnd0166",
     "functional_record_id": "LND-NSR-0166",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000264",
+    "link_internal_record_id": "i0264",
     "link_foundational_id": null,
     "record_name": "Land plot 166",
     "record_image_storage_id": null,
@@ -2988,9 +2988,9 @@
     "productive_assets": "[\"TRACTOR\", \"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000167",
+    "internal_record_id": "lnd0167",
     "functional_record_id": "LND-NSR-0167",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000264",
+    "link_internal_record_id": "i0264",
     "link_foundational_id": null,
     "record_name": "Land plot 167",
     "record_image_storage_id": null,
@@ -3006,9 +3006,9 @@
     "productive_assets": "[\"TRACTOR\", \"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000168",
+    "internal_record_id": "lnd0168",
     "functional_record_id": "LND-NSR-0168",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000265",
+    "link_internal_record_id": "i0265",
     "link_foundational_id": null,
     "record_name": "Land plot 168",
     "record_image_storage_id": null,
@@ -3024,9 +3024,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000169",
+    "internal_record_id": "lnd0169",
     "functional_record_id": "LND-NSR-0169",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000265",
+    "link_internal_record_id": "i0265",
     "link_foundational_id": null,
     "record_name": "Land plot 169",
     "record_image_storage_id": null,
@@ -3042,9 +3042,9 @@
     "productive_assets": "[\"TRACTOR\", \"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000170",
+    "internal_record_id": "lnd0170",
     "functional_record_id": "LND-NSR-0170",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000265",
+    "link_internal_record_id": "i0265",
     "link_foundational_id": null,
     "record_name": "Land plot 170",
     "record_image_storage_id": null,
@@ -3060,9 +3060,9 @@
     "productive_assets": "[\"OTHER\", \"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000171",
+    "internal_record_id": "lnd0171",
     "functional_record_id": "LND-NSR-0171",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000269",
+    "link_internal_record_id": "i0269",
     "link_foundational_id": null,
     "record_name": "Land plot 171",
     "record_image_storage_id": null,
@@ -3078,9 +3078,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000172",
+    "internal_record_id": "lnd0172",
     "functional_record_id": "LND-NSR-0172",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000269",
+    "link_internal_record_id": "i0269",
     "link_foundational_id": null,
     "record_name": "Land plot 172",
     "record_image_storage_id": null,
@@ -3096,9 +3096,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000173",
+    "internal_record_id": "lnd0173",
     "functional_record_id": "LND-NSR-0173",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000269",
+    "link_internal_record_id": "i0269",
     "link_foundational_id": null,
     "record_name": "Land plot 173",
     "record_image_storage_id": null,
@@ -3114,9 +3114,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000174",
+    "internal_record_id": "lnd0174",
     "functional_record_id": "LND-NSR-0174",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000270",
+    "link_internal_record_id": "i0270",
     "link_foundational_id": null,
     "record_name": "Land plot 174",
     "record_image_storage_id": null,
@@ -3132,9 +3132,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000175",
+    "internal_record_id": "lnd0175",
     "functional_record_id": "LND-NSR-0175",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000274",
+    "link_internal_record_id": "i0274",
     "link_foundational_id": null,
     "record_name": "Land plot 175",
     "record_image_storage_id": null,
@@ -3150,9 +3150,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000176",
+    "internal_record_id": "lnd0176",
     "functional_record_id": "LND-NSR-0176",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000274",
+    "link_internal_record_id": "i0274",
     "link_foundational_id": null,
     "record_name": "Land plot 176",
     "record_image_storage_id": null,
@@ -3168,9 +3168,9 @@
     "productive_assets": "[\"PLOUGH\", \"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000177",
+    "internal_record_id": "lnd0177",
     "functional_record_id": "LND-NSR-0177",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000274",
+    "link_internal_record_id": "i0274",
     "link_foundational_id": null,
     "record_name": "Land plot 177",
     "record_image_storage_id": null,
@@ -3186,9 +3186,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000178",
+    "internal_record_id": "lnd0178",
     "functional_record_id": "LND-NSR-0178",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000281",
+    "link_internal_record_id": "i0281",
     "link_foundational_id": null,
     "record_name": "Land plot 178",
     "record_image_storage_id": null,
@@ -3204,9 +3204,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000179",
+    "internal_record_id": "lnd0179",
     "functional_record_id": "LND-NSR-0179",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000282",
+    "link_internal_record_id": "i0282",
     "link_foundational_id": null,
     "record_name": "Land plot 179",
     "record_image_storage_id": null,
@@ -3222,9 +3222,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000180",
+    "internal_record_id": "lnd0180",
     "functional_record_id": "LND-NSR-0180",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000282",
+    "link_internal_record_id": "i0282",
     "link_foundational_id": null,
     "record_name": "Land plot 180",
     "record_image_storage_id": null,
@@ -3240,9 +3240,9 @@
     "productive_assets": "[\"PLOUGH\", \"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000181",
+    "internal_record_id": "lnd0181",
     "functional_record_id": "LND-NSR-0181",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000285",
+    "link_internal_record_id": "i0285",
     "link_foundational_id": null,
     "record_name": "Land plot 181",
     "record_image_storage_id": null,
@@ -3258,9 +3258,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000182",
+    "internal_record_id": "lnd0182",
     "functional_record_id": "LND-NSR-0182",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000285",
+    "link_internal_record_id": "i0285",
     "link_foundational_id": null,
     "record_name": "Land plot 182",
     "record_image_storage_id": null,
@@ -3276,9 +3276,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000183",
+    "internal_record_id": "lnd0183",
     "functional_record_id": "LND-NSR-0183",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000285",
+    "link_internal_record_id": "i0285",
     "link_foundational_id": null,
     "record_name": "Land plot 183",
     "record_image_storage_id": null,
@@ -3294,9 +3294,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000184",
+    "internal_record_id": "lnd0184",
     "functional_record_id": "LND-NSR-0184",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000286",
+    "link_internal_record_id": "i0286",
     "link_foundational_id": null,
     "record_name": "Land plot 184",
     "record_image_storage_id": null,
@@ -3312,9 +3312,9 @@
     "productive_assets": "[\"OTHER\", \"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000185",
+    "internal_record_id": "lnd0185",
     "functional_record_id": "LND-NSR-0185",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000291",
+    "link_internal_record_id": "i0291",
     "link_foundational_id": null,
     "record_name": "Land plot 185",
     "record_image_storage_id": null,
@@ -3330,9 +3330,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000186",
+    "internal_record_id": "lnd0186",
     "functional_record_id": "LND-NSR-0186",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000291",
+    "link_internal_record_id": "i0291",
     "link_foundational_id": null,
     "record_name": "Land plot 186",
     "record_image_storage_id": null,
@@ -3348,9 +3348,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000187",
+    "internal_record_id": "lnd0187",
     "functional_record_id": "LND-NSR-0187",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000291",
+    "link_internal_record_id": "i0291",
     "link_foundational_id": null,
     "record_name": "Land plot 187",
     "record_image_storage_id": null,
@@ -3366,9 +3366,9 @@
     "productive_assets": "[\"OTHER\", \"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000188",
+    "internal_record_id": "lnd0188",
     "functional_record_id": "LND-NSR-0188",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000294",
+    "link_internal_record_id": "i0294",
     "link_foundational_id": null,
     "record_name": "Land plot 188",
     "record_image_storage_id": null,
@@ -3384,9 +3384,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000189",
+    "internal_record_id": "lnd0189",
     "functional_record_id": "LND-NSR-0189",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000294",
+    "link_internal_record_id": "i0294",
     "link_foundational_id": null,
     "record_name": "Land plot 189",
     "record_image_storage_id": null,
@@ -3402,9 +3402,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000190",
+    "internal_record_id": "lnd0190",
     "functional_record_id": "LND-NSR-0190",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000294",
+    "link_internal_record_id": "i0294",
     "link_foundational_id": null,
     "record_name": "Land plot 190",
     "record_image_storage_id": null,
@@ -3420,9 +3420,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000191",
+    "internal_record_id": "lnd0191",
     "functional_record_id": "LND-NSR-0191",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000298",
+    "link_internal_record_id": "i0298",
     "link_foundational_id": null,
     "record_name": "Land plot 191",
     "record_image_storage_id": null,
@@ -3438,9 +3438,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000192",
+    "internal_record_id": "lnd0192",
     "functional_record_id": "LND-NSR-0192",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000300",
+    "link_internal_record_id": "i0300",
     "link_foundational_id": null,
     "record_name": "Land plot 192",
     "record_image_storage_id": null,
@@ -3456,9 +3456,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000193",
+    "internal_record_id": "lnd0193",
     "functional_record_id": "LND-NSR-0193",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000301",
+    "link_internal_record_id": "i0301",
     "link_foundational_id": null,
     "record_name": "Land plot 193",
     "record_image_storage_id": null,
@@ -3474,9 +3474,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000194",
+    "internal_record_id": "lnd0194",
     "functional_record_id": "LND-NSR-0194",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000301",
+    "link_internal_record_id": "i0301",
     "link_foundational_id": null,
     "record_name": "Land plot 194",
     "record_image_storage_id": null,
@@ -3492,9 +3492,9 @@
     "productive_assets": "[\"OTHER\", \"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000195",
+    "internal_record_id": "lnd0195",
     "functional_record_id": "LND-NSR-0195",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000303",
+    "link_internal_record_id": "i0303",
     "link_foundational_id": null,
     "record_name": "Land plot 195",
     "record_image_storage_id": null,
@@ -3510,9 +3510,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000196",
+    "internal_record_id": "lnd0196",
     "functional_record_id": "LND-NSR-0196",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000311",
+    "link_internal_record_id": "i0311",
     "link_foundational_id": null,
     "record_name": "Land plot 196",
     "record_image_storage_id": null,
@@ -3528,9 +3528,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000197",
+    "internal_record_id": "lnd0197",
     "functional_record_id": "LND-NSR-0197",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000311",
+    "link_internal_record_id": "i0311",
     "link_foundational_id": null,
     "record_name": "Land plot 197",
     "record_image_storage_id": null,
@@ -3546,9 +3546,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000198",
+    "internal_record_id": "lnd0198",
     "functional_record_id": "LND-NSR-0198",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000311",
+    "link_internal_record_id": "i0311",
     "link_foundational_id": null,
     "record_name": "Land plot 198",
     "record_image_storage_id": null,
@@ -3564,9 +3564,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000199",
+    "internal_record_id": "lnd0199",
     "functional_record_id": "LND-NSR-0199",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000312",
+    "link_internal_record_id": "i0312",
     "link_foundational_id": null,
     "record_name": "Land plot 199",
     "record_image_storage_id": null,
@@ -3582,9 +3582,9 @@
     "productive_assets": "[\"OTHER\", \"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000200",
+    "internal_record_id": "lnd0200",
     "functional_record_id": "LND-NSR-0200",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000316",
+    "link_internal_record_id": "i0316",
     "link_foundational_id": null,
     "record_name": "Land plot 200",
     "record_image_storage_id": null,
@@ -3600,9 +3600,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000201",
+    "internal_record_id": "lnd0201",
     "functional_record_id": "LND-NSR-0201",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000316",
+    "link_internal_record_id": "i0316",
     "link_foundational_id": null,
     "record_name": "Land plot 201",
     "record_image_storage_id": null,
@@ -3618,9 +3618,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000202",
+    "internal_record_id": "lnd0202",
     "functional_record_id": "LND-NSR-0202",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000317",
+    "link_internal_record_id": "i0317",
     "link_foundational_id": null,
     "record_name": "Land plot 202",
     "record_image_storage_id": null,
@@ -3636,9 +3636,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000203",
+    "internal_record_id": "lnd0203",
     "functional_record_id": "LND-NSR-0203",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000317",
+    "link_internal_record_id": "i0317",
     "link_foundational_id": null,
     "record_name": "Land plot 203",
     "record_image_storage_id": null,
@@ -3654,9 +3654,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000204",
+    "internal_record_id": "lnd0204",
     "functional_record_id": "LND-NSR-0204",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000323",
+    "link_internal_record_id": "i0323",
     "link_foundational_id": null,
     "record_name": "Land plot 204",
     "record_image_storage_id": null,
@@ -3672,9 +3672,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000205",
+    "internal_record_id": "lnd0205",
     "functional_record_id": "LND-NSR-0205",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000323",
+    "link_internal_record_id": "i0323",
     "link_foundational_id": null,
     "record_name": "Land plot 205",
     "record_image_storage_id": null,
@@ -3690,9 +3690,9 @@
     "productive_assets": "[\"TRACTOR\", \"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000206",
+    "internal_record_id": "lnd0206",
     "functional_record_id": "LND-NSR-0206",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000323",
+    "link_internal_record_id": "i0323",
     "link_foundational_id": null,
     "record_name": "Land plot 206",
     "record_image_storage_id": null,
@@ -3708,9 +3708,9 @@
     "productive_assets": "[\"PLOUGH\", \"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000207",
+    "internal_record_id": "lnd0207",
     "functional_record_id": "LND-NSR-0207",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000324",
+    "link_internal_record_id": "i0324",
     "link_foundational_id": null,
     "record_name": "Land plot 207",
     "record_image_storage_id": null,
@@ -3726,9 +3726,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000208",
+    "internal_record_id": "lnd0208",
     "functional_record_id": "LND-NSR-0208",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000324",
+    "link_internal_record_id": "i0324",
     "link_foundational_id": null,
     "record_name": "Land plot 208",
     "record_image_storage_id": null,
@@ -3744,9 +3744,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000209",
+    "internal_record_id": "lnd0209",
     "functional_record_id": "LND-NSR-0209",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000332",
+    "link_internal_record_id": "i0332",
     "link_foundational_id": null,
     "record_name": "Land plot 209",
     "record_image_storage_id": null,
@@ -3762,9 +3762,9 @@
     "productive_assets": "[\"TRACTOR\", \"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000210",
+    "internal_record_id": "lnd0210",
     "functional_record_id": "LND-NSR-0210",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000332",
+    "link_internal_record_id": "i0332",
     "link_foundational_id": null,
     "record_name": "Land plot 210",
     "record_image_storage_id": null,
@@ -3780,9 +3780,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000211",
+    "internal_record_id": "lnd0211",
     "functional_record_id": "LND-NSR-0211",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000334",
+    "link_internal_record_id": "i0334",
     "link_foundational_id": null,
     "record_name": "Land plot 211",
     "record_image_storage_id": null,
@@ -3798,9 +3798,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000212",
+    "internal_record_id": "lnd0212",
     "functional_record_id": "LND-NSR-0212",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000334",
+    "link_internal_record_id": "i0334",
     "link_foundational_id": null,
     "record_name": "Land plot 212",
     "record_image_storage_id": null,
@@ -3816,9 +3816,9 @@
     "productive_assets": "[\"PLOUGH\", \"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000213",
+    "internal_record_id": "lnd0213",
     "functional_record_id": "LND-NSR-0213",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000334",
+    "link_internal_record_id": "i0334",
     "link_foundational_id": null,
     "record_name": "Land plot 213",
     "record_image_storage_id": null,
@@ -3834,9 +3834,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000214",
+    "internal_record_id": "lnd0214",
     "functional_record_id": "LND-NSR-0214",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000335",
+    "link_internal_record_id": "i0335",
     "link_foundational_id": null,
     "record_name": "Land plot 214",
     "record_image_storage_id": null,
@@ -3852,9 +3852,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000215",
+    "internal_record_id": "lnd0215",
     "functional_record_id": "LND-NSR-0215",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000335",
+    "link_internal_record_id": "i0335",
     "link_foundational_id": null,
     "record_name": "Land plot 215",
     "record_image_storage_id": null,
@@ -3870,9 +3870,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000216",
+    "internal_record_id": "lnd0216",
     "functional_record_id": "LND-NSR-0216",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000335",
+    "link_internal_record_id": "i0335",
     "link_foundational_id": null,
     "record_name": "Land plot 216",
     "record_image_storage_id": null,
@@ -3888,9 +3888,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000217",
+    "internal_record_id": "lnd0217",
     "functional_record_id": "LND-NSR-0217",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000339",
+    "link_internal_record_id": "i0339",
     "link_foundational_id": null,
     "record_name": "Land plot 217",
     "record_image_storage_id": null,
@@ -3906,9 +3906,9 @@
     "productive_assets": "[\"TRACTOR\", \"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000218",
+    "internal_record_id": "lnd0218",
     "functional_record_id": "LND-NSR-0218",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000339",
+    "link_internal_record_id": "i0339",
     "link_foundational_id": null,
     "record_name": "Land plot 218",
     "record_image_storage_id": null,
@@ -3924,9 +3924,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000219",
+    "internal_record_id": "lnd0219",
     "functional_record_id": "LND-NSR-0219",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000339",
+    "link_internal_record_id": "i0339",
     "link_foundational_id": null,
     "record_name": "Land plot 219",
     "record_image_storage_id": null,
@@ -3942,9 +3942,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000220",
+    "internal_record_id": "lnd0220",
     "functional_record_id": "LND-NSR-0220",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000340",
+    "link_internal_record_id": "i0340",
     "link_foundational_id": null,
     "record_name": "Land plot 220",
     "record_image_storage_id": null,
@@ -3960,9 +3960,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000221",
+    "internal_record_id": "lnd0221",
     "functional_record_id": "LND-NSR-0221",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000343",
+    "link_internal_record_id": "i0343",
     "link_foundational_id": null,
     "record_name": "Land plot 221",
     "record_image_storage_id": null,
@@ -3978,9 +3978,9 @@
     "productive_assets": "[\"TRACTOR\", \"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000222",
+    "internal_record_id": "lnd0222",
     "functional_record_id": "LND-NSR-0222",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000346",
+    "link_internal_record_id": "i0346",
     "link_foundational_id": null,
     "record_name": "Land plot 222",
     "record_image_storage_id": null,
@@ -3996,9 +3996,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000223",
+    "internal_record_id": "lnd0223",
     "functional_record_id": "LND-NSR-0223",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000346",
+    "link_internal_record_id": "i0346",
     "link_foundational_id": null,
     "record_name": "Land plot 223",
     "record_image_storage_id": null,
@@ -4014,9 +4014,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000224",
+    "internal_record_id": "lnd0224",
     "functional_record_id": "LND-NSR-0224",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000347",
+    "link_internal_record_id": "i0347",
     "link_foundational_id": null,
     "record_name": "Land plot 224",
     "record_image_storage_id": null,
@@ -4032,9 +4032,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000225",
+    "internal_record_id": "lnd0225",
     "functional_record_id": "LND-NSR-0225",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000347",
+    "link_internal_record_id": "i0347",
     "link_foundational_id": null,
     "record_name": "Land plot 225",
     "record_image_storage_id": null,
@@ -4050,9 +4050,9 @@
     "productive_assets": "[\"PLOUGH\", \"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000226",
+    "internal_record_id": "lnd0226",
     "functional_record_id": "LND-NSR-0226",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000347",
+    "link_internal_record_id": "i0347",
     "link_foundational_id": null,
     "record_name": "Land plot 226",
     "record_image_storage_id": null,
@@ -4068,9 +4068,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000227",
+    "internal_record_id": "lnd0227",
     "functional_record_id": "LND-NSR-0227",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000349",
+    "link_internal_record_id": "i0349",
     "link_foundational_id": null,
     "record_name": "Land plot 227",
     "record_image_storage_id": null,
@@ -4086,9 +4086,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000228",
+    "internal_record_id": "lnd0228",
     "functional_record_id": "LND-NSR-0228",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000349",
+    "link_internal_record_id": "i0349",
     "link_foundational_id": null,
     "record_name": "Land plot 228",
     "record_image_storage_id": null,
@@ -4104,9 +4104,9 @@
     "productive_assets": "[\"TRACTOR\", \"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000229",
+    "internal_record_id": "lnd0229",
     "functional_record_id": "LND-NSR-0229",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000352",
+    "link_internal_record_id": "i0352",
     "link_foundational_id": null,
     "record_name": "Land plot 229",
     "record_image_storage_id": null,
@@ -4122,9 +4122,9 @@
     "productive_assets": "[\"TRACTOR\", \"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000230",
+    "internal_record_id": "lnd0230",
     "functional_record_id": "LND-NSR-0230",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000352",
+    "link_internal_record_id": "i0352",
     "link_foundational_id": null,
     "record_name": "Land plot 230",
     "record_image_storage_id": null,
@@ -4140,9 +4140,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000231",
+    "internal_record_id": "lnd0231",
     "functional_record_id": "LND-NSR-0231",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000353",
+    "link_internal_record_id": "i0353",
     "link_foundational_id": null,
     "record_name": "Land plot 231",
     "record_image_storage_id": null,
@@ -4158,9 +4158,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000232",
+    "internal_record_id": "lnd0232",
     "functional_record_id": "LND-NSR-0232",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000354",
+    "link_internal_record_id": "i0354",
     "link_foundational_id": null,
     "record_name": "Land plot 232",
     "record_image_storage_id": null,
@@ -4176,9 +4176,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000233",
+    "internal_record_id": "lnd0233",
     "functional_record_id": "LND-NSR-0233",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000354",
+    "link_internal_record_id": "i0354",
     "link_foundational_id": null,
     "record_name": "Land plot 233",
     "record_image_storage_id": null,
@@ -4194,9 +4194,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000234",
+    "internal_record_id": "lnd0234",
     "functional_record_id": "LND-NSR-0234",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000354",
+    "link_internal_record_id": "i0354",
     "link_foundational_id": null,
     "record_name": "Land plot 234",
     "record_image_storage_id": null,
@@ -4212,9 +4212,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000235",
+    "internal_record_id": "lnd0235",
     "functional_record_id": "LND-NSR-0235",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000358",
+    "link_internal_record_id": "i0358",
     "link_foundational_id": null,
     "record_name": "Land plot 235",
     "record_image_storage_id": null,
@@ -4230,9 +4230,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000236",
+    "internal_record_id": "lnd0236",
     "functional_record_id": "LND-NSR-0236",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000358",
+    "link_internal_record_id": "i0358",
     "link_foundational_id": null,
     "record_name": "Land plot 236",
     "record_image_storage_id": null,
@@ -4248,9 +4248,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000237",
+    "internal_record_id": "lnd0237",
     "functional_record_id": "LND-NSR-0237",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000363",
+    "link_internal_record_id": "i0363",
     "link_foundational_id": null,
     "record_name": "Land plot 237",
     "record_image_storage_id": null,
@@ -4266,9 +4266,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000238",
+    "internal_record_id": "lnd0238",
     "functional_record_id": "LND-NSR-0238",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000363",
+    "link_internal_record_id": "i0363",
     "link_foundational_id": null,
     "record_name": "Land plot 238",
     "record_image_storage_id": null,
@@ -4284,9 +4284,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000239",
+    "internal_record_id": "lnd0239",
     "functional_record_id": "LND-NSR-0239",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000372",
+    "link_internal_record_id": "i0372",
     "link_foundational_id": null,
     "record_name": "Land plot 239",
     "record_image_storage_id": null,
@@ -4302,9 +4302,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000240",
+    "internal_record_id": "lnd0240",
     "functional_record_id": "LND-NSR-0240",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000373",
+    "link_internal_record_id": "i0373",
     "link_foundational_id": null,
     "record_name": "Land plot 240",
     "record_image_storage_id": null,
@@ -4320,9 +4320,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000241",
+    "internal_record_id": "lnd0241",
     "functional_record_id": "LND-NSR-0241",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000373",
+    "link_internal_record_id": "i0373",
     "link_foundational_id": null,
     "record_name": "Land plot 241",
     "record_image_storage_id": null,
@@ -4338,9 +4338,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000242",
+    "internal_record_id": "lnd0242",
     "functional_record_id": "LND-NSR-0242",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000373",
+    "link_internal_record_id": "i0373",
     "link_foundational_id": null,
     "record_name": "Land plot 242",
     "record_image_storage_id": null,
@@ -4356,9 +4356,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000243",
+    "internal_record_id": "lnd0243",
     "functional_record_id": "LND-NSR-0243",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000374",
+    "link_internal_record_id": "i0374",
     "link_foundational_id": null,
     "record_name": "Land plot 243",
     "record_image_storage_id": null,
@@ -4374,9 +4374,9 @@
     "productive_assets": "[\"PLOUGH\", \"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000244",
+    "internal_record_id": "lnd0244",
     "functional_record_id": "LND-NSR-0244",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000374",
+    "link_internal_record_id": "i0374",
     "link_foundational_id": null,
     "record_name": "Land plot 244",
     "record_image_storage_id": null,
@@ -4392,9 +4392,9 @@
     "productive_assets": "[\"OTHER\", \"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000245",
+    "internal_record_id": "lnd0245",
     "functional_record_id": "LND-NSR-0245",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000375",
+    "link_internal_record_id": "i0375",
     "link_foundational_id": null,
     "record_name": "Land plot 245",
     "record_image_storage_id": null,
@@ -4410,9 +4410,9 @@
     "productive_assets": "[\"OTHER\", \"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000246",
+    "internal_record_id": "lnd0246",
     "functional_record_id": "LND-NSR-0246",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000375",
+    "link_internal_record_id": "i0375",
     "link_foundational_id": null,
     "record_name": "Land plot 246",
     "record_image_storage_id": null,
@@ -4428,9 +4428,9 @@
     "productive_assets": "[\"OTHER\", \"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000247",
+    "internal_record_id": "lnd0247",
     "functional_record_id": "LND-NSR-0247",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000375",
+    "link_internal_record_id": "i0375",
     "link_foundational_id": null,
     "record_name": "Land plot 247",
     "record_image_storage_id": null,
@@ -4446,9 +4446,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000248",
+    "internal_record_id": "lnd0248",
     "functional_record_id": "LND-NSR-0248",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000376",
+    "link_internal_record_id": "i0376",
     "link_foundational_id": null,
     "record_name": "Land plot 248",
     "record_image_storage_id": null,
@@ -4464,9 +4464,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000249",
+    "internal_record_id": "lnd0249",
     "functional_record_id": "LND-NSR-0249",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000376",
+    "link_internal_record_id": "i0376",
     "link_foundational_id": null,
     "record_name": "Land plot 249",
     "record_image_storage_id": null,
@@ -4482,9 +4482,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000250",
+    "internal_record_id": "lnd0250",
     "functional_record_id": "LND-NSR-0250",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000376",
+    "link_internal_record_id": "i0376",
     "link_foundational_id": null,
     "record_name": "Land plot 250",
     "record_image_storage_id": null,
@@ -4500,9 +4500,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000251",
+    "internal_record_id": "lnd0251",
     "functional_record_id": "LND-NSR-0251",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000377",
+    "link_internal_record_id": "i0377",
     "link_foundational_id": null,
     "record_name": "Land plot 251",
     "record_image_storage_id": null,
@@ -4518,9 +4518,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000252",
+    "internal_record_id": "lnd0252",
     "functional_record_id": "LND-NSR-0252",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000377",
+    "link_internal_record_id": "i0377",
     "link_foundational_id": null,
     "record_name": "Land plot 252",
     "record_image_storage_id": null,
@@ -4536,9 +4536,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000253",
+    "internal_record_id": "lnd0253",
     "functional_record_id": "LND-NSR-0253",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000377",
+    "link_internal_record_id": "i0377",
     "link_foundational_id": null,
     "record_name": "Land plot 253",
     "record_image_storage_id": null,
@@ -4554,9 +4554,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000254",
+    "internal_record_id": "lnd0254",
     "functional_record_id": "LND-NSR-0254",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000380",
+    "link_internal_record_id": "i0380",
     "link_foundational_id": null,
     "record_name": "Land plot 254",
     "record_image_storage_id": null,
@@ -4572,9 +4572,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000255",
+    "internal_record_id": "lnd0255",
     "functional_record_id": "LND-NSR-0255",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000384",
+    "link_internal_record_id": "i0384",
     "link_foundational_id": null,
     "record_name": "Land plot 255",
     "record_image_storage_id": null,
@@ -4590,9 +4590,9 @@
     "productive_assets": "[\"OTHER\", \"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000256",
+    "internal_record_id": "lnd0256",
     "functional_record_id": "LND-NSR-0256",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000386",
+    "link_internal_record_id": "i0386",
     "link_foundational_id": null,
     "record_name": "Land plot 256",
     "record_image_storage_id": null,
@@ -4608,9 +4608,9 @@
     "productive_assets": "[\"TRACTOR\", \"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000257",
+    "internal_record_id": "lnd0257",
     "functional_record_id": "LND-NSR-0257",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000393",
+    "link_internal_record_id": "i0393",
     "link_foundational_id": null,
     "record_name": "Land plot 257",
     "record_image_storage_id": null,
@@ -4626,9 +4626,9 @@
     "productive_assets": "[\"TRACTOR\", \"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000258",
+    "internal_record_id": "lnd0258",
     "functional_record_id": "LND-NSR-0258",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000395",
+    "link_internal_record_id": "i0395",
     "link_foundational_id": null,
     "record_name": "Land plot 258",
     "record_image_storage_id": null,
@@ -4644,9 +4644,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000259",
+    "internal_record_id": "lnd0259",
     "functional_record_id": "LND-NSR-0259",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000395",
+    "link_internal_record_id": "i0395",
     "link_foundational_id": null,
     "record_name": "Land plot 259",
     "record_image_storage_id": null,
@@ -4662,9 +4662,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000260",
+    "internal_record_id": "lnd0260",
     "functional_record_id": "LND-NSR-0260",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000395",
+    "link_internal_record_id": "i0395",
     "link_foundational_id": null,
     "record_name": "Land plot 260",
     "record_image_storage_id": null,
@@ -4680,9 +4680,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000261",
+    "internal_record_id": "lnd0261",
     "functional_record_id": "LND-NSR-0261",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000398",
+    "link_internal_record_id": "i0398",
     "link_foundational_id": null,
     "record_name": "Land plot 261",
     "record_image_storage_id": null,
@@ -4698,9 +4698,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000262",
+    "internal_record_id": "lnd0262",
     "functional_record_id": "LND-NSR-0262",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000398",
+    "link_internal_record_id": "i0398",
     "link_foundational_id": null,
     "record_name": "Land plot 262",
     "record_image_storage_id": null,
@@ -4716,9 +4716,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000263",
+    "internal_record_id": "lnd0263",
     "functional_record_id": "LND-NSR-0263",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000403",
+    "link_internal_record_id": "i0403",
     "link_foundational_id": null,
     "record_name": "Land plot 263",
     "record_image_storage_id": null,
@@ -4734,9 +4734,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000264",
+    "internal_record_id": "lnd0264",
     "functional_record_id": "LND-NSR-0264",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000412",
+    "link_internal_record_id": "i0412",
     "link_foundational_id": null,
     "record_name": "Land plot 264",
     "record_image_storage_id": null,
@@ -4752,9 +4752,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000265",
+    "internal_record_id": "lnd0265",
     "functional_record_id": "LND-NSR-0265",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000412",
+    "link_internal_record_id": "i0412",
     "link_foundational_id": null,
     "record_name": "Land plot 265",
     "record_image_storage_id": null,
@@ -4770,9 +4770,9 @@
     "productive_assets": "[\"PLOUGH\", \"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000266",
+    "internal_record_id": "lnd0266",
     "functional_record_id": "LND-NSR-0266",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000412",
+    "link_internal_record_id": "i0412",
     "link_foundational_id": null,
     "record_name": "Land plot 266",
     "record_image_storage_id": null,
@@ -4788,9 +4788,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000267",
+    "internal_record_id": "lnd0267",
     "functional_record_id": "LND-NSR-0267",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000413",
+    "link_internal_record_id": "i0413",
     "link_foundational_id": null,
     "record_name": "Land plot 267",
     "record_image_storage_id": null,
@@ -4806,9 +4806,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000268",
+    "internal_record_id": "lnd0268",
     "functional_record_id": "LND-NSR-0268",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000415",
+    "link_internal_record_id": "i0415",
     "link_foundational_id": null,
     "record_name": "Land plot 268",
     "record_image_storage_id": null,
@@ -4824,9 +4824,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000269",
+    "internal_record_id": "lnd0269",
     "functional_record_id": "LND-NSR-0269",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000415",
+    "link_internal_record_id": "i0415",
     "link_foundational_id": null,
     "record_name": "Land plot 269",
     "record_image_storage_id": null,
@@ -4842,9 +4842,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000270",
+    "internal_record_id": "lnd0270",
     "functional_record_id": "LND-NSR-0270",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000415",
+    "link_internal_record_id": "i0415",
     "link_foundational_id": null,
     "record_name": "Land plot 270",
     "record_image_storage_id": null,
@@ -4860,9 +4860,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000271",
+    "internal_record_id": "lnd0271",
     "functional_record_id": "LND-NSR-0271",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000416",
+    "link_internal_record_id": "i0416",
     "link_foundational_id": null,
     "record_name": "Land plot 271",
     "record_image_storage_id": null,
@@ -4878,9 +4878,9 @@
     "productive_assets": "[\"OTHER\", \"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000272",
+    "internal_record_id": "lnd0272",
     "functional_record_id": "LND-NSR-0272",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000418",
+    "link_internal_record_id": "i0418",
     "link_foundational_id": null,
     "record_name": "Land plot 272",
     "record_image_storage_id": null,
@@ -4896,9 +4896,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000273",
+    "internal_record_id": "lnd0273",
     "functional_record_id": "LND-NSR-0273",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000419",
+    "link_internal_record_id": "i0419",
     "link_foundational_id": null,
     "record_name": "Land plot 273",
     "record_image_storage_id": null,
@@ -4914,9 +4914,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000274",
+    "internal_record_id": "lnd0274",
     "functional_record_id": "LND-NSR-0274",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000419",
+    "link_internal_record_id": "i0419",
     "link_foundational_id": null,
     "record_name": "Land plot 274",
     "record_image_storage_id": null,
@@ -4932,9 +4932,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000275",
+    "internal_record_id": "lnd0275",
     "functional_record_id": "LND-NSR-0275",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000419",
+    "link_internal_record_id": "i0419",
     "link_foundational_id": null,
     "record_name": "Land plot 275",
     "record_image_storage_id": null,
@@ -4950,9 +4950,9 @@
     "productive_assets": "[\"OTHER\", \"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000276",
+    "internal_record_id": "lnd0276",
     "functional_record_id": "LND-NSR-0276",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000422",
+    "link_internal_record_id": "i0422",
     "link_foundational_id": null,
     "record_name": "Land plot 276",
     "record_image_storage_id": null,
@@ -4968,9 +4968,9 @@
     "productive_assets": "[\"TRACTOR\", \"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000277",
+    "internal_record_id": "lnd0277",
     "functional_record_id": "LND-NSR-0277",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000422",
+    "link_internal_record_id": "i0422",
     "link_foundational_id": null,
     "record_name": "Land plot 277",
     "record_image_storage_id": null,
@@ -4986,9 +4986,9 @@
     "productive_assets": "[\"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000278",
+    "internal_record_id": "lnd0278",
     "functional_record_id": "LND-NSR-0278",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000422",
+    "link_internal_record_id": "i0422",
     "link_foundational_id": null,
     "record_name": "Land plot 278",
     "record_image_storage_id": null,
@@ -5004,9 +5004,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000279",
+    "internal_record_id": "lnd0279",
     "functional_record_id": "LND-NSR-0279",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000425",
+    "link_internal_record_id": "i0425",
     "link_foundational_id": null,
     "record_name": "Land plot 279",
     "record_image_storage_id": null,
@@ -5022,9 +5022,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000280",
+    "internal_record_id": "lnd0280",
     "functional_record_id": "LND-NSR-0280",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000431",
+    "link_internal_record_id": "i0431",
     "link_foundational_id": null,
     "record_name": "Land plot 280",
     "record_image_storage_id": null,
@@ -5040,9 +5040,9 @@
     "productive_assets": "[\"PLOUGH\", \"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000281",
+    "internal_record_id": "lnd0281",
     "functional_record_id": "LND-NSR-0281",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000431",
+    "link_internal_record_id": "i0431",
     "link_foundational_id": null,
     "record_name": "Land plot 281",
     "record_image_storage_id": null,
@@ -5058,9 +5058,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000282",
+    "internal_record_id": "lnd0282",
     "functional_record_id": "LND-NSR-0282",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000435",
+    "link_internal_record_id": "i0435",
     "link_foundational_id": null,
     "record_name": "Land plot 282",
     "record_image_storage_id": null,
@@ -5076,9 +5076,9 @@
     "productive_assets": "[\"PLOUGH\", \"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000283",
+    "internal_record_id": "lnd0283",
     "functional_record_id": "LND-NSR-0283",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000435",
+    "link_internal_record_id": "i0435",
     "link_foundational_id": null,
     "record_name": "Land plot 283",
     "record_image_storage_id": null,
@@ -5094,9 +5094,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000284",
+    "internal_record_id": "lnd0284",
     "functional_record_id": "LND-NSR-0284",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000438",
+    "link_internal_record_id": "i0438",
     "link_foundational_id": null,
     "record_name": "Land plot 284",
     "record_image_storage_id": null,
@@ -5112,9 +5112,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000285",
+    "internal_record_id": "lnd0285",
     "functional_record_id": "LND-NSR-0285",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000438",
+    "link_internal_record_id": "i0438",
     "link_foundational_id": null,
     "record_name": "Land plot 285",
     "record_image_storage_id": null,
@@ -5130,9 +5130,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000286",
+    "internal_record_id": "lnd0286",
     "functional_record_id": "LND-NSR-0286",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000438",
+    "link_internal_record_id": "i0438",
     "link_foundational_id": null,
     "record_name": "Land plot 286",
     "record_image_storage_id": null,
@@ -5148,9 +5148,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000287",
+    "internal_record_id": "lnd0287",
     "functional_record_id": "LND-NSR-0287",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000439",
+    "link_internal_record_id": "i0439",
     "link_foundational_id": null,
     "record_name": "Land plot 287",
     "record_image_storage_id": null,
@@ -5166,9 +5166,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000288",
+    "internal_record_id": "lnd0288",
     "functional_record_id": "LND-NSR-0288",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000439",
+    "link_internal_record_id": "i0439",
     "link_foundational_id": null,
     "record_name": "Land plot 288",
     "record_image_storage_id": null,
@@ -5184,9 +5184,9 @@
     "productive_assets": "[\"OTHER\", \"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000289",
+    "internal_record_id": "lnd0289",
     "functional_record_id": "LND-NSR-0289",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000442",
+    "link_internal_record_id": "i0442",
     "link_foundational_id": null,
     "record_name": "Land plot 289",
     "record_image_storage_id": null,
@@ -5202,9 +5202,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000290",
+    "internal_record_id": "lnd0290",
     "functional_record_id": "LND-NSR-0290",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000443",
+    "link_internal_record_id": "i0443",
     "link_foundational_id": null,
     "record_name": "Land plot 290",
     "record_image_storage_id": null,
@@ -5220,9 +5220,9 @@
     "productive_assets": "[\"TRACTOR\", \"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000291",
+    "internal_record_id": "lnd0291",
     "functional_record_id": "LND-NSR-0291",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000452",
+    "link_internal_record_id": "i0452",
     "link_foundational_id": null,
     "record_name": "Land plot 291",
     "record_image_storage_id": null,
@@ -5238,9 +5238,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000292",
+    "internal_record_id": "lnd0292",
     "functional_record_id": "LND-NSR-0292",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000452",
+    "link_internal_record_id": "i0452",
     "link_foundational_id": null,
     "record_name": "Land plot 292",
     "record_image_storage_id": null,
@@ -5256,9 +5256,9 @@
     "productive_assets": "[\"TRACTOR\", \"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000293",
+    "internal_record_id": "lnd0293",
     "functional_record_id": "LND-NSR-0293",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000454",
+    "link_internal_record_id": "i0454",
     "link_foundational_id": null,
     "record_name": "Land plot 293",
     "record_image_storage_id": null,
@@ -5274,9 +5274,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000294",
+    "internal_record_id": "lnd0294",
     "functional_record_id": "LND-NSR-0294",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000454",
+    "link_internal_record_id": "i0454",
     "link_foundational_id": null,
     "record_name": "Land plot 294",
     "record_image_storage_id": null,
@@ -5292,9 +5292,9 @@
     "productive_assets": "[\"PLOUGH\", \"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000295",
+    "internal_record_id": "lnd0295",
     "functional_record_id": "LND-NSR-0295",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000455",
+    "link_internal_record_id": "i0455",
     "link_foundational_id": null,
     "record_name": "Land plot 295",
     "record_image_storage_id": null,
@@ -5310,9 +5310,9 @@
     "productive_assets": "[\"PLOUGH\", \"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000296",
+    "internal_record_id": "lnd0296",
     "functional_record_id": "LND-NSR-0296",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000457",
+    "link_internal_record_id": "i0457",
     "link_foundational_id": null,
     "record_name": "Land plot 296",
     "record_image_storage_id": null,
@@ -5328,9 +5328,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000297",
+    "internal_record_id": "lnd0297",
     "functional_record_id": "LND-NSR-0297",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000460",
+    "link_internal_record_id": "i0460",
     "link_foundational_id": null,
     "record_name": "Land plot 297",
     "record_image_storage_id": null,
@@ -5346,9 +5346,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000298",
+    "internal_record_id": "lnd0298",
     "functional_record_id": "LND-NSR-0298",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000461",
+    "link_internal_record_id": "i0461",
     "link_foundational_id": null,
     "record_name": "Land plot 298",
     "record_image_storage_id": null,
@@ -5364,9 +5364,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000299",
+    "internal_record_id": "lnd0299",
     "functional_record_id": "LND-NSR-0299",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000461",
+    "link_internal_record_id": "i0461",
     "link_foundational_id": null,
     "record_name": "Land plot 299",
     "record_image_storage_id": null,
@@ -5382,9 +5382,9 @@
     "productive_assets": "[\"PLOUGH\", \"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000300",
+    "internal_record_id": "lnd0300",
     "functional_record_id": "LND-NSR-0300",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000470",
+    "link_internal_record_id": "i0470",
     "link_foundational_id": null,
     "record_name": "Land plot 300",
     "record_image_storage_id": null,
@@ -5400,9 +5400,9 @@
     "productive_assets": "[\"TRACTOR\", \"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000301",
+    "internal_record_id": "lnd0301",
     "functional_record_id": "LND-NSR-0301",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000470",
+    "link_internal_record_id": "i0470",
     "link_foundational_id": null,
     "record_name": "Land plot 301",
     "record_image_storage_id": null,
@@ -5418,9 +5418,9 @@
     "productive_assets": "[\"TRACTOR\", \"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000302",
+    "internal_record_id": "lnd0302",
     "functional_record_id": "LND-NSR-0302",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000470",
+    "link_internal_record_id": "i0470",
     "link_foundational_id": null,
     "record_name": "Land plot 302",
     "record_image_storage_id": null,
@@ -5436,9 +5436,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000303",
+    "internal_record_id": "lnd0303",
     "functional_record_id": "LND-NSR-0303",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000471",
+    "link_internal_record_id": "i0471",
     "link_foundational_id": null,
     "record_name": "Land plot 303",
     "record_image_storage_id": null,
@@ -5454,9 +5454,9 @@
     "productive_assets": "[\"PLOUGH\", \"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000304",
+    "internal_record_id": "lnd0304",
     "functional_record_id": "LND-NSR-0304",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000471",
+    "link_internal_record_id": "i0471",
     "link_foundational_id": null,
     "record_name": "Land plot 304",
     "record_image_storage_id": null,
@@ -5472,9 +5472,9 @@
     "productive_assets": "[\"OTHER\", \"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000305",
+    "internal_record_id": "lnd0305",
     "functional_record_id": "LND-NSR-0305",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000471",
+    "link_internal_record_id": "i0471",
     "link_foundational_id": null,
     "record_name": "Land plot 305",
     "record_image_storage_id": null,
@@ -5490,9 +5490,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000306",
+    "internal_record_id": "lnd0306",
     "functional_record_id": "LND-NSR-0306",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000474",
+    "link_internal_record_id": "i0474",
     "link_foundational_id": null,
     "record_name": "Land plot 306",
     "record_image_storage_id": null,
@@ -5508,9 +5508,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000307",
+    "internal_record_id": "lnd0307",
     "functional_record_id": "LND-NSR-0307",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000474",
+    "link_internal_record_id": "i0474",
     "link_foundational_id": null,
     "record_name": "Land plot 307",
     "record_image_storage_id": null,
@@ -5526,9 +5526,9 @@
     "productive_assets": "[\"TRACTOR\", \"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000308",
+    "internal_record_id": "lnd0308",
     "functional_record_id": "LND-NSR-0308",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000474",
+    "link_internal_record_id": "i0474",
     "link_foundational_id": null,
     "record_name": "Land plot 308",
     "record_image_storage_id": null,
@@ -5544,9 +5544,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000309",
+    "internal_record_id": "lnd0309",
     "functional_record_id": "LND-NSR-0309",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000478",
+    "link_internal_record_id": "i0478",
     "link_foundational_id": null,
     "record_name": "Land plot 309",
     "record_image_storage_id": null,
@@ -5562,9 +5562,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000310",
+    "internal_record_id": "lnd0310",
     "functional_record_id": "LND-NSR-0310",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000478",
+    "link_internal_record_id": "i0478",
     "link_foundational_id": null,
     "record_name": "Land plot 310",
     "record_image_storage_id": null,
@@ -5580,9 +5580,9 @@
     "productive_assets": "[\"TRACTOR\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000311",
+    "internal_record_id": "lnd0311",
     "functional_record_id": "LND-NSR-0311",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000478",
+    "link_internal_record_id": "i0478",
     "link_foundational_id": null,
     "record_name": "Land plot 311",
     "record_image_storage_id": null,
@@ -5598,9 +5598,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000312",
+    "internal_record_id": "lnd0312",
     "functional_record_id": "LND-NSR-0312",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000479",
+    "link_internal_record_id": "i0479",
     "link_foundational_id": null,
     "record_name": "Land plot 312",
     "record_image_storage_id": null,
@@ -5616,9 +5616,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000313",
+    "internal_record_id": "lnd0313",
     "functional_record_id": "LND-NSR-0313",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000482",
+    "link_internal_record_id": "i0482",
     "link_foundational_id": null,
     "record_name": "Land plot 313",
     "record_image_storage_id": null,
@@ -5634,9 +5634,9 @@
     "productive_assets": "[\"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000314",
+    "internal_record_id": "lnd0314",
     "functional_record_id": "LND-NSR-0314",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000482",
+    "link_internal_record_id": "i0482",
     "link_foundational_id": null,
     "record_name": "Land plot 314",
     "record_image_storage_id": null,
@@ -5652,9 +5652,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000315",
+    "internal_record_id": "lnd0315",
     "functional_record_id": "LND-NSR-0315",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000487",
+    "link_internal_record_id": "i0487",
     "link_foundational_id": null,
     "record_name": "Land plot 315",
     "record_image_storage_id": null,
@@ -5670,9 +5670,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000316",
+    "internal_record_id": "lnd0316",
     "functional_record_id": "LND-NSR-0316",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000487",
+    "link_internal_record_id": "i0487",
     "link_foundational_id": null,
     "record_name": "Land plot 316",
     "record_image_storage_id": null,
@@ -5688,9 +5688,9 @@
     "productive_assets": "[\"TRACTOR\", \"OTHER\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000317",
+    "internal_record_id": "lnd0317",
     "functional_record_id": "LND-NSR-0317",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000487",
+    "link_internal_record_id": "i0487",
     "link_foundational_id": null,
     "record_name": "Land plot 317",
     "record_image_storage_id": null,
@@ -5706,9 +5706,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000318",
+    "internal_record_id": "lnd0318",
     "functional_record_id": "LND-NSR-0318",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000489",
+    "link_internal_record_id": "i0489",
     "link_foundational_id": null,
     "record_name": "Land plot 318",
     "record_image_storage_id": null,
@@ -5724,9 +5724,9 @@
     "productive_assets": null
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000319",
+    "internal_record_id": "lnd0319",
     "functional_record_id": "LND-NSR-0319",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000499",
+    "link_internal_record_id": "i0499",
     "link_foundational_id": null,
     "record_name": "Land plot 319",
     "record_image_storage_id": null,
@@ -5742,9 +5742,9 @@
     "productive_assets": "[\"OTHER\", \"PLOUGH\"]"
   },
   {
-    "internal_record_id": "61000000-0000-4000-8000-000000000320",
+    "internal_record_id": "lnd0320",
     "functional_record_id": "LND-NSR-0320",
-    "link_internal_record_id": "20000000-0000-4000-8000-000000000499",
+    "link_internal_record_id": "i0499",
     "link_foundational_id": null,
     "record_name": "Land plot 320",
     "record_image_storage_id": null,
