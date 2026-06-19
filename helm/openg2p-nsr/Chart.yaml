@@ -12,7 +12,7 @@ type: application
 # Branch-name-equals-version convention: this file lives on the `develop`
 # branch of the NSR repo, so the version carries the `-develop` pre-release
 # tag. Bump to a SemVer release (e.g. 1.0.0) when cutting a tag branch.
-version: 0.0.0-develop
+version: 1.0.0
 appVersion: "develop"
 
 keywords:
