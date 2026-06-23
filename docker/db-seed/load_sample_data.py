@@ -45,8 +45,39 @@ def load_json(path: Path):
     return json.loads(path.read_text())
 
 
-JSON_COLUMNS_INDIVIDUAL = {"phone_numbers", "geo_hierarchy_json"}
-JSON_COLUMNS_HOUSEHOLD = {"geo_hierarchy_json"}
+JSON_COLUMNS_INDIVIDUAL = {"phone_numbers"}
+JSON_COLUMNS_HOUSEHOLD = set()
+
+# Geo is carried in the seed files as plain names (country..village). The
+# internal id + hierarchy JSON the registry stores are derived here, using the
+# SAME slug-path scheme as master-data's load_geo_data.py so the runtime
+# registry<->master-data join holds.
+GEO_LEVELS = ["country", "region", "district", "ward", "village"]
+
+
+def _slug(name: str) -> str:
+    return name.strip().lower().replace(" ", "_")
+
+
+def geo_lowest_id(rec: dict) -> str:
+    """Slug-path of the full country..village chain (= master-data PK)."""
+    return "/".join(_slug(rec[level]) for level in GEO_LEVELS)
+
+
+def geo_hierarchy(rec: dict):
+    """Build geo_code_hierarchy_json from the name columns, matching the shape
+    registry-core's G2PGeoHierarchyService produces at runtime."""
+    hierarchy = []
+    for depth, level in enumerate(GEO_LEVELS):
+        node_id = "/".join(_slug(rec[GEO_LEVELS[i]]) for i in range(depth + 1))
+        hierarchy.append(
+            {
+                "level_mnemonic": level,
+                "level_value_mnemonic": rec[level],
+                "level_value_id": node_id,
+            }
+        )
+    return to_json({"hierarchy": hierarchy})
 
 
 def _read_csv_rows(path: Path, json_columns: set[str]) -> list[dict]:
@@ -156,8 +187,8 @@ def insert_individuals(cur, individuals: list[dict]) -> None:
                 ind["address_line_2"],
                 ind["postal_code"],
                 ind["country_code"],
-                ind["geo_village_id"],
-                to_json(ind.get("geo_hierarchy_json")),
+                geo_lowest_id(ind),
+                geo_hierarchy(ind),
                 ind["foundational_id_masked"],
                 "VERIFIED",
                 ind["full_name"],
@@ -216,8 +247,8 @@ def insert_households(cur, households: list[dict]) -> None:
                 hh["address_line_2"],
                 hh["postal_code"],
                 hh["country_code"],
-                hh["geo_village_id"],
-                to_json(hh.get("geo_hierarchy_json")),
+                geo_lowest_id(hh),
+                geo_hierarchy(hh),
                 hh["head_individual_id"],
                 hh["head_name"],
                 hh["headship_type"],

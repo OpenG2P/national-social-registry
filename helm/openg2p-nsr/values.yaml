@@ -1344,3 +1344,28 @@ openg2p-awe:
                 - "view-users"
                 - "view-clients"
                 - "query-groups"
+
+# ---------------------------------------------------------------------------
+# WebSub (event hub) + WebSub Consolidator
+# ---------------------------------------------------------------------------
+websub:
+  enabled: false
+  # image: stock MOSIP defaults (docker.io/mosipid/websub-service)
+  extraEnvVarsCM: []
+  extraEnvVarsSecret:
+  extraEnvVars:
+    - name: hub_config_file_url_env
+      value: "http://websub-config-server:8000/hub-config.toml"
+  # Kafka broker the hub publishes/consumes from. Set to your Kafka service.
+  # springConfig / app config that needs the broker is delivered via the
+  # config-server TOML above; set KAFKA_BOOTSTRAP_SERVERS there or here:
+  #   - name: KAFKA_BOOTSTRAP_SERVERS
+  #     value: "kafka:9092"
+
+websub-consolidator:
+  enabled: false
+  extraEnvVarsCM: []
+  extraEnvVarsSecret:
+  extraEnvVars:
+    - name: consolidator_config_file_url_env
+      value: "http://websub-config-server:8000/consolidator-config.toml"
