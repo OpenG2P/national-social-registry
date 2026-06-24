@@ -757,7 +757,7 @@ staffPortalUi:
     name: ""
   image:
     repository: openg2p/openg2p-registry-staff-portal-ui
-    tag: "1.0.0"
+    tag: "develop"
     pullPolicy: Always
   podSecurityContext:
     enabled: false
