@@ -13,9 +13,9 @@ type: application
 #   This `version` is a STATIC placeholder — it is NOT the published version.
 #   The helm-publish workflow derives the real version from the BRANCH NAME and
 #   overrides this at package time via `helm package --version`:
-#       develop  -> 0.0.0-develop.<date>.<run>
-#       N.N      -> N.N.0-develop.<date>.<run>   (Helm needs 3-part SemVer)
-#       N.N.N    -> N.N.N                         (frozen release, no suffix)
+#       develop  -> 0.0.0-develop.<run>
+#       N.N      -> N.N.0-develop.<run>   (Helm needs 3-part SemVer)
+#       N.N.N    -> N.N.N                  (frozen release, no suffix)
 #   (see ".github/workflows/helm-publish.yml" and the "Helm chart versioning"
 #   section in the NSR Gitbook docs). The value below is used ONLY for a local
 #   `helm package`/`helm install .` that does not pass --version, so just keep
@@ -45,7 +45,7 @@ dependencies:
     repository: https://openg2p.github.io/openg2p-helm
     version: 2.30.0
   - name: postgres-init
-    version: 0.0.0-develop
+    version: 1.2.0 
     repository: https://openg2p.github.io/openg2p-helm
     condition: postgres-init.enabled
   - name: redis
@@ -62,7 +62,7 @@ dependencies:
     repository: https://openg2p.github.io/openg2p-helm
     condition: keycloak-init.enabled
   - name: openg2p-awe
-    version: 0.0.0-develop
+    version: 1.0.0
     repository: https://openg2p.github.io/openg2p-helm
     condition: openg2p-awe.enabled
   # WebSub event hub + consolidator — pulled UNMODIFIED from the MOSIP Helm
