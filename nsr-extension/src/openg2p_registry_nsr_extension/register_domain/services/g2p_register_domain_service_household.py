@@ -2,7 +2,13 @@ import logging
 
 from openg2p_registry_core.services import G2PRegisterDomainService
 
-from .domain_validation_utils import as_bool, as_float, as_int, validation_error
+from .domain_validation_utils import (
+    as_bool,
+    as_float,
+    as_int,
+    has_keys,
+    validation_error,
+)
 
 _logger = logging.getLogger("g2p-register-domain-service")
 
@@ -16,10 +22,20 @@ class G2PRegisterDomainServiceHousehold(G2PRegisterDomainService):
 
     def _validate_household_size(self, record: dict) -> None:
         size_total = as_int(record.get("size_total"))
-        male = as_int(record.get("number_of_male_members"))
-        female = as_int(record.get("number_of_female_members"))
-        if size_total is not None and male is not None and female is not None:
-            if size_total != male + female:
+        if has_keys(
+            record,
+            "size_total",
+            "number_of_male_members",
+            "number_of_female_members",
+        ):
+            male = as_int(record.get("number_of_male_members"))
+            female = as_int(record.get("number_of_female_members"))
+            if (
+                size_total is not None
+                and male is not None
+                and female is not None
+                and size_total != male + female
+            ):
                 validation_error(
                     "size_total must equal number_of_male_members + number_of_female_members"
                 )
@@ -30,6 +46,8 @@ class G2PRegisterDomainServiceHousehold(G2PRegisterDomainService):
             "size_school_age",
             "size_elderly",
         )
+        if not has_keys(record, "size_total", *category_fields):
+            return
         category_values = [as_int(record.get(field)) for field in category_fields]
         if size_total is not None and all(value is not None for value in category_values):
             category_sum = sum(category_values)
@@ -40,12 +58,16 @@ class G2PRegisterDomainServiceHousehold(G2PRegisterDomainService):
                 )
 
     def _validate_overcrowding(self, record: dict) -> None:
+        if not has_keys(record, "overcrowding_indicator", "size_total"):
+            return
         overcrowding = as_float(record.get("overcrowding_indicator"))
         size_total = as_int(record.get("size_total"))
         if overcrowding is not None and size_total is not None and overcrowding > size_total:
             validation_error("overcrowding_indicator must not exceed size_total")
 
     def _validate_elderly_member(self, record: dict) -> None:
+        if not has_keys(record, "elderly_member_present", "size_elderly"):
+            return
         elderly_present = as_bool(record.get("elderly_member_present"))
         size_elderly = as_int(record.get("size_elderly"))
         if elderly_present is False and size_elderly not in (None, 0):

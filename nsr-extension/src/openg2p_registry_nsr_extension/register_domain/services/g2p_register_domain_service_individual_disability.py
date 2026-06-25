@@ -2,7 +2,7 @@ import logging
 
 from openg2p_registry_core.services import G2PRegisterDomainService
 
-from .domain_validation_utils import validation_error
+from .domain_validation_utils import ensure_no_duplicate_key
 
 _logger = logging.getLogger("g2p-register-domain-service")
 
@@ -12,15 +12,11 @@ class G2PRegisterDomainServiceIndividualDisability(G2PRegisterDomainService):
         self._validate_no_duplicate_disability_domain(records)
 
     def _validate_no_duplicate_disability_domain(self, records: list[dict]) -> None:
-        seen: set[str] = set()
-        for record in records:
-            value = record.get("disability_domain")
-            if value is None or str(value).strip() == "":
-                continue
-            normalized = str(value).strip()
-            if normalized in seen:
-                validation_error("Duplicate disability_domain entries are not allowed")
-            seen.add(normalized)
+        ensure_no_duplicate_key(
+            records,
+            "disability_domain",
+            "Duplicate disability_domain entries are not allowed",
+        )
 
     def construct_search_text(self, payload: dict, extra: list[str] = None) -> str:
         _logger.info("Constructing search text for individual disability")

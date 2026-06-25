@@ -10,6 +10,10 @@ def validation_error(message: str) -> None:
     )
 
 
+def has_keys(record: dict, *keys: str) -> bool:
+    return all(key in record for key in keys)
+
+
 def parse_date(value) -> date | None:
     if value is None or value == "":
         return None
@@ -73,3 +77,93 @@ def is_blank(value) -> bool:
     if isinstance(value, (list, dict, tuple, set)):
         return len(value) == 0
     return False
+
+
+def ensure_no_duplicate_key(records: list[dict], key: str, message: str) -> None:
+    seen: set[str] = set()
+    for record in records:
+        if not has_keys(record, key):
+            continue
+        value = record.get(key)
+        if is_blank(value):
+            continue
+        normalized = str(value).strip()
+        if normalized in seen:
+            validation_error(message)
+        seen.add(normalized)
+
+
+def ensure_end_on_or_after_start(
+    start: date | None,
+    end: date | None,
+    *,
+    start_label: str,
+    end_label: str,
+) -> None:
+    if start is None or end is None:
+        return
+    if end < start:
+        validation_error(f"{end_label} must be on or after {start_label}")
+
+
+def ensure_not_future(value: date, field_label: str) -> None:
+    if value > date.today():
+        validation_error(f"{field_label} must not be in the future")
+
+
+def _program_date_range(record: dict) -> tuple[str | None, date | None, date | None]:
+    program_name = record.get("program_name")
+    if program_name is not None:
+        program_name = str(program_name).strip() or None
+    return (
+        program_name,
+        parse_date(record.get("program_start_date")),
+        parse_date(record.get("program_exit_date")),
+    )
+
+
+def _date_ranges_overlap(
+    start_a: date | None,
+    end_a: date | None,
+    start_b: date | None,
+    end_b: date | None,
+) -> bool:
+    if start_a is None or start_b is None:
+        return True
+    effective_end_a = end_a or date.max
+    effective_end_b = end_b or date.max
+    return start_a <= effective_end_b and start_b <= effective_end_a
+
+
+def ensure_program_entries_no_overlap(records: list[dict]) -> None:
+    entries: list[tuple[str, date | None, date | None]] = []
+    for record in records:
+        if not has_keys(record, "program_name"):
+            continue
+        program_name, start_date, exit_date = _program_date_range(record)
+        if not program_name:
+            continue
+        for existing_name, existing_start, existing_exit in entries:
+            if existing_name != program_name:
+                continue
+            if _date_ranges_overlap(existing_start, existing_exit, start_date, exit_date):
+                validation_error(
+                    f"Duplicate program '{program_name}' with overlapping dates is not allowed"
+                )
+        entries.append((program_name, start_date, exit_date))
+
+
+def validate_program_records(records: list[dict]) -> None:
+    for record in records:
+        if has_keys(record, "program_start_date", "program_exit_date"):
+            ensure_end_on_or_after_start(
+                parse_date(record.get("program_start_date")),
+                parse_date(record.get("program_exit_date")),
+                start_label="program_start_date",
+                end_label="program_exit_date",
+            )
+        if has_keys(record, "program_exit_date"):
+            exit_date = parse_date(record.get("program_exit_date"))
+            if exit_date is not None:
+                ensure_not_future(exit_date, "program_exit_date")
+    ensure_program_entries_no_overlap(records)

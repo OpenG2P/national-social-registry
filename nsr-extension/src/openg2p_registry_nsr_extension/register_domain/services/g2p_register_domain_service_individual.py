@@ -5,7 +5,13 @@ from openg2p_registry_core.models import G2PRegisterChangeRequest
 from openg2p_registry_core.services import G2PRegisterDomainService
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from .domain_validation_utils import as_int, is_blank, parse_date, validation_error
+from .domain_validation_utils import (
+    as_int,
+    has_keys,
+    is_blank,
+    parse_date,
+    validation_error,
+)
 
 _logger = logging.getLogger("g2p-register-domain-service")
 
@@ -18,15 +24,21 @@ class G2PRegisterDomainServiceIndividual(G2PRegisterDomainService):
             self._validate_estimated_age(record)
 
     def _validate_middle_name(self, record: dict) -> None:
+        if not has_keys(record, "middle_name"):
+            return
         if is_blank(record.get("middle_name")):
             validation_error("middle_name is required")
 
     def _validate_birth_date(self, record: dict) -> None:
+        if not has_keys(record, "birth_date"):
+            return
         birth_date = parse_date(record.get("birth_date"))
         if birth_date is not None and birth_date > date.today():
             validation_error("birth_date must not be in the future")
 
     def _validate_estimated_age(self, record: dict) -> None:
+        if not has_keys(record, "birth_date", "estimated_age"):
+            return
         birth_date = parse_date(record.get("birth_date"))
         estimated_age = as_int(record.get("estimated_age"))
         if birth_date is None or estimated_age is None:
