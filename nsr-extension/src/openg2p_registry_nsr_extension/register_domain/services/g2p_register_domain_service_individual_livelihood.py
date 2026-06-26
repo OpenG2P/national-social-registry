@@ -2,7 +2,7 @@ import logging
 
 from openg2p_registry_core.services import G2PRegisterDomainService
 
-from .domain_validation_utils import has_keys, is_blank, validation_error
+from .utils.validations import has_keys, is_blank, validation_error
 
 _logger = logging.getLogger("g2p-register-individual-livelihood-service")
 

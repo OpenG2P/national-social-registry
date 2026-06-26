@@ -2,15 +2,24 @@ import logging
 from datetime import date
 
 from openg2p_registry_core.models import G2PRegisterChangeRequest
+from openg2p_registry_core.models.enum import ChangeActionEnum
 from openg2p_registry_core.services import G2PRegisterDomainService
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from .domain_validation_utils import (
+from .utils.validations import (
     as_int,
     has_keys,
     is_blank,
     parse_date,
     validation_error,
+)
+from .utils.household_roster import (
+    affected_household_ids,
+    calculate_age,
+    has_roster_affecting_changes,
+    member_payload,
+    normalize_link,
+    recompute_household_roster_for_household,
 )
 
 _logger = logging.getLogger("g2p-register-domain-service")
@@ -112,21 +121,13 @@ class G2PRegisterDomainServiceIndividual(G2PRegisterDomainService):
         return " ".join(record_name).strip()
 
     async def post_ingest(self, register_id: str, register_row, session: AsyncSession):
-        from ..models.household import G2PRegisterHousehold
-
-        link_internal_record_id = getattr(register_row, "link_internal_record_id", None)
+        link_internal_record_id = normalize_link(
+            getattr(register_row, "link_internal_record_id", None)
+        )
         if not link_internal_record_id:
             return
 
-        household = await session.get(G2PRegisterHousehold, link_internal_record_id)
-        if not household:
-            return
-
-        birth_date = getattr(register_row, "birth_date", None)
-        if birth_date:
-            age = self._calculate_age(birth_date)
-            if age is not None and age < 5:
-                household.size_children_u5 = (household.size_children_u5 or 0) + 1
+        await recompute_household_roster_for_household(session, link_internal_record_id)
 
     async def post_approve(self, change_request: G2PRegisterChangeRequest, session: AsyncSession):
         from openg2p_registry_core.models import G2PRegisterChangeRequestPayload
@@ -156,11 +157,4 @@ class G2PRegisterDomainServiceIndividual(G2PRegisterDomainService):
 
     @staticmethod
     def _calculate_age(birth_date):
-        if not birth_date:
-            return None
-        today = date.today()
-        return (
-            today.year
-            - birth_date.year
-            - ((today.month, today.day) < (birth_date.month, birth_date.day))
-        )
+        return calculate_age(birth_date)

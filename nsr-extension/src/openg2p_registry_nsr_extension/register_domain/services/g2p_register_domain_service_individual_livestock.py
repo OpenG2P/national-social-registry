@@ -2,7 +2,7 @@ import logging
 
 from openg2p_registry_core.services import G2PRegisterDomainService
 
-from .domain_validation_utils import ensure_no_duplicate_key
+from .utils.validations import ensure_no_duplicate_key
 
 _logger = logging.getLogger("g2p-register-individual-livestock-service")
 

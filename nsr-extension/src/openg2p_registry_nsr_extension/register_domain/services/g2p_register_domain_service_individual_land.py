@@ -2,7 +2,7 @@ import logging
 
 from openg2p_registry_core.services import G2PRegisterDomainService
 
-from .domain_validation_utils import (
+from .utils.validations import (
     as_bool,
     as_float,
     has_keys,

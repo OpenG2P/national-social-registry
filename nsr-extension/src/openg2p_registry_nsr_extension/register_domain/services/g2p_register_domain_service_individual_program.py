@@ -2,7 +2,7 @@ import logging
 
 from openg2p_registry_core.services import G2PRegisterDomainService
 
-from .domain_validation_utils import validate_program_records
+from .utils.validations import validate_program_records
 
 _logger = logging.getLogger("g2p-register-individualprogram-service")
 
