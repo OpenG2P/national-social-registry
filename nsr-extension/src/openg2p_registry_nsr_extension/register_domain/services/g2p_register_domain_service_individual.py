@@ -120,6 +120,46 @@ class G2PRegisterDomainServiceIndividual(G2PRegisterDomainService):
 
         return " ".join(record_name).strip()
 
+    async def pre_approve(self, change_request: G2PRegisterChangeRequest, session: AsyncSession):
+        from openg2p_registry_core.models import G2PRegisterChangeRequestPayload
+        from ..models.individual import G2PRegisterIndividual
+
+        payload_obj = await session.get(
+            G2PRegisterChangeRequestPayload, change_request.change_request_id
+        )
+        if not payload_obj or not payload_obj.change_payload:
+            return
+
+        individual = await session.get(
+            G2PRegisterIndividual, change_request.internal_record_id
+        )
+        if not individual:
+            return
+
+        for record in payload_obj.change_payload:
+            if record.get("edit_action") == ChangeActionEnum.NO_CHANGE.value:
+                continue
+            if not has_roster_affecting_changes(record):
+                continue
+
+            old_link = normalize_link(individual.link_internal_record_id)
+            merged_member = member_payload(individual, record)
+            if "link_internal_record_id" in record:
+                new_link = normalize_link(record.get("link_internal_record_id"))
+                household_ids = affected_household_ids(old_link, new_link)
+            elif old_link:
+                household_ids = {old_link}
+            else:
+                continue
+
+            for household_id in household_ids:
+                await recompute_household_roster_for_household(
+                    session,
+                    household_id,
+                    changed_member_id=change_request.internal_record_id,
+                    changed_member_payload=merged_member,
+                )
+
     async def post_ingest(self, register_id: str, register_row, session: AsyncSession):
         link_internal_record_id = normalize_link(
             getattr(register_row, "link_internal_record_id", None)
