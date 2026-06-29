@@ -32,8 +32,6 @@ class G2PRegisterDomainServiceIndividualLivelihood(G2PRegisterDomainService):
             "primary_livelihood",
             "secondary_livelihood",
             "employment_status",
-            "coping_strategies_index",
-            "mobile_phone_type",
         ]
         search_text = []
         if extra:

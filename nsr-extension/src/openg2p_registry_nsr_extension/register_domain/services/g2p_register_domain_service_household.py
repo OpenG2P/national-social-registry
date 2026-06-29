@@ -82,20 +82,10 @@ class G2PRegisterDomainServiceHousehold(G2PRegisterDomainService):
             "functional_record_id",
             "record_name",
             "household_head_name",
-            "headship_type",
-            "size_total",
-            "dwelling_type",
-            "tenure_status",
-            "water_source_type",
-            "sanitation_type",
-            "latitude",
-            "longitude",
-            "altitude",
             "plus_code",
             "address_line_1",
             "address_line_2",
             "postal_code",
-            "country_code",
         ]
         search_text = []
         if extra:

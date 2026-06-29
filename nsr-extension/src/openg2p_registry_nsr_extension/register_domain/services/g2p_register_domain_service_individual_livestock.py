@@ -21,7 +21,7 @@ class G2PRegisterDomainServiceIndividualLivestock(G2PRegisterDomainService):
     def construct_search_text(self, payload: dict, extra: list[str] = None) -> str:
         _logger.info("Constructing search text for individual livestock")
 
-        keys = ["functional_record_id", "livestock_species", "livestock_counts"]
+        keys = ["functional_record_id", "livestock_species"]
         search_text = []
         if extra:
             search_text.extend(str(v).strip() for v in extra if str(v).strip())

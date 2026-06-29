@@ -43,7 +43,7 @@ class G2PRegisterDomainServiceIndividualLand(G2PRegisterDomainService):
     def construct_search_text(self, payload: dict, extra: list[str] = None) -> str:
         _logger.info("Constructing search text for individual land")
 
-        keys = ["functional_record_id", "land_access", "land_size", "productive_assets"]
+        keys = ["functional_record_id", "productive_assets"]
         search_text = []
         if extra:
             search_text.extend(str(v).strip() for v in extra if str(v).strip())

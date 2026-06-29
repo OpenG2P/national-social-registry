@@ -21,7 +21,7 @@ class G2PRegisterDomainServiceIndividualDisability(G2PRegisterDomainService):
     def construct_search_text(self, payload: dict, extra: list[str] = None) -> str:
         _logger.info("Constructing search text for individual disability")
 
-        keys = ["disability_domain", "disability_severity"]
+        keys = ["functional_record_id", "disability_domain", "disability_severity"]
         search_text = []
         if extra:
             search_text.extend(str(v).strip() for v in extra if str(v).strip())
