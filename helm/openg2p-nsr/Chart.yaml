@@ -65,6 +65,18 @@ dependencies:
     version: 1.0.0
     repository: https://openg2p.github.io/openg2p-helm
     condition: openg2p-awe.enabled
+  # WebSub event hub + consolidator — pulled UNMODIFIED from the MOSIP Helm
+  # repo (not openg2p-helm). Disabled by default: both require an external
+  # Kafka and a websub config-server, which are NOT provisioned by this chart.
+  # Enable only once those are available and configured via the values blocks.
+  - name: websub
+    version: 1.3.0-beta.1-develop
+    repository: https://mosip.github.io/mosip-helm
+    condition: websub.enabled
+  - name: websub-consolidator
+    version: 1.3.0-beta.1-develop
+    repository: https://mosip.github.io/mosip-helm
+    condition: websub-consolidator.enabled
 
 # Rancher catalog branding
 annotations:
