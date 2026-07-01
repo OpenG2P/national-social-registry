@@ -2,7 +2,13 @@ import logging
 
 from openg2p_registry_core.services import G2PRegisterDomainService
 
-from .domain_validation_utils import as_bool, as_float, is_blank, validation_error
+from .utils.validations import (
+    as_bool,
+    as_float,
+    has_keys,
+    is_blank,
+    validation_error,
+)
 
 _logger = logging.getLogger("g2p-register-individual-land-service")
 
@@ -13,23 +19,31 @@ class G2PRegisterDomainServiceIndividualLand(G2PRegisterDomainService):
             self._validate_land_access(record)
 
     def _validate_land_access(self, record: dict) -> None:
+        if not has_keys(record, "land_access"):
+            return
         land_access = as_bool(record.get("land_access"))
-        land_size = as_float(record.get("land_size"))
-        productive_assets = record.get("productive_assets")
+        has_land_size = has_keys(record, "land_size")
+        land_size = as_float(record.get("land_size")) if has_land_size else None
 
         if land_access is False:
-            if land_size is not None and land_size > 0:
+            if has_land_size and land_size is not None and land_size > 0:
                 validation_error("land_size must be empty when land_access is false")
-            if not is_blank(productive_assets):
+            if has_keys(record, "productive_assets") and not is_blank(
+                record.get("productive_assets")
+            ):
                 validation_error("productive_assets must be empty when land_access is false")
 
-        if land_access is True and (land_size is None or land_size <= 0):
+        if (
+            land_access is True
+            and has_land_size
+            and (land_size is None or land_size <= 0)
+        ):
             validation_error("land_size must be greater than zero when land_access is true")
 
     def construct_search_text(self, payload: dict, extra: list[str] = None) -> str:
         _logger.info("Constructing search text for individual land")
 
-        keys = ["functional_record_id", "land_access", "land_size", "productive_assets"]
+        keys = ["functional_record_id", "productive_assets"]
         search_text = []
         if extra:
             search_text.extend(str(v).strip() for v in extra if str(v).strip())

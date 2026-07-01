@@ -77,6 +77,6 @@ class G2PIntakeFormHouseholdHousingAndServices(
 
     def get_record_name_fields(self) -> str:
         """Return household housing and services record_name from domain service implementation."""
-        return G2PRegisterDomainServiceHouseholdHousingAndServices().construct_record_name(
+        return G2PRegisterDomainServiceHouseholdHousingAndServices().construct_intake_record_name(
             self.to_dict()
         )

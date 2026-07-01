@@ -51,4 +51,4 @@ class G2PIntakeFormIndividualShock(G2PIntakeForm, G2PRegister, G2PIndividualShoc
 
     def get_record_name_fields(self) -> str:
         """Return individual shock record_name from domain service implementation."""
-        return G2PRegisterDomainServiceIndividualShock().construct_record_name(self.to_dict())
+        return G2PRegisterDomainServiceIndividualShock().construct_intake_record_name(self.to_dict())

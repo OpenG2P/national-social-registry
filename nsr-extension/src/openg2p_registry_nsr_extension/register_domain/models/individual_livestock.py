@@ -49,4 +49,4 @@ class G2PIntakeFormIndividualLivestock(G2PIntakeForm, G2PRegister, G2PIndividual
 
     def get_record_name_fields(self) -> str:
         """Return individual livestock record_name from domain service implementation."""
-        return G2PRegisterDomainServiceIndividualLivestock().construct_record_name(self.to_dict())
+        return G2PRegisterDomainServiceIndividualLivestock().construct_intake_record_name(self.to_dict())

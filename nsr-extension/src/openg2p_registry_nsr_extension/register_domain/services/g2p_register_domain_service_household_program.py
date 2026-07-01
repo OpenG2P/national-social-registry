@@ -1,74 +1,15 @@
 import logging
-from datetime import date
 
 from openg2p_registry_core.services import G2PRegisterDomainService
 
-from .domain_validation_utils import parse_date, validation_error
+from .utils.validations import validate_program_records
 
 _logger = logging.getLogger("g2p-register-householdprogram-service")
 
 
 class G2PRegisterDomainServiceHouseholdProgram(G2PRegisterDomainService):
     async def validate_domain_attributes(self, records: list[dict]):
-        self._validate_program_records(records)
-
-    def _validate_program_records(self, records: list[dict]) -> None:
-        for record in records:
-            start_date = parse_date(record.get("program_start_date"))
-            exit_date = parse_date(record.get("program_exit_date"))
-            self._validate_program_date_range(start_date, exit_date)
-            if exit_date is not None and exit_date > date.today():
-                validation_error("program_exit_date must not be in the future")
-        self._validate_program_entries_no_overlap(records)
-
-    def _validate_program_date_range(
-        self,
-        start_date: date | None,
-        exit_date: date | None,
-    ) -> None:
-        if start_date is None or exit_date is None:
-            return
-        if exit_date < start_date:
-            validation_error("program_exit_date must be on or after program_start_date")
-
-    def _validate_program_entries_no_overlap(self, records: list[dict]) -> None:
-        entries: list[tuple[str, date | None, date | None]] = []
-        for record in records:
-            program_name, start_date, exit_date = self._program_date_range(record)
-            if not program_name:
-                continue
-            for existing_name, existing_start, existing_exit in entries:
-                if existing_name != program_name:
-                    continue
-                if self._date_ranges_overlap(existing_start, existing_exit, start_date, exit_date):
-                    validation_error(
-                        f"Duplicate program '{program_name}' with overlapping dates is not allowed"
-                    )
-            entries.append((program_name, start_date, exit_date))
-
-    @staticmethod
-    def _program_date_range(record: dict) -> tuple[str | None, date | None, date | None]:
-        program_name = record.get("program_name")
-        if program_name is not None:
-            program_name = str(program_name).strip() or None
-        return (
-            program_name,
-            parse_date(record.get("program_start_date")),
-            parse_date(record.get("program_exit_date")),
-        )
-
-    @staticmethod
-    def _date_ranges_overlap(
-        start_a: date | None,
-        end_a: date | None,
-        start_b: date | None,
-        end_b: date | None,
-    ) -> bool:
-        if start_a is None or start_b is None:
-            return True
-        effective_end_a = end_a or date.max
-        effective_end_b = end_b or date.max
-        return start_a <= effective_end_b and start_b <= effective_end_a
+        validate_program_records(records)
 
     def construct_search_text(self, payload: dict, extra: list[str] = None) -> str:
         _logger.info("Constructing search text for householdprogram")

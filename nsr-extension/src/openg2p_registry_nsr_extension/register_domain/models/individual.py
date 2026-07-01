@@ -98,7 +98,7 @@ class G2PIntakeFormIndividual(G2PIntakeForm, G2PRegister, G2PPerson, G2PGeo, G2P
 
     def get_record_name_fields(self) -> str:
         """Return individual fields used to build record_name."""
-        return G2PRegisterDomainServiceIndividual().construct_record_name(self.to_dict())
+        return G2PRegisterDomainServiceIndividual().construct_intake_record_name(self.to_dict())
 
     def get_search_text_fields(self) -> str:
         """Return individual fields used to build search_text."""

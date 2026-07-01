@@ -14,11 +14,9 @@ class G2PRegisterDomainServiceHouseholdAsset(G2PRegisterDomainService):
         _logger.info("Constructing search text for household asset")
 
         keys = [
+            "functional_record_id",
             "asset_type",
             "asset_category",
-            "size_band",
-            "size_unit",
-            "quantity",
         ]
         search_text = []
         if extra:
