@@ -49,4 +49,4 @@ class G2PIntakeFormIndividualDisability(G2PIntakeForm, G2PRegister, G2PIndividua
 
     def get_record_name_fields(self) -> str:
         """Return individual disability record_name from domain service implementation."""
-        return G2PRegisterDomainServiceIndividualDisability().construct_record_name(self.to_dict())
+        return G2PRegisterDomainServiceIndividualDisability().construct_intake_record_name(self.to_dict())

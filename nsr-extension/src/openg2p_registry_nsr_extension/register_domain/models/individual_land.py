@@ -49,4 +49,4 @@ class G2PIntakeFormIndividualLand(G2PIntakeForm, G2PRegister, G2PIndividualLand)
 
     def get_record_name_fields(self) -> str:
         """Return individual land record_name from domain service implementation."""
-        return G2PRegisterDomainServiceIndividualLand().construct_record_name(self.to_dict())
+        return G2PRegisterDomainServiceIndividualLand().construct_intake_record_name(self.to_dict())

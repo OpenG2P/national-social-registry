@@ -2,7 +2,7 @@ import logging
 
 from openg2p_registry_core.services import G2PRegisterDomainService
 
-from .domain_validation_utils import is_blank, validation_error
+from .utils.validations import has_keys, is_blank, validation_error
 
 _logger = logging.getLogger("g2p-register-individual-livelihood-service")
 
@@ -13,6 +13,8 @@ class G2PRegisterDomainServiceIndividualLivelihood(G2PRegisterDomainService):
             self._validate_livelihood_distinct(record)
 
     def _validate_livelihood_distinct(self, record: dict) -> None:
+        if not has_keys(record, "primary_livelihood", "secondary_livelihood"):
+            return
         primary = record.get("primary_livelihood")
         secondary = record.get("secondary_livelihood")
         if (
@@ -30,8 +32,6 @@ class G2PRegisterDomainServiceIndividualLivelihood(G2PRegisterDomainService):
             "primary_livelihood",
             "secondary_livelihood",
             "employment_status",
-            "coping_strategies_index",
-            "mobile_phone_type",
         ]
         search_text = []
         if extra:

@@ -21,7 +21,6 @@ class G2PRegisterDomainServiceHouseholdHousingAndServices(G2PRegisterDomainServi
             "floor_material",
             "tenure_status",
             "water_source_type",
-            "water_distance_minutes",
             "sanitation_type",
             "lighting_source",
             "cooking_fuel_type",

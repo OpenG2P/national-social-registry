@@ -54,4 +54,4 @@ class G2PIntakeFormHouseholdAsset(G2PIntakeForm, G2PRegister, G2PHouseholdAsset)
 
     def get_record_name_fields(self) -> str:
         """Return household asset record_name from domain service implementation."""
-        return G2PRegisterDomainServiceHouseholdAsset().construct_record_name(self.to_dict())
+        return G2PRegisterDomainServiceHouseholdAsset().construct_intake_record_name(self.to_dict())

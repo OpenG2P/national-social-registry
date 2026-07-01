@@ -35,7 +35,7 @@ class G2PIntakeFormHouseholdProgram(G2PIntakeForm, G2PRegister, G2PHouseholdProg
 
     def get_record_name_fields(self) -> str:
         """Return household programs fields used to build record_name."""
-        return G2PRegisterDomainServiceHouseholdProgram().construct_record_name(self.to_dict())
+        return G2PRegisterDomainServiceHouseholdProgram().construct_intake_record_name(self.to_dict())
 
     def get_search_text_fields(self) -> str:
         """Return household programs fields used to build search_text."""
