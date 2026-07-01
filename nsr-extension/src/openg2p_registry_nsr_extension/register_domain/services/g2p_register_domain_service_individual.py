@@ -90,6 +90,21 @@ class G2PRegisterDomainServiceIndividual(G2PRegisterDomainService):
 
         return " ".join(search_text).strip()
 
+    def construct_intake_record_name(self, payload: dict, extra: list[str] = None) -> str:
+        _logger.info("Constructing intake record name for individual")
+
+        keys = ["first_name", "last_name", "application_reference"]
+        record_name = []
+        if extra:
+            record_name.extend(str(item).strip() for item in extra if str(item).strip())
+        record_name.extend(
+            str(payload.get(key) or "").strip()
+            for key in keys
+            if str(payload.get(key) or "").strip()
+        )
+
+        return " ".join(record_name).strip()
+
     def construct_record_name(self, payload: dict, extra: list[str] = None) -> str:
         _logger.info("Constructing record name for individual")
 

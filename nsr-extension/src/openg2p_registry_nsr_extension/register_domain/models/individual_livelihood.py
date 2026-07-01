@@ -52,4 +52,4 @@ class G2PIntakeFormIndividualLivelihood(G2PIntakeForm, G2PRegister, G2PIndividua
 
     def get_record_name_fields(self) -> str:
         """Return individual livelihood record_name from domain service implementation."""
-        return G2PRegisterDomainServiceIndividualLivelihood().construct_record_name(self.to_dict())
+        return G2PRegisterDomainServiceIndividualLivelihood().construct_intake_record_name(self.to_dict())
