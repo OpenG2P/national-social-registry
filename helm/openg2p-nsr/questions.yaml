@@ -204,18 +204,6 @@ questions:
   label: AWE Webhook Timestamp Tolerance (s)
   group: AWE
 
-- variable: global.aweApproverUserPassword
-  description: Initial Keycloak password for seeded approver users
-  type: string
-  label: AWE Approver User Password
-  group: AWE
-
-- variable: openg2p-awe.enabled
-  description: Install AWE subchart (required for AWE seeding and staff-portal integration)
-  type: boolean
-  label: Enable AWE Subchart
-  group: AWE
-
 # ID Generator
 - variable: idgenerator.idGenerator.appConfig.idTypesNote
   description: "Default ID types: individual (12 digits), household (10 digits). To add, remove, or modify ID types, switch to 'Edit YAML' and update the idgenerator.idGenerator.appConfig.idTypes section."
