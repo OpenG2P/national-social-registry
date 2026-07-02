@@ -47,19 +47,21 @@ jobs:
       # Derive the Helm CHART version from the branch name. This is the chart's
       # published SemVer ONLY — it has nothing to do with docker image tags.
       # Convention:
-      #   develop          -> 0.0.0-develop.<date>.<run>
-      #   N.N    (active)   -> N.N.0-develop.<date>.<run>   (Helm needs 3-part SemVer)
+      #   develop          -> 0.0.0-develop.<run>
+      #   N.N    (active)   -> N.N.0-develop.<run>   (Helm needs 3-part SemVer)
       #   N.N.N  (frozen)   -> N.N.N   (no suffix; a release outranks all its -develop builds)
       #   anything else     -> skip publishing (set SKIP=TRUE)
-      # The <date>.<run> suffix is a unique, monotonic pre-release tag so each
-      # publish is a new version (sidesteps Rancher/CDN version-caching).
+      # The <run> suffix (GitHub run number) is a unique, monotonically-increasing
+      # pre-release tag so each publish is a new version (sidesteps Rancher/CDN
+      # version-caching). A date is intentionally omitted — it adds no uniqueness
+      # and the longer string gets truncated in Rancher's chart-list tiles.
       - name: Resolve chart version (branch-gated, with manual override)
         shell: bash
         env:
           INPUT_VERSION: ${{ inputs.version }}
         run: |
           BRANCH="${GITHUB_REF_NAME}"
-          SUFFIX="$(date +%Y%m%d).${GITHUB_RUN_NUMBER}"
+          SUFFIX="${GITHUB_RUN_NUMBER}"
           if [ -n "${INPUT_VERSION}" ]; then
             # Explicit override via manual "Run workflow" — publish this EXACT
             # version regardless of branch (e.g. 1.0.0-g2p5466). helm package
