@@ -20,6 +20,17 @@ ENV STAFF_PORTAL_HOST=0.0.0.0
 ENV STAFF_PORTAL_PORT=8000
 ENV STAFF_PORTAL_NO_OF_WORKERS=8
 
+# Run as a non-root user (uid/gid 1001) instead of root. uid/gid match the
+# chart's runAsUser/fsGroup so enabling the pod securityContext is consistent.
+# The app only needs read access to the root-owned site-packages (world-readable)
+# and write access to /app and /tmp — both fine for uid 1001. Binds to port 8000
+# (>1024) so no NET_BIND_SERVICE capability is required.
+RUN addgroup -g 1001 openg2p \
+ && adduser -D -u 1001 -G openg2p -h /home/openg2p openg2p \
+ && chown -R 1001:1001 /app
+USER 1001
+ENV HOME=/home/openg2p
+
 # Use module path for migrate and Gunicorn WSGI app
 CMD python3 -m openg2p_registry_staff_portal_api.main migrate; \
     ${STAFF_PORTAL_WORKER_TYPE} "openg2p_registry_staff_portal_api.main:app" --workers ${STAFF_PORTAL_NO_OF_WORKERS} --worker-class uvicorn.workers.UvicornWorker --bind ${STAFF_PORTAL_HOST}:${STAFF_PORTAL_PORT}

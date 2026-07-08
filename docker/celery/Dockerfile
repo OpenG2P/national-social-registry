@@ -21,5 +21,16 @@ ENV CELERY_IMPORTS=""
 
 COPY celery/run_celery.py /app/run_celery.py
 
+# Run as a non-root user (uid/gid 1001) instead of root. uid/gid match the
+# chart's runAsUser/fsGroup so enabling the pod securityContext is consistent.
+# The app reads root-owned site-packages (world-readable) and writes only to
+# /app and /tmp (celery-beat's schedule db lives at /tmp/...), both fine for
+# uid 1001. Placed AFTER the run_celery.py copy so that file is owned by 1001.
+RUN addgroup -g 1001 openg2p \
+ && adduser -D -u 1001 -G openg2p -h /home/openg2p openg2p \
+ && chown -R 1001:1001 /app
+USER 1001
+ENV HOME=/home/openg2p
+
 # Always use the python wrapper to handle imports and startup
 CMD ["python3", "/app/run_celery.py"]
