@@ -18,7 +18,9 @@ ENV PYTHONUNBUFFERED=1
 ENV STAFF_PORTAL_WORKER_TYPE=gunicorn
 ENV STAFF_PORTAL_HOST=0.0.0.0
 ENV STAFF_PORTAL_PORT=8000
-ENV STAFF_PORTAL_NO_OF_WORKERS=8
+# Default worker count kept low (3) for predictable memory; the Helm chart
+# overrides this per-deployment via STAFF_PORTAL_NO_OF_WORKERS in envVars.
+ENV STAFF_PORTAL_NO_OF_WORKERS=3
 
 # Run as a non-root user (uid/gid 1001) instead of root. uid/gid match the
 # chart's runAsUser/fsGroup so enabling the pod securityContext is consistent.
