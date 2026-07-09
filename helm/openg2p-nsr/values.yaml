@@ -71,6 +71,13 @@ global:
   # IAM service internal URL
   iamServiceUrl: 'http://commons-services-iam-staff-portal-api'
 
+  # Redis-backed auth (refresh tokens + OAuth transaction state) for staff-portal-api.
+  # Uses the same shared Redis as iam-staff-portal-api (commons-redis-master).
+  authRedisInstallationName: 'commons-redis'
+  authRefreshTokenTtlSeconds: 1800
+  # Double-submit CSRF validation on state-changing staff-portal-api requests.
+  csrfEnabled: true
+
   # Master Data API internal URL
   masterDataApiUrl: 'http://commons-services-master-data-api'
 
@@ -128,10 +135,17 @@ global:
   # registry instance. The extension SQL (awe_meta_data/40_callback_secret.sql.tpl)
   # reads this via the AWE_CALLBACK_SECRET_ID env passed by the db-seed Job.
   aweCallbackSecretId: '{{ .Release.Name }}'
+  # Full staff-portal webhook URL stored in AWE callback_secret.caller_service
+  # and passed to the registry as REGISTRY_STAFF_PORTAL_API_AWE_DEFAULT_CALLBACK_URL.
+  # e.g. https://staff-nsr.nsr.openg2p.org/awe/webhooks/decision
+  aweDefaultCallbackUrl: 'https://staff-{{ tpl .Values.global.registryHostname $ }}/awe/webhooks/decision'
   aweHttpTimeoutSeconds: 30
   aweWebhookTimestampToleranceSeconds: 300
   aweCallbackHmacSecretName: '{{ .Release.Name }}-awe-callback-hmac'
   aweCallbackHmacSecretKey: 'hmac-secret'
+  # NOTE: despite the name, this is the initial Keycloak password for the seeded
+  # demo staff users below (keycloak-init), not an AWE resource. Kept here.
+  aweApproverUserPassword: 'pass'
   # Helm release that hosts the shared AWE — its Service is <aweReleaseName>-awe.
   # Used by db-seed to wait for the AWE API before seeding the callback secret.
   aweReleaseName: commons-services
@@ -637,6 +651,9 @@ staffPortalApi:
     REGISTRY_STAFF_PORTAL_API_OPENAPI_ROOT_PATH: '{{ .Values.openapiRootPath }}'
 
     REGISTRY_STAFF_PORTAL_API_AUTH_PROVIDER_API_URL: '{{ .Values.global.iamServiceUrl }}'
+    REGISTRY_STAFF_PORTAL_API_AUTH_REDIS_URL: 'redis://{{ tpl .Values.global.authRedisInstallationName $ }}-master:6379/0'
+    REGISTRY_STAFF_PORTAL_API_AUTH_REFRESH_TOKEN_TTL_SECONDS: '{{ .Values.global.authRefreshTokenTtlSeconds }}'
+    REGISTRY_STAFF_PORTAL_API_CSRF_ENABLED: '{{ .Values.global.csrfEnabled }}'
     REGISTRY_STAFF_PORTAL_API_KEYCLOAK_CLIENT_ID: '{{ tpl .Values.global.authClientId $ }}'
     REGISTRY_STAFF_PORTAL_API_MINIO_ENDPOINT: '{{ tpl .Values.global.minioHost $ }}'
     REGISTRY_STAFF_PORTAL_API_MINIO_SECURE: '{{ .Values.global.minioSecure }}'
@@ -656,7 +673,7 @@ staffPortalApi:
     REGISTRY_STAFF_PORTAL_API_AWE_ENABLED: '{{ .Values.global.aweEnabled }}'
     REGISTRY_STAFF_PORTAL_API_AWE_BASE_URL: '{{ tpl .Values.global.aweBaseUrl $ }}'
     REGISTRY_STAFF_PORTAL_API_AWE_HTTP_TIMEOUT_SECONDS: '{{ .Values.global.aweHttpTimeoutSeconds }}'
-    REGISTRY_STAFF_PORTAL_API_AWE_DEFAULT_CALLBACK_URL: 'https://staff-{{ tpl .Values.global.registryHostname $ }}/awe/webhooks/decision'
+    REGISTRY_STAFF_PORTAL_API_AWE_DEFAULT_CALLBACK_URL: '{{ tpl .Values.global.aweDefaultCallbackUrl $ }}'
     REGISTRY_STAFF_PORTAL_API_AWE_CALLBACK_SECRET_ID: '{{ tpl .Values.global.aweCallbackSecretId $ }}'
     REGISTRY_STAFF_PORTAL_API_AWE_WEBHOOK_TIMESTAMP_TOLERANCE_SECONDS: '{{ .Values.global.aweWebhookTimestampToleranceSeconds }}'
 
@@ -813,6 +830,8 @@ staffPortalUi:
   partnerIngestUrl: 'https://partner-{{ tpl .Values.global.registryHostname $ }}/partner/ingest_data?data_model=dcivc'
   vpPresentationId: "7f3c2a91-bb84-4d1f-9a6e-41c8e5a0d9f2"
   vpPurpose: "Digital identity verification for registry onboarding"
+  # Browser-facing IAM URL (Staff Portal UI login providers)
+  iamPublicUrl: 'https://staff-iam.{{ .Release.Namespace }}.openg2p.org'
 
   envVars:
     # Per-release identifiers so two registry installs in the same namespace
@@ -821,6 +840,8 @@ staffPortalUi:
     APP_MNEMONIC: '{{ .Release.Name }}-ui'
     APP_URL: 'https://{{ tpl .Values.global.registryHostname $ }}'
     APPLICATION_MNEMONIC: '{{ tpl .Values.global.authClientId $ }}'
+    # Allow profile/document images from MinIO pre-signed URLs in the browser CSP.
+    CSP_SRC_IMG: 'self blob: data: https://{{ tpl .Values.global.minioHost $ }}'
     # Server-side calls from the Next.js Staff Portal UI pod to the Staff
     # Portal API stay inside the cluster — sibling K8s Service is named
     # "<release>-staff-portal-api" on port 80. Browser-side calls from the
@@ -828,7 +849,7 @@ staffPortalUi:
     # https://staff-<host> hostname (add when needed).
     BACKEND_API_URL: 'http://{{ .Release.Name }}-staff-portal-api'
     COOKIE_DOMAIN: '.{{ .Release.Namespace }}.openg2p.org'
-    IAM_URL: '{{ .Values.global.iamServiceUrl }}'
+    IAM_URL: '{{ tpl .Values.iamPublicUrl $ }}'
     KEYCLOAK_LOGOUT_URL: '{{ tpl .Values.global.keycloakIssuerUrl $ }}/protocol/openid-connect/logout'
     LOGIN_PROVIDER_ID: '1'
     MASTERDATA_BACKEND_API_URL: '{{ .Values.global.masterDataApiUrl }}'
@@ -1119,6 +1140,8 @@ keycloak-init:
               - "Operations Administrator"
               - "Technical Administrator"
         - username: alex.carter
+          firstName: Alex
+          lastName: Carter
           email: alex.carter@email.com
           password: '{{ .Values.global.aweApproverUserPassword }}'
           enabled: true
@@ -1131,6 +1154,8 @@ keycloak-init:
               - "Operations Administrator"
               - "Technical Administrator"
         - username: maya.reed
+          firstName: Maya
+          lastName: Reed
           email: maya.reed@email.com
           password: '{{ .Values.global.aweApproverUserPassword }}'
           enabled: true
@@ -1143,6 +1168,8 @@ keycloak-init:
               - "Operations Administrator"
               - "Technical Administrator"
         - username: nina.patel
+          firstName: Nina
+          lastName: Patel
           email: nina.patel@email.com
           password: '{{ .Values.global.aweApproverUserPassword }}'
           enabled: true
@@ -1155,6 +1182,8 @@ keycloak-init:
               - "Operations Administrator"
               - "Technical Administrator"
         - username: omar.sheikh
+          firstName: Omar
+          lastName: Sheikh
           email: omar.sheikh@email.com
           password: '{{ .Values.global.aweApproverUserPassword }}'
           enabled: true
@@ -1167,6 +1196,8 @@ keycloak-init:
               - "Operations Administrator"
               - "Technical Administrator"
         - username: zara.khan
+          firstName: Zara
+          lastName: Khan
           email: zara.khan@email.com
           password: '{{ .Values.global.aweApproverUserPassword }}'
           enabled: true
@@ -1179,6 +1210,8 @@ keycloak-init:
               - "Operations Administrator"
               - "Technical Administrator"
         - username: chipo.banda
+          firstName: Chipo
+          lastName: Banda
           email: chipo.banda@email.com
           password: '{{ .Values.global.aweApproverUserPassword }}'
           enabled: true
@@ -1191,6 +1224,8 @@ keycloak-init:
               - "Operations Administrator"
               - "Technical Administrator"
         - username: tendai.moyo
+          firstName: Tendai
+          lastName: Moyo
           email: tendai.moyo@email.com
           password: '{{ .Values.global.aweApproverUserPassword }}'
           enabled: true
@@ -1203,6 +1238,8 @@ keycloak-init:
               - "Operations Administrator"
               - "Technical Administrator"
         - username: hana.bekele
+          firstName: Hana
+          lastName: Bekele
           email: hana.bekele@email.com
           password: '{{ .Values.global.aweApproverUserPassword }}'
           enabled: true
@@ -1215,6 +1252,8 @@ keycloak-init:
               - "Operations Administrator"
               - "Technical Administrator"
         - username: tesfaye.mekonnen
+          firstName: Tesfaye
+          lastName: Mekonnen
           email: tesfaye.mekonnen@email.com
           password: '{{ .Values.global.aweApproverUserPassword }}'
           enabled: true
@@ -1227,6 +1266,8 @@ keycloak-init:
               - "Operations Administrator"
               - "Technical Administrator"
         - username: mwansa.tembo
+          firstName: Mwansa
+          lastName: Tembo
           email: mwansa.tembo@email.com
           password: '{{ .Values.global.aweApproverUserPassword }}'
           enabled: true
