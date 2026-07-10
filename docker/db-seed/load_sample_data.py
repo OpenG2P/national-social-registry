@@ -131,7 +131,7 @@ def insert_individuals(cur, individuals: list[dict]) -> None:
     columns = [
         "internal_record_id", "functional_record_id",
         "link_internal_record_id", "link_foundational_id",
-        "record_name", "record_image_storage_id",
+        "record_name", "record_image_document_id",
         "created_by", "created_at", "last_approved_at", "last_approved_by",
         "search_text", "record_status", "record_status_reason",
         "foundational_id", "first_name", "middle_name", "last_name",
@@ -209,7 +209,7 @@ def insert_households(cur, households: list[dict]) -> None:
     columns = [
         "internal_record_id", "functional_record_id",
         "link_internal_record_id", "link_foundational_id",
-        "record_name", "record_image_storage_id",
+        "record_name", "record_image_document_id",
         "created_by", "created_at", "last_approved_at", "last_approved_by",
         "search_text", "record_status", "record_status_reason",
         "latitude", "longitude", "altitude", "plus_code",
@@ -335,7 +335,7 @@ SUB_TABLES = [
 COMMON_COLUMNS = [
     "internal_record_id", "functional_record_id",
     "link_internal_record_id", "link_foundational_id",
-    "record_name", "record_image_storage_id",
+    "record_name", "record_image_document_id",
     "created_by", "created_at", "last_approved_at", "last_approved_by",
     "search_text", "record_status", "record_status_reason",
 ]
@@ -354,7 +354,7 @@ def insert_sub_table(cur, table: str, rows_json: list[dict], extra_cols: list[st
             r["link_internal_record_id"],
             r.get("link_foundational_id"),
             r["record_name"],
-            r.get("record_image_storage_id"),
+            r.get("record_image_document_id") or r.get("record_image_storage_id"),
             r.get("created_by", SEEDER),
             r.get("created_at", CREATED_AT),
             r.get("last_approved_at", CREATED_AT),

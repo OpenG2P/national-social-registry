@@ -1,14 +1,18 @@
 #!/usr/bin/env python3
-"""Upload sample profile images to MinIO and link them to g2p_register_individuals.
+"""Upload sample profile images to MinIO and link them via the document catalog.
 
-Images are stored under openg2p-data/demography/images/IND-XXXX.jpg.
-Each image is uploaded under the same filename to a MinIO bucket and the
-corresponding row in g2p_register_individuals is updated with
-record_image_storage_id = filename.
+Flow:
+1. Upload each image to the documents bucket (object key = filename).
+2. Insert a g2p_registry_documents catalog row (bucket=documents).
+3. Set g2p_register_individuals.record_image_document_id = catalog.document_id.
 """
+
+from __future__ import annotations
 
 import os
 import sys
+import uuid
+from datetime import datetime, timezone
 from pathlib import Path
 
 import psycopg2
@@ -27,7 +31,8 @@ def main() -> None:
     images_dir = Path(
         os.environ.get("IMAGES_DIR", "/openg2p-data/demography/images")
     )
-    bucket_name = env("IMAGE_BUCKET_NAME", "registrant-photos")
+    # Physical bucket must match DocumentBucket.DOCUMENTS ("documents")
+    bucket_name = env("IMAGE_BUCKET_NAME", "documents")
     endpoint = env("MINIO_ENDPOINT")
     access_key = env("MINIO_ACCESS_KEY")
     secret_key = env("MINIO_SECRET_KEY")
@@ -50,13 +55,13 @@ def main() -> None:
     print(
         f"[upload-images] Uploading {len(image_files)} image(s) to s3://{bucket_name}/ …"
     )
+    # (functional_record_id, object_key/source_filename)
     uploaded: list[tuple[str, str]] = []
     for path in image_files:
         client.fput_object(bucket_name, path.name, str(path), content_type="image/jpeg")
         uploaded.append((path.stem, path.name))
     print(f"[upload-images] Uploaded {len(uploaded)} images.")
 
-    # Update DB references. functional_record_id matches stem (e.g. IND-0001).
     conn = psycopg2.connect(
         host=env("PGHOST"),
         port=os.environ.get("PGPORT", "5432"),
@@ -66,16 +71,39 @@ def main() -> None:
     )
     conn.autocommit = False
     cur = conn.cursor()
+    now = datetime.now(timezone.utc).replace(tzinfo=None)
     try:
-        cur.executemany(
-            'UPDATE "public"."g2p_register_individuals" '
-            "SET record_image_storage_id = %s "
-            "WHERE functional_record_id = %s",
-            [(obj_key, fr_id) for fr_id, obj_key in uploaded],
-        )
+        updated = 0
+        for functional_record_id, object_key in uploaded:
+            document_id = str(uuid.uuid4())
+            cur.execute(
+                """
+                INSERT INTO "public"."g2p_registry_documents"
+                    (document_id, document_store_id, bucket, source_filename, created_by, created_at)
+                VALUES (%s, %s, %s, %s, %s, %s)
+                ON CONFLICT (document_store_id) DO UPDATE
+                    SET source_filename = EXCLUDED.source_filename
+                RETURNING document_id
+                """,
+                (document_id, object_key, "documents", object_key, "seeder", now),
+            )
+            row = cur.fetchone()
+            catalog_document_id = row[0] if row else document_id
+
+            cur.execute(
+                """
+                UPDATE "public"."g2p_register_individuals"
+                SET record_image_document_id = %s
+                WHERE functional_record_id = %s
+                """,
+                (catalog_document_id, functional_record_id),
+            )
+            updated += cur.rowcount
+
         conn.commit()
         print(
-            f"[upload-images] Updated {cur.rowcount} rows in g2p_register_individuals."
+            f"[upload-images] Catalogued {len(uploaded)} images; "
+            f"updated {updated} rows in g2p_register_individuals."
         )
     except Exception as exc:
         conn.rollback()

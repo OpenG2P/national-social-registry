@@ -10,7 +10,8 @@ set -e
 #   LOAD_IMAGES      — "true" to upload profile images to MinIO (default: false)
 #   LOAD_TEMPLATES   — "true" to upload Jinja templates to MinIO (default: false)
 #   MINIO_ENDPOINT, MINIO_ACCESS_KEY, MINIO_SECRET_KEY, MINIO_SECURE
-#   TEMPLATE_BUCKET_NAME, TEMPLATES_DIR, IMAGE_BUCKET_NAME, IMAGES_DIR
+#   TEMPLATE_BUCKET_NAME, TEMPLATES_DIR — default bucket "templates" (DocumentBucket.TEMPLATES)
+#   IMAGE_BUCKET_NAME, IMAGES_DIR — default bucket "documents" (DocumentBucket.DOCUMENTS)
 #   OPENG2P_DATA_DIR (default "/openg2p-data")
 #
 # Master-data database (geo reference data; the master-data service is a generic
