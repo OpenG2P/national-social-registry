@@ -1,0 +1,17 @@
+#!openg2p/openg2p-nsr-staff-portal-api:G2P-4763
+
+# Document handling refactor build — pins registry-platform to G2P-4763-documents-refactor.
+# Build: ./docker/scripts/build.sh staff-portal-api/G2P-4763.txt
+
+# NSR extension — built from this repo's working tree (copied into local_deps/ by parse_service.py).
+./nsr-extension
+
+# Dependencies libs
+git://v1.1.7//https://github.com/openg2p/openg2p-fastapi-common#subdirectory=openg2p-fastapi-common
+git://v1.1.7//https://github.com/openg2p/openg2p-fastapi-common#subdirectory=openg2p-fastapi-auth
+
+# Core
+git://v1.2.1//https://github.com/openg2p/openg2p-iam-service#subdirectory=iam-core
+# Consolidated registry-platform repo — document handling refactor branch.
+git://G2P-4763-documents-refactor//https://github.com/openg2p/registry-platform#subdirectory=core/openg2p-registry-core
+git://G2P-4763-documents-refactor//https://github.com/openg2p/registry-platform#subdirectory=apis/openg2p-registry-staff-portal-api
