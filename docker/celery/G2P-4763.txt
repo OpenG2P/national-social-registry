@@ -14,7 +14,7 @@ git://G2P-4763-documents-refactor//https://github.com/openg2p/registry-platform#
 git://G2P-4763-documents-refactor//https://github.com/openg2p/registry-platform#subdirectory=celery/openg2p-registry-celery-workers
 
 # Domain specific
-git://v1.2.1//https://github.com/openg2p/openg2p-iam-service#subdirectory=iam-core
+git://v1.2.1//https://github.com/openg2p/iam-service#subdirectory=iam-core
 
 # NSR extension — built from this repo's working tree (copied into local_deps/ by parse_service.py).
 ./nsr-extension
