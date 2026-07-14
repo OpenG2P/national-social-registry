@@ -230,3 +230,9 @@ questions:
   type: boolean
   label: Audit Anonymous Failures
   group: Audit Manager
+
+- variable: global.csrfEnabled
+  description: Enable double-submit CSRF validation on state-changing staff-portal-api requests. Set false for local/dev troubleshooting only.
+  type: boolean
+  label: CSRF Enabled
+  group: Security
