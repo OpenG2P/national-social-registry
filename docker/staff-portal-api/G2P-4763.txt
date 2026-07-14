@@ -13,5 +13,5 @@ git://v1.1.7//https://github.com/openg2p/openg2p-fastapi-common#subdirectory=ope
 # Core
 git://v1.2.1//https://github.com/openg2p/openg2p-iam-service#subdirectory=iam-core
 # Consolidated registry-platform repo — document handling refactor branch.
-git://G2P-4763-documents-refactor//https://github.com/openg2p/registry-platform#subdirectory=core/openg2p-registry-core
-git://G2P-4763-documents-refactor//https://github.com/openg2p/registry-platform#subdirectory=apis/openg2p-registry-staff-portal-api
+git://1.1//https://github.com/openg2p/registry-platform#subdirectory=core/openg2p-registry-core
+git://1.1//https://github.com/openg2p/registry-platform#subdirectory=apis/openg2p-registry-staff-portal-api
