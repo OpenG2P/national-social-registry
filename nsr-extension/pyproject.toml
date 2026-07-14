@@ -5,7 +5,6 @@ build-backend = "hatchling.build"
 [project]
 name = "openg2p-registry-nsr-extension"
 description = "OpenG2P Registry NSR (National Social Registry) Extension"
-readme = "README.md"
 requires-python = ">=3.7"
 license = { text = "MPL-2.0" }
 
