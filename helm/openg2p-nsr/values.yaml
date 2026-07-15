@@ -47,6 +47,19 @@ global:
   imageBucketName: 'documents'
   minioSecure: true
 
+  # Document / template upload validation (G2P-5326). Wired into
+  # staff-portal-api only (the upload entrypoint). Defaults match
+  # openg2p_registry_core.config.Settings.
+  documentUploadAllowedExtensions: 'png,jpg,jpeg,webp,pdf'
+  documentUploadAllowedMimeTypes: 'image/png,image/jpeg,image/webp,application/pdf'
+  documentUploadMaxBytes: 10485760  # 10 MiB overall cap
+  # Per-MIME caps (JSON string). Images 5 MiB; PDF 10 MiB.
+  documentUploadMaxBytesByMime: '{"image/png":5242880,"image/jpeg":5242880,"image/webp":5242880,"application/pdf":10485760}'
+  templateUploadAllowedExtensions: 'json.j2'
+  templateUploadAllowedMimeTypes: 'text/plain,application/json'
+  templateUploadMaxBytes: 1048576  # 1 MiB
+  templateUploadMaxBytesByMime: '{}'
+
   # Security & Authentication
   keymanagerInstallationName: commons-services-keymanager
   keycloakBaseUrl: 'https://keycloak.{{ .Release.Namespace }}.openg2p.org'
@@ -60,6 +73,29 @@ global:
   # Per-release keymanager app id (uppercased Release.Name) so signature
   # scopes don't collide across registry instances in the same environment.
   registryKeymanagerAppId: '{{ .Release.Name | upper }}'
+
+  # ------------------------------------------------------------------
+  # Partner signature verification + Consent Manager (PDP) integration
+  # ------------------------------------------------------------------
+  # The partner-api (a PEP) verifies the DCI envelope signature against partner
+  # public keys served by Partner Management (crypto backend "partner-mgmt"),
+  # and enforces consent by calling the Consent Manager /validate before
+  # returning data — clamping the response to the effective data scopes.
+  #
+  # Two INDEPENDENT kill-switches. Defaulted OFF here so a fresh NSR install
+  # works before CM/PM are wired; turn BOTH ON for production — they govern
+  # real PII egress. When OFF, the bypass is logged and stamped into the
+  # DCI response header meta (signature_validation / consent_enforcement).
+  partnerSignatureValidationEnabled: false
+  consentEnforcementEnabled: false
+  # Partner-key crypto backend: partner-mgmt | keymanager | local
+  registryCryptoBackend: partner-mgmt
+  # Partner Management partner-api — source of partner public keys.
+  partnerManagementApiUrl: 'http://commons-services-pm-partner-api'
+  # Consent Manager partner-api base URL — the /validate PDP endpoint.
+  consentManagerUrl: 'http://commons-services-cm-partner-api'
+  consentManagerTimeoutSeconds: 5
+
   # OIDC client ID — per-release; MUST equal the clientId in keycloak-init.realms below.
   authClientId: '{{ .Release.Name }}-staff-portal'
   # K8s Secret name holding the client password (keycloak-init names the
@@ -316,11 +352,20 @@ partnerApi:
     REGISTRY_PARTNER_API_KEYMANAGER_SIGN_APP_ID: '{{ tpl .Values.global.registryKeymanagerAppId $ }}'
     REGISTRY_PARTNER_API_KEYMANAGER_SIGN_REF_ID: ""
 
+    # Partner signature verification (transport) + Consent Manager enforcement.
+    # Both default OFF (global.*Enabled) — enable for production PII egress.
+    REGISTRY_PARTNER_API_SIGNATURE_VALIDATION_ENABLED: '{{ .Values.global.partnerSignatureValidationEnabled }}'
+    REGISTRY_PARTNER_API_CONSENT_ENFORCEMENT_ENABLED: '{{ .Values.global.consentEnforcementEnabled }}'
+    REGISTRY_PARTNER_API_CRYPTO_BACKEND: '{{ .Values.global.registryCryptoBackend }}'
+    REGISTRY_PARTNER_API_PARTNER_MGMT_API_URL: '{{ tpl .Values.global.partnerManagementApiUrl $ }}'
+    REGISTRY_PARTNER_API_CONSENT_MANAGER_URL: '{{ tpl .Values.global.consentManagerUrl $ }}'
+    REGISTRY_PARTNER_API_CONSENT_MANAGER_TIMEOUT: '{{ .Values.global.consentManagerTimeoutSeconds }}'
+
+    # Document storage — bucket names are hard-set by DocumentBucket enum
+    # (default / templates / documents / data_import_files); not configurable.
+    REGISTRY_PARTNER_API_DOCUMENT_STORAGE_BACKEND: 'minio'
     REGISTRY_PARTNER_API_MINIO_ENDPOINT: '{{ tpl .Values.global.minioHost $ }}'
     REGISTRY_PARTNER_API_MINIO_SECURE: '{{ .Values.global.minioSecure }}'
-    # Match imageBucketName so partner-served record-image URLs resolve.
-    REGISTRY_PARTNER_API_MINIO_BUCKET_NAME: '{{ tpl .Values.global.imageBucketName $ }}'
-    REGISTRY_PARTNER_API_TEMPLATE_BUCKET_NAME: '{{ tpl .Values.global.templateBucketName $ }}'
 
     # OpenG2P Audit Manager integration. No-op unless both AUDIT_ENABLED=true
     # and AUDIT_MANAGER_URL are set (controlled via global.auditEnabled and
@@ -350,10 +395,6 @@ partnerApi:
       secretKeyRef:
         name: '{{ tpl .Values.global.minioSecret $ }}'
         key: '{{ tpl .Values.global.minioSecretKey $ }}'
-    REGISTRY_PARTNER_API_OAUTH_CLIENT_SECRET:
-      secretKeyRef:
-        name: '{{ tpl .Values.global.authClientSecret $ }}'
-        key: '{{ tpl .Values.global.authClientSecretKey $ }}'
     REGISTRY_PARTNER_API_KEYMANAGER_AUTH_CLIENT_SECRET:
       secretKeyRef:
         name: '{{ tpl .Values.global.authClientSecret $ }}'
@@ -481,10 +522,10 @@ benePortalApi:
 
     REGISTRY_BENE_PORTAL_API_OPENAPI_ROOT_PATH: '{{ .Values.openapiRootPath }}'
 
+    # Document storage — bucket names are hard-set by DocumentBucket enum.
+    REGISTRY_BENE_PORTAL_API_DOCUMENT_STORAGE_BACKEND: 'minio'
     REGISTRY_BENE_PORTAL_API_MINIO_ENDPOINT: '{{ tpl .Values.global.minioHost $ }}'
     REGISTRY_BENE_PORTAL_API_MINIO_SECURE: '{{ .Values.global.minioSecure }}'
-    # DocumentBucket.TEMPLATES hard-sets the physical bucket to "templates".
-    REGISTRY_BENE_PORTAL_API_MINIO_BUCKET_NAME: "templates"
   envVarsFrom:
     REGISTRY_BENE_PORTAL_API_DB_PASSWORD:
       secretKeyRef:
@@ -631,12 +672,29 @@ staffPortalApi:
 
     REGISTRY_STAFF_PORTAL_API_AUTH_PROVIDER_API_URL: '{{ .Values.global.iamServiceUrl }}'
     REGISTRY_STAFF_PORTAL_API_KEYCLOAK_CLIENT_ID: '{{ tpl .Values.global.authClientId $ }}'
+
+    # Redis-backed auth (refresh tokens + OAuth transaction state) and
+    # registrant OIDC widget sessions.
+    REGISTRY_STAFF_PORTAL_API_AUTH_REDIS_URL: 'redis://{{ tpl .Values.global.redisInstallationName $ }}:6379/0'
+    REGISTRY_STAFF_PORTAL_API_AUTH_TRANSACTION_STORE_BACKEND: 'redis'
+    REGISTRY_STAFF_PORTAL_API_AUTH_REFRESH_TOKEN_TTL_SECONDS: '1800'
+    REGISTRY_STAFF_PORTAL_API_REGISTRANT_AUTH_SESSION_STORE_BACKEND: 'redis'
+    REGISTRY_STAFF_PORTAL_API_REGISTRANT_AUTH_REDIS_URL: 'redis://{{ tpl .Values.global.redisInstallationName $ }}:6379/0'
+
+    # Document storage — bucket names are hard-set by DocumentBucket enum
+    # (default / templates / documents / data_import_files); not configurable.
+    REGISTRY_STAFF_PORTAL_API_DOCUMENT_STORAGE_BACKEND: 'minio'
     REGISTRY_STAFF_PORTAL_API_MINIO_ENDPOINT: '{{ tpl .Values.global.minioHost $ }}'
     REGISTRY_STAFF_PORTAL_API_MINIO_SECURE: '{{ .Values.global.minioSecure }}'
-    # Record images (incl. db-seed uploads) live in imageBucketName; this must
-    # match so staff-portal presigned record-image URLs resolve.
-    REGISTRY_STAFF_PORTAL_API_MINIO_BUCKET_NAME: '{{ tpl .Values.global.imageBucketName $ }}'
-    REGISTRY_STAFF_PORTAL_API_TEMPLATE_BUCKET_NAME: '{{ tpl .Values.global.templateBucketName $ }}'
+    # File upload validations
+    REGISTRY_STAFF_PORTAL_API_DOCUMENT_UPLOAD_ALLOWED_EXTENSIONS: '{{ .Values.global.documentUploadAllowedExtensions }}'
+    REGISTRY_STAFF_PORTAL_API_DOCUMENT_UPLOAD_ALLOWED_MIME_TYPES: '{{ .Values.global.documentUploadAllowedMimeTypes }}'
+    REGISTRY_STAFF_PORTAL_API_DOCUMENT_UPLOAD_MAX_BYTES: '{{ .Values.global.documentUploadMaxBytes }}'
+    REGISTRY_STAFF_PORTAL_API_DOCUMENT_UPLOAD_MAX_BYTES_BY_MIME: '{{ .Values.global.documentUploadMaxBytesByMime }}'
+    REGISTRY_STAFF_PORTAL_API_TEMPLATE_UPLOAD_ALLOWED_EXTENSIONS: '{{ .Values.global.templateUploadAllowedExtensions }}'
+    REGISTRY_STAFF_PORTAL_API_TEMPLATE_UPLOAD_ALLOWED_MIME_TYPES: '{{ .Values.global.templateUploadAllowedMimeTypes }}'
+    REGISTRY_STAFF_PORTAL_API_TEMPLATE_UPLOAD_MAX_BYTES: '{{ .Values.global.templateUploadMaxBytes }}'
+    REGISTRY_STAFF_PORTAL_API_TEMPLATE_UPLOAD_MAX_BYTES_BY_MIME: '{{ .Values.global.templateUploadMaxBytesByMime }}'
 
     # OpenG2P Audit Manager integration. No-op unless both AUDIT_ENABLED=true
     # and AUDIT_MANAGER_URL are set (controlled via global.auditEnabled and
@@ -909,6 +967,12 @@ celeryBeatProducer:
     REGISTRY_CELERY_BEAT_OUTGEST_DATA_PUBLISH_BEAT_PRODUCER_FREQUENCY: 20
     REGISTRY_CELERY_BEAT_OUTGEST_TOPIC_REGISTER_BEAT_PRODUCER_FREQUENCY: 20
     REGISTRY_CELERY_BEAT_DEDUPLICATION_BEAT_PRODUCER_FREQUENCY: 30
+    REGISTRY_CELERY_BEAT_INTAKE_FORM_REGISTER_INGEST_BEAT_PRODUCER_FREQUENCY: 20
+    REGISTRY_CELERY_BEAT_FUNCTIONAL_ID_ALLOCATION_BEAT_PRODUCER_FREQUENCY: 20
+    REGISTRY_CELERY_BEAT_FUNCTIONAL_ID_UPDATION_BEAT_PRODUCER_FREQUENCY: 20
+    REGISTRY_CELERY_BEAT_SCORE_COMPUTE_BEAT_PRODUCER_FREQUENCY: 20
+    REGISTRY_CELERY_BEAT_COMPLETION_SCORE_BEAT_PRODUCER_FREQUENCY: 20
+    REGISTRY_CELERY_BEAT_IMPORT_FILE_PROCESS_BEAT_PRODUCER_FREQUENCY: 20
     CELERY_APP: "openg2p_registry_celery_beat_producers.main.celery_app"
     CELERY_OPTS: "worker --beat --loglevel=info --schedule=/tmp/celery-beat-schedule.db"
 
@@ -986,12 +1050,13 @@ celeryWorker:
     REGISTRY_CELERY_WORKERS_BATCH_SIZE: 2000
     REGISTRY_CELERY_WORKERS_WORKER_MAX_ATTEMPTS: 5
 
+    # Document storage — bucket names are hard-set by DocumentBucket enum.
+    REGISTRY_CELERY_WORKERS_DOCUMENT_STORAGE_BACKEND: 'minio'
     REGISTRY_CELERY_WORKERS_MINIO_ENDPOINT: '{{ tpl .Values.global.minioHost $ }}'
     REGISTRY_CELERY_WORKERS_MINIO_SECURE: '{{ .Values.global.minioSecure }}'
-    REGISTRY_CELERY_WORKERS_MINIO_BUCKET_NAME: '{{ tpl .Values.global.defaultBucketName $ }}'
-    REGISTRY_CELERY_WORKERS_TEMPLATE_BUCKET_NAME: '{{ tpl .Values.global.templateBucketName $ }}'
     REGISTRY_CELERY_WORKERS_FUNCTIONAL_ID_GENERATION_URL: '{{ tpl .Values.global.idGeneratorInternalUrl $ }}'
     REGISTRY_CELERY_WORKERS_ID_GENERATION_ALLOCATION_PATH: '/idgenerator/{id_type}/id'
+    REGISTRY_CELERY_WORKERS_ID_GENERATION_UPDATION_PATH: ''
     CELERY_APP: "openg2p_registry_celery_workers.main.celery_app"
     CELERY_OPTS: "worker -Q registry_worker_queue --loglevel=info"
 
