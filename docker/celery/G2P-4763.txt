@@ -14,7 +14,7 @@ git://1.1//https://github.com/openg2p/registry-platform#subdirectory=celery/open
 git://1.1//https://github.com/openg2p/registry-platform#subdirectory=celery/openg2p-registry-celery-workers
 
 # Domain specific
-git://v1.2.1//https://github.com/openg2p/iam-service#subdirectory=iam-core
+git://1.3//https://github.com/openg2p/iam-service#subdirectory=iam-core
 
 # NSR extension — built from this repo's working tree (copied into local_deps/ by parse_service.py).
 ./nsr-extension
