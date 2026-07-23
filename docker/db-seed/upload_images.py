@@ -4,7 +4,7 @@
 Images are stored under openg2p-data/demography/images/IND-XXXX.jpg.
 Each image is uploaded under the same filename to a MinIO bucket and the
 corresponding row in g2p_register_individuals is updated with
-record_image_storage_id = filename.
+record_image_document_id = filename.
 """
 
 import os
@@ -69,7 +69,7 @@ def main() -> None:
     try:
         cur.executemany(
             'UPDATE "public"."g2p_register_individuals" '
-            "SET record_image_storage_id = %s "
+            "SET record_image_document_id = %s "
             "WHERE functional_record_id = %s",
             [(obj_key, fr_id) for fr_id, obj_key in uploaded],
         )
