@@ -12,12 +12,7 @@ the inverted build model the platform publishes the runnable base images and the
 | `nsr-extension/` | The NSR domain package — Individual and Household registers and their sub-registers, schemas, services, seed metadata (registers, AWE policy, DCI templates) |
 | `docker/` | Thin Dockerfiles (`FROM openg2p/openg2p-registry-*` + `pip install nsr-extension`) selected at runtime by `REGISTRY_EXTENSION_MODULE` (Option C), plus NSR's sample seed JSON |
 | `helm/openg2p-nsr/` | A thin wrapper chart: pins `openg2p-registry` as a dependency and supplies the NSR values overlay (no templates) |
-
-There is **no NSR sanity suite in this repo**: NSR's registers, tables
-(`g2p_register_individuals`), DCI template shape, register id, UI tab and section
-are the same ones the platform's reference registry ships — the reference was
-derived from NSR — so the published `openg2p-registry-sanity-tests` image applies
-unchanged. It is enabled from the chart values.
+| `test/sanity/` | The NSR **field-specific** sanity tests (Set 2); the harness + generic tests are inherited from the platform sanity image |
 
 The `openg2p-registry` base image tag (`RP_VERSION` in each Dockerfile) and the
 chart dependency version in `helm/openg2p-nsr/Chart.yaml` are **hardcoded and

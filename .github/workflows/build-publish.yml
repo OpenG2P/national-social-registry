@@ -8,10 +8,6 @@ name: Build & Publish
 # dependency they extend are HARDCODED (RP_VERSION in each Dockerfile / the
 # dependency in Chart.yaml), not derived here.
 #
-# There is no NSR sanity image: NSR's registers, tables and DCI template shape
-# match the platform's reference registry, so the published
-# openg2p-registry-sanity-tests image applies unchanged (see the chart values).
-#
 # All versioning / build / promote / publish / changelog policy lives in
 # openg2p-packaging behind @v1.
 
@@ -59,7 +55,11 @@ jobs:
 
           {"name": "db-seed",
            "repo": "openg2p/openg2p-nsr-db-seed",
-           "dockerfile": "docker/db-seed/Dockerfile"}
+           "dockerfile": "docker/db-seed/Dockerfile"},
+
+          {"name": "sanity-tests",
+           "repo": "openg2p/openg2p-nsr-sanity-tests",
+           "dockerfile": "docker/sanity-tests/Dockerfile"}
         ]
 
       # The thin wrapper chart. It owns no templates — it pins openg2p-registry
@@ -76,15 +76,16 @@ jobs:
 
       # Rewrite ONLY the NSR-built image tags (nested under the `registry`
       # subchart alias) to this commit's version — images and chart locked
-      # together. beneApi/staffUi/sanity are consumed as-is from the platform
-      # images, so they carry no NSR tag to rewrite. The openg2p-registry
-      # dependency version is intentionally NOT here (it stays hardcoded).
+      # together. beneApi/staffUi are consumed as-is from the platform images, so
+      # they carry no NSR tag to rewrite. The openg2p-registry dependency version
+      # is intentionally NOT here (it stays hardcoded in Chart.yaml).
       chart-image-paths: |
         [".registry.staffApi.image.tag",
          ".registry.partnerApi.image.tag",
          ".registry.celeryWorker.image.tag",
          ".registry.celeryBeat.image.tag",
-         ".registry.dbSeed.image.tag"]
+         ".registry.dbSeed.image.tag",
+         ".registry.sanity.image.tag"]
 
       packaging-ref: v1
 

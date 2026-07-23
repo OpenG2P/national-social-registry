@@ -77,11 +77,17 @@ registry:
           household:
             idLength: 10
 
-  # ── Sanity suite ────────────────────────────────────────────────────────────
-  # NSR needs NO field-specific test overrides: its Individual register, tables
-  # (g2p_register_individuals), DCI template shape, register id, UI tab and
-  # section are the same ones the platform's reference registry ships — the
-  # reference was derived from NSR. So the platform sanity image and every
-  # subchart sanity default apply unchanged; only enable it here.
+  # ── NSR e2e sanity suite (image built here; Set 2 field tests) ──────────────
+  # The harness and the extension-independent tests (Set 1) are inherited from
+  # the platform sanity image; this image layers NSR's field-specific files on
+  # top. The register id, DCI reg-type, UI tab and section are the subchart's
+  # defaults because NSR's Individual register matches the reference registry —
+  # only the seeded record's id differs.
   sanity:
     enabled: true
+    image:
+      repository: openg2p/openg2p-nsr-sanity-tests
+      tag: 0.0.0-develop
+    # functional_record_id of the injected sanity record (see
+    # test/sanity/sanity/fixtures.py).
+    searchText: SANITY-INDIVIDUAL-0001
