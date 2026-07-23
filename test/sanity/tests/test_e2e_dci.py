@@ -59,7 +59,7 @@ def test_dci_search_returns_the_consented_record(partner_client, cfg, priv, seed
     step(f"response carried {len(records)} record(s)")
     assert records, (
         f"no records returned for search_text '{cfg.search_text}'. The sanity individual "
-        f"{fixtures.INDIVIDUAL_FUNCTIONAL_ID} should match. If the register is otherwise "
+        f"{fixtures.FARMER_FUNCTIONAL_ID} should match. If the register is otherwise "
         f"healthy, check that dbSeed.loadTemplates=true — without the DCI template in "
         f"MinIO every record fails to render and the error surfaces as an empty 200."
     )
@@ -75,9 +75,9 @@ def test_dci_search_returns_the_consented_record(partner_client, cfg, priv, seed
     step(f"asserting consented scope '{scope}' is present and carries the seeded demographics")
     demographic = record.get(scope) or {}
     name = demographic.get("name") or {}
-    assert name.get("given_name") == fixtures.INDIVIDUAL["first_name"]
-    assert name.get("surname") == fixtures.INDIVIDUAL["last_name"]
-    assert demographic.get("birth_date") == fixtures.INDIVIDUAL["birth_date"]
+    assert name.get("given_name") == fixtures.FARMER["first_name"]
+    assert name.get("surname") == fixtures.FARMER["last_name"]
+    assert demographic.get("birth_date") == fixtures.FARMER["birth_date"]
     step("consented record returned the correct given_name / surname / birth_date ✓")
 
 

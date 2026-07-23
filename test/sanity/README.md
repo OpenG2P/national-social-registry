@@ -26,11 +26,21 @@ Everything else (register id, DCI reg-type, search text, consent scopes, CR
 tab/section) is **configuration**, supplied as env by the Helm chart's `sanity.*`
 values — not baked here.
 
-## A note on inherited names
+## A note on inherited names — do not rename them
 
-`cfg.farmer_register_id` and the `farmer_seeded` pytest fixture are names owned by
-the **inherited** harness and `conftest.py`. They are not NSR concepts — here they
-simply carry NSR's Individual register and its seeded record.
+`fixtures.py` is a **contract**, not a private file. The inherited modules that NSR
+does *not* override — `sanity/dci.py`, `sanity/awe_seed.py`,
+`sanity/keycloak_seed.py`, `conftest.py` — import `fixtures.FARMER_*` by name.
+Renaming a symbol in this overlay leaves them referencing a name that no longer
+exists and every e2e test dies at collection with
+`AttributeError: module 'sanity.fixtures' has no attribute ...`.
+
+So `FARMER_INTERNAL_ID`, `FARMER_FUNCTIONAL_ID`, `FARMER_FOUNDATIONAL_ID`,
+`FARMER`, `cfg.farmer_register_id` and the `farmer_seeded` fixture keep their
+names here. They are historical — they mean "the seeded sanity record" and carry
+whatever register the variant deploys, which for NSR is Individual.
+**Change the values, not the names.** `tests/test_contract.py` in the base image
+enforces this.
 
 ## Extending
 
