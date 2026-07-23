@@ -1,11 +1,24 @@
 # National Social Registry — DB-seed image.
 #
-# Thin extension of the registry-platform db-seed base image. The base ships all
-# the generic seeding MACHINERY (entrypoint.sh, load/upload scripts, the shared
-# openg2p-data clone). This image adds ONLY NSR's seed content: the SQL metadata,
-# AWE metadata and Jinja templates carried by the nsr-extension, plus the NSR
-# sub-table sample JSON. The entrypoint (inherited) reads /seed/* at container-run
-# time; behaviour is toggled entirely via env from the Helm Job.
+# Thin extension of the registry-platform db-seed base image. The base ships the
+# seeding machinery (entrypoint.sh, the shared openg2p-data clone, geo loader,
+# template uploader) plus the reference registry's seed content. This image
+# replaces the seed content with NSR's, and overrides the two loaders that are
+# NOT domain-agnostic.
+#
+# WHICH LOADERS ARE DOMAIN-SPECIFIC
+#   The base image's load_sample_data.py and upload_images.py are written against
+#   the FARMER schema — they INSERT into g2p_register_farmers/crops/lands/... and
+#   read farmers.json, crops.json, lands.json. NSR has none of those tables or
+#   files (it has g2p_register_individuals plus individual_*/household_* sub
+#   tables), so inheriting them makes the Job crash-loop on LOAD_SAMPLE_DATA=true.
+#   NSR therefore ships its own, copied over the inherited ones below.
+#
+#   Genuinely generic and inherited unchanged: entrypoint.sh, load_geo_data.py
+#   (geo is registry-agnostic), upload_templates.py, requirements.txt.
+#
+# The entrypoint (inherited) reads /seed/* at container-run time; behaviour is
+# toggled entirely via env from the Helm Job.
 #
 # Build context = repo root (so nsr-extension/ and docker/db-seed/ are both
 # reachable).
@@ -20,3 +33,8 @@ COPY nsr-extension/src/openg2p_registry_nsr_extension/meta_data/     /seed/meta_
 COPY nsr-extension/src/openg2p_registry_nsr_extension/awe_meta_data/ /seed/awe_meta_data/
 COPY nsr-extension/src/openg2p_registry_nsr_extension/templates/     /seed/templates/
 COPY docker/db-seed/seed-data/                                       /seed/seed-data/
+
+# NSR's domain-specific loaders, overriding the base image's farmer-shaped ones.
+COPY docker/db-seed/load_sample_data.py /seed/load_sample_data.py
+COPY docker/db-seed/upload_images.py    /seed/upload_images.py
+RUN chmod +x /seed/load_sample_data.py /seed/upload_images.py
