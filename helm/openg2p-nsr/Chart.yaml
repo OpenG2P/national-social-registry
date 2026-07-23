@@ -1,35 +1,30 @@
 apiVersion: v2
 name: openg2p-nsr
 description: |
-  OpenG2P National Social Registry (NSR) — a self-sufficient Helm chart for the
-  NSR registry stack (staff portal API/UI, partner API, celery beat/worker,
-  db-seed, id-generator). Supplies NSR-branded Docker images and NSR-specific
-  ID-generator configuration. Previously a thin wrapper over the
-  openg2p-registry base chart; that chart's templates and defaults now live
-  directly in this chart, so it no longer depends on openg2p-registry.
+  OpenG2P National Social Registry — a thin, branded package over the shared
+  openg2p-registry chart published by the registry platform.
+
+  This chart owns NO templates. It declares openg2p-registry as a pinned
+  dependency and supplies only the NSR values overlay (variant identity,
+  hostname, the NSR-built images, seed toggles, id types and the IAM tile name).
+  Everything else — all service templates, keycloak/iam wiring, db-seed
+  machinery, sanity suite — comes from the openg2p-registry subchart.
 type: application
 
 # Version handling:
 #   This `version` is a STATIC placeholder — it is NOT the published version.
 #   The central CI pipeline (build-publish.yml -> openg2p-packaging @v1) derives
-#   the real version from git — one version per commit — and overrides this at
-#   publish time:
-#       develop       -> 0.0.0-develop.N   (N = git commit count)
-#       release line  -> N.N.0-rc.N        (e.g. branch 1.0)
-#       tag N.N.N     -> N.N.N             (frozen release, no suffix)
-#   (see ".github/workflows/build-publish.yml" and the OpenG2P "Helm & Docker
-#   Versioning and CI" docs). The value below is used ONLY for a local
-#   `helm package`/`helm install .` that does not pass --version, so just keep
-#   it a valid SemVer; bumping it has no effect on CI-published charts.
+#   the real version from git (one version per commit) and overrides it at
+#   publish time, in lockstep with the NSR images this chart references.
+#   Bumping it here only affects a local `helm package`/`helm install .`.
 version: 0.0.0-develop
 appVersion: "develop"
 
 keywords:
   - openg2p
+  - registry
   - social-registry
   - nsr
-  - registry
-
 home: https://openg2p.org
 icon: https://openg2p.github.io/openg2p-helm/openg2p-logo.png
 sources:
@@ -38,49 +33,20 @@ maintainers:
   - name: OpenG2P
     email: info@openg2p.org
 
-# Sub-dependencies — identical to the openg2p-registry base chart this was
-# derived from. Fetched from the OpenG2P Helm repo via `helm dependency build`
-# (the packaged .tgz are gitignored, same as the base chart).
+# The National Social Registry is the openg2p-registry chart plus a values
+# overlay. The openg2p-registry version is HARDCODED (not CI-rewritten): the NSR
+# images extend that same base image tag, so the two are pinned together and only
+# moved deliberately. Aliased to `registry` so the overlay nests under a
+# hyphen-free key (.Values.registry.*).
 dependencies:
-  - name: common
+  - name: openg2p-registry
+    alias: registry
+    version: 0.0.0-develop.288
     repository: https://openg2p.github.io/openg2p-helm
-    version: 2.30.0
-  - name: postgres-init
-    version: 1.2.0 
-    repository: https://openg2p.github.io/openg2p-helm
-    condition: postgres-init.enabled
-  - name: redis
-    version: 19.6.4
-    repository: https://openg2p.github.io/openg2p-helm
-    condition: redis.enabled
-  - name: openg2p-id-generator
-    alias: idgenerator
-    version: 0.0.0-develop.42
-    repository: https://gitlab.com/api/v4/projects/84460547/packages/helm/stable
-    condition: idgenerator.enabled
-  - name: keycloak-init
-    version: 1.1.1
-    repository: https://openg2p.github.io/openg2p-helm
-    condition: keycloak-init.enabled
-  # AWE is no longer bundled here — it is installed once per environment by
-  # commons-services. This registry consumes that shared instance (see the AWE
-  # globals in values.yaml).
-  # WebSub event hub + consolidator — pulled UNMODIFIED from the MOSIP Helm
-  # repo (not openg2p-helm). Disabled by default: both require an external
-  # Kafka and a websub config-server, which are NOT provisioned by this chart.
-  # Enable only once those are available and configured via the values blocks.
-  - name: websub
-    version: 1.3.0-beta.1-develop
-    repository: https://mosip.github.io/mosip-helm
-    condition: websub.enabled
-  - name: websub-consolidator
-    version: 1.3.0-beta.1-develop
-    repository: https://mosip.github.io/mosip-helm
-    condition: websub-consolidator.enabled
 
 # Rancher catalog branding
 annotations:
-  catalog.cattle.io/display-name: "OpenG2P NSR"
+  catalog.cattle.io/display-name: "OpenG2P National Social Registry"
   catalog.cattle.io/certified: partner
   catalog.cattle.io/kube-version: ">=1.23.0-0"
   openg2p.org/add-to-rancher: ""

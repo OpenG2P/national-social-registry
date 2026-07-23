@@ -1,51 +1,16 @@
-FROM python:3.12.11-alpine3.22
+# National Social Registry — Partner API image.
+#
+# Thin extension of the registry-platform base image (see
+# docker/staff-api/Dockerfile for the full rationale). Adds only the NSR domain
+# model; ENV defaults and the migrate+gunicorn CMD are inherited.
+#
+# Build context = repo root (so nsr-extension/ is reachable).
+ARG RP_VERSION=0.0.0-develop.286
+FROM openg2p/openg2p-registry-partner-api:${RP_VERSION}
 
-# Git refs for the OpenG2P packages this image installs. Defaults track the
-# moving `develop` branches. In CI the central pipeline (openg2p-packaging @v1)
-# resolves each of these to a commit SHA BEFORE the build, passes it as the
-# build-arg, and records it as an `org.openg2p.pin.<arg>` OCI image label — so a
-# built image is traceable to the exact source commits and is reproducible.
-# Locally you can pin explicitly, e.g. --build-arg REGISTRY_PLATFORM_REF=<sha>.
-ARG REGISTRY_PLATFORM_REF=develop
-ARG FASTAPI_COMMON_REF=develop
-ARG IAM_CORE_REF=develop
+# Option C: select NSR's domain model (coexists with the base image's reference
+# extension; env picks NSR, no uninstall needed).
+ENV REGISTRY_EXTENSION_MODULE=openg2p_registry_nsr_extension
 
-RUN apk add --no-cache --virtual .build-deps gcc libc-dev linux-headers make \
- && apk add --no-cache bash git gettext libpq-dev libmagic
-
-WORKDIR /app
-
-# NSR extension — this repo's working tree (build context = repo root).
 COPY nsr-extension/ /app/nsr-extension/
-
-RUN pip install --no-cache-dir \
-      "git+https://github.com/openg2p/openg2p-fastapi-common@${FASTAPI_COMMON_REF}#subdirectory=openg2p-fastapi-common" \
-      "git+https://github.com/openg2p/openg2p-fastapi-common@${FASTAPI_COMMON_REF}#subdirectory=openg2p-fastapi-auth" \
-      "git+https://github.com/openg2p/iam-service@${IAM_CORE_REF}#subdirectory=iam-core" \
-      "git+https://github.com/openg2p/registry-platform@${REGISTRY_PLATFORM_REF}#subdirectory=core/openg2p-registry-core" \
-      "git+https://github.com/openg2p/registry-platform@${REGISTRY_PLATFORM_REF}#subdirectory=apis/openg2p-registry-partner-api" \
-      /app/nsr-extension \
- && apk del --no-network .build-deps
-
-ENV PYTHONUNBUFFERED=1
-ENV PARTNER_WORKER_TYPE=gunicorn
-ENV PARTNER_HOST=0.0.0.0
-ENV PARTNER_PORT=8000
-# Default worker count kept low (3) for predictable memory; the Helm chart
-# overrides this per-deployment via PARTNER_NO_OF_WORKERS in envVars.
-ENV PARTNER_NO_OF_WORKERS=3
-
-# Run as a non-root user (uid/gid 1001) instead of root. uid/gid match the
-# chart's runAsUser/fsGroup so enabling the pod securityContext is consistent.
-# The app only needs read access to the root-owned site-packages (world-readable)
-# and write access to /app and /tmp — both fine for uid 1001. Binds to port 8000
-# (>1024) so no NET_BIND_SERVICE capability is required.
-RUN addgroup -g 1001 openg2p \
- && adduser -D -u 1001 -G openg2p -h /home/openg2p openg2p \
- && chown -R 1001:1001 /app
-USER 1001
-ENV HOME=/home/openg2p
-
-# Use module path for migrate and Gunicorn WSGI app
-CMD python3 -m openg2p_registry_partner_api.main migrate; \
-    ${PARTNER_WORKER_TYPE} "openg2p_registry_partner_api.main:app" --workers ${PARTNER_NO_OF_WORKERS} --worker-class uvicorn.workers.UvicornWorker --bind ${PARTNER_HOST}:${PARTNER_PORT}
+RUN pip install --no-cache-dir /app/nsr-extension

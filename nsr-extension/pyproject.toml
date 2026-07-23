@@ -34,8 +34,8 @@ Repository = "https://github.com/OpenG2P/national-social-registry"
 [tool.hatch.version]
 path = "src/openg2p_registry_nsr_extension/__init__.py"
 
-# Import name mapping — installed package imports as openg2p_registry_extensions
-# (same alias the farmer extension uses) so the core platform's factories,
-# which do `importlib.import_module("openg2p_registry_extensions.*")`, continue to work.
-[tool.hatch.build.targets.wheel.sources]
-"src/openg2p_registry_nsr_extension" = "openg2p_registry_extensions"
+# The package installs under its OWN import name (openg2p_registry_nsr_extension)
+# — there is no alias onto openg2p_registry_extensions. Each image selects the
+# domain model at runtime with REGISTRY_EXTENSION_MODULE, which the platform
+# entrypoints alias into sys.modules at startup. That lets this extension and the
+# platform's reference extension coexist in one image without colliding.
