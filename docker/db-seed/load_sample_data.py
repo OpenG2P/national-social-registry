@@ -199,7 +199,7 @@ def insert_individuals(cur, individuals: list[dict]) -> None:
     sql = (
         f'INSERT INTO "public"."g2p_register_individuals" ('
         + ", ".join(f'"{c}"' for c in columns)
-        + ") VALUES %s"
+        + ") VALUES %s ON CONFLICT (\"internal_record_id\") DO NOTHING"
     )
     psycopg2.extras.execute_values(cur, sql, rows, template=None, page_size=200)
     print(f"[load-sample-data]   -> g2p_register_individuals: {len(rows)}")
@@ -265,7 +265,7 @@ def insert_households(cur, households: list[dict]) -> None:
     sql = (
         f'INSERT INTO "public"."g2p_register_households" ('
         + ", ".join(f'"{c}"' for c in columns)
-        + ") VALUES %s"
+        + ") VALUES %s ON CONFLICT (\"internal_record_id\") DO NOTHING"
     )
     psycopg2.extras.execute_values(cur, sql, rows, template=None, page_size=200)
     print(f"[load-sample-data]   -> g2p_register_households: {len(rows)}")
@@ -369,7 +369,7 @@ def insert_sub_table(cur, table: str, rows_json: list[dict], extra_cols: list[st
     sql = (
         f'INSERT INTO "public"."{table}" ('
         + ", ".join(f'"{c}"' for c in columns)
-        + ") VALUES %s"
+        + ") VALUES %s ON CONFLICT (\"internal_record_id\") DO NOTHING"
     )
     psycopg2.extras.execute_values(cur, sql, rows, template=None, page_size=200)
     print(f"[load-sample-data]   -> {table}: {len(rows)}")
@@ -387,7 +387,7 @@ def insert_scores(cur, scores: list[dict]) -> None:
     sql = (
         f'INSERT INTO "public"."g2p_register_scores" ('
         + ", ".join(f'"{c}"' for c in columns)
-        + ") VALUES %s"
+        + ") VALUES %s ON CONFLICT (\"internal_record_id\") DO NOTHING"
     )
     psycopg2.extras.execute_values(cur, sql, rows, template=None, page_size=200)
     print(f"[load-sample-data]   -> g2p_register_scores: {len(rows)}")
