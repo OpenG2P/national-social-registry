@@ -1,0 +1,63 @@
+# Run generate_bulk_sample.py inside the cluster.
+#
+# A bulk load over `kubectl port-forward` does not survive: the tunnel drops
+# part-way through ("lost connection to pod") and leaves the register tables
+# half-written. Running in-cluster removes the tunnel entirely, talks to
+# commons-postgresql over the service network, and is the same shape a seed
+# Job would take at install time.
+#
+#   kubectl -n <ns> create configmap nsr-bulk-seed \
+#       --from-file=generate_bulk_sample.py --from-file=distributions.json
+#   kubectl -n <ns> apply -f bulk-seed-job.yaml
+#   kubectl -n <ns> logs -f job/nsr-bulk-seed
+#
+# To undo everything the Job wrote, set ARGS to "--purge" and re-apply.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: nsr-bulk-seed
+spec:
+  backoffLimit: 0 # a partial load must be purged, not blindly retried
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: seed
+          image: python:3.11-slim
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              set -e
+              pip install --no-cache-dir --quiet psycopg2-binary
+              python /seed/generate_bulk_sample.py $ARGS
+          env:
+            - name: ARGS
+              value: "--individuals 1000000"
+            - name: PGHOST
+              value: commons-postgresql
+            - name: PGPORT
+              value: "5432"
+            - name: PGUSER
+              value: postgres
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: commons-postgresql
+                  key: postgres-password
+            - name: NSR_DB
+              value: nsr
+            - name: MDS_DB
+              value: master_data
+          volumeMounts:
+            - name: seed
+              mountPath: /seed
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 200m
+            limits:
+              memory: 1Gi
+      volumes:
+        - name: seed
+          configMap:
+            name: nsr-bulk-seed
