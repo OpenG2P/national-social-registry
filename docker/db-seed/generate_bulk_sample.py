@@ -63,6 +63,14 @@ ACTIVE = "ACTIVE"
 # registry, so households = individuals / 4.
 MEMBERS_PER_HOUSEHOLD = 4
 
+# Share of household heads that are male. Female-headed households are a common
+# targeting criterion, so this wants to land near the ~1-in-3 seen in practice
+# rather than the ~50% a blind draw produces.
+HEAD_MALE_SHARE = 0.66
+# Male share among everyone else, chosen so that heads plus non-heads together
+# reproduce the reference registry's overall split at ~4 members per household.
+NON_HEAD_MALE_SHARE = 0.45
+
 # Rows per COPY chunk. Large enough to amortise round-trips, small enough that
 # the buffer stays well clear of memory pressure at 1M+ rows.
 CHUNK = 50_000
@@ -188,6 +196,18 @@ def load_geo(conn, rng):
     leaf_levels = [lid for lid in levels if lid not in parents]
     leaf_level = sorted(leaf_levels)[-1]
 
+    # Poverty is spatially clustered: neighbouring places resemble each other,
+    # and a poor region tends to contain poor districts. Drawing it per
+    # household independently of place makes every area average out to the same
+    # number — a choropleth then renders one flat colour and drilling into it
+    # shows nothing. So give each node an offset inherited from its parent plus
+    # its own smaller deviation, with the deviation shrinking as we go deeper.
+    offsets = {}
+    for v in sorted(values, key=lambda x: x["id"].count("/")):
+        depth = v["id"].count("/")
+        sigma = max(0.03, 0.16 / (depth + 1))
+        offsets[v["id"]] = offsets.get(v["parent"], 0.0) + rng.gauss(0, sigma)
+
     leaves = []
     for v in values:
         if v["level_id"] != leaf_level:
@@ -202,6 +222,7 @@ def load_geo(conn, rng):
                 "chain": chain,
                 "lowest": v["id"],
                 "weight": rng.lognormvariate(0, 0.7),
+                "poverty_offset": offsets.get(v["id"], 0.0),
             }
         )
     if not leaves:
@@ -347,6 +368,8 @@ def generate(conn, geo_conn, args, dist, rng):
             "pastoralist_classification", "high_mobility_indicator",
             "primary_livelihood", "secondary_livelihood", "employment_status",
             "coping_strategies_index", "phone_numbers",
+            "foundational_id", "foundational_id_verification_status",
+            "foundational_id_masked", "identity_evidence_type",
             "geo_lowest_level_value_id", "geo_code_hierarchy_json", "country_code",
             "educational_status", "is_head", "has_national_id",
         ], args.dry_run),
@@ -406,7 +429,7 @@ def generate(conn, geo_conn, args, dist, rng):
 
         # Poverty drives score, deprivation and programme enrolment together, so
         # the seeded data has the correlations a targeting dashboard looks for.
-        poverty = min(1.0, max(0.0, rng.betavariate(2, 3)))
+        poverty = min(1.0, max(0.0, rng.betavariate(2, 3) + leaf["poverty_offset"]))
 
         size = max(1, min(14, int(rng.gauss(MEMBERS_PER_HOUSEHOLD + poverty * 2, 1.8))))
         size = min(size, max(1, n_ind - ind_seq))  # don't overshoot the target
@@ -424,7 +447,12 @@ def generate(conn, geo_conn, args, dist, rng):
             members.append({
                 "id": rid(),
                 "age": rng.randint(lo, hi),
-                "gender": dist["gender"].pick(),
+                # Non-heads are drawn with a compensating female skew. Heads are
+                # deliberately male-biased below and are ~1 in 4 of everyone, so
+                # drawing the rest at the raw population split would push the
+                # overall marginal to ~54/46 and no longer match the reference
+                # registry this data is meant to resemble.
+                "gender": "MALE" if rng.random() < NON_HEAD_MALE_SHARE else "FEMALE",
                 "is_head": False,
             })
         # Nearly every household has an adult in it. Drawing ages independently
@@ -441,7 +469,7 @@ def generate(conn, geo_conn, args, dist, rng):
         # members, while landing female-headed near the ~1-in-3 that social
         # protection targeting actually sees (a straight draw gives ~50%, which
         # would overstate a common targeting criterion).
-        head["gender"] = "FEMALE" if rng.random() < 0.34 else "MALE"
+        head["gender"] = "MALE" if rng.random() < HEAD_MALE_SHARE else "FEMALE"
 
         u5 = sum(1 for x in members if x["age"] < 5)
         school = sum(1 for x in members if 5 <= x["age"] < 18)
@@ -540,6 +568,22 @@ def generate(conn, geo_conn, args, dist, rng):
             education = dist["education"].pick() if age >= 5 else None
             cs_index = int(min(20, max(0, rng.gauss(poverty * 12, 3))))
 
+            # Foundational ID: the gate on whether someone can actually be paid.
+            # Coverage falls with poverty and is lower for women — the exclusion
+            # pattern G2P readiness dashboards exist to surface. Children are
+            # enrolled far less often.
+            id_chance = 0.88 - poverty * 0.30
+            if gender == "FEMALE":
+                id_chance -= 0.09
+            if not adult:
+                id_chance -= 0.45
+            has_fid = rng.random() < max(0.02, id_chance)
+            fid = f"FID{ind_seq:010d}" if has_fid else None
+            fid_status = None
+            if has_fid:
+                fid_status = rng.choices(
+                    ["VERIFIED", "PENDING", "FAILED"], weights=[78, 18, 4], k=1)[0]
+
             ind = {
                 "internal_record_id": i_id,
                 "record_name": f"Person {ind_seq}",
@@ -574,8 +618,13 @@ def generate(conn, geo_conn, args, dist, rng):
                                          if adult and rng.random() < 0.25 else None),
                 "employment_status": employment,
                 "coping_strategies_index": cs_index,
+                "foundational_id": fid,
+                "foundational_id_verification_status": fid_status,
+                "foundational_id_masked": (f"FID******{ind_seq % 10000:04d}"
+                                           if has_fid else None),
+                "identity_evidence_type": ("NATIONAL_ID" if has_fid else None),
                 # Digital-inclusion signal: phone ownership tracks wealth.
-                "has_national_id": rng.random() < (0.9 - poverty * 0.35),
+                "has_national_id": has_fid,
                 "phone_numbers": ([{"phone_no": f"+2519{rng.randint(10**7, 10**8 - 1)}"}]
                                   if adult and rng.random() < (0.75 - poverty * 0.3) else None),
                 "geo_lowest_level_value_id": leaf["lowest"],
