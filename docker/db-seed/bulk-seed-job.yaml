@@ -1,4 +1,4 @@
-# Run generate_bulk_sample.py inside the cluster.
+# Run generate_nsr_bulk_sample.py inside the cluster.
 #
 # A bulk load over `kubectl port-forward` does not survive: the tunnel drops
 # part-way through ("lost connection to pod") and leaves the register tables
@@ -7,7 +7,7 @@
 # Job would take at install time.
 #
 #   kubectl -n <ns> create configmap nsr-bulk-seed \
-#       --from-file=generate_bulk_sample.py --from-file=distributions.json
+#       --from-file=generate_nsr_bulk_sample.py --from-file=distributions.json
 #   kubectl -n <ns> apply -f bulk-seed-job.yaml
 #   kubectl -n <ns> logs -f job/nsr-bulk-seed
 #
@@ -29,7 +29,11 @@ spec:
             - |
               set -e
               pip install --no-cache-dir --quiet psycopg2-binary
-              python /seed/generate_bulk_sample.py $ARGS
+              # --distributions is passed explicitly: the ConfigMap mounts the
+              # script and the data side by side in /seed, whereas the script's
+              # default expects the openg2p-data repo layout.
+              python /seed/generate_nsr_bulk_sample.py \
+                --distributions /seed/distributions.json $ARGS
           env:
             - name: ARGS
               value: "--individuals 1000000"
