@@ -488,7 +488,12 @@ def fetch_columns(dsn, view):
 def main():
     p = argparse.ArgumentParser(description=__doc__,
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
-    p.add_argument("--out", default="nsr-dashboards.zip")
+    # Default straight into the chart. Helm's .Files.Get cannot reach outside
+    # the chart directory, so that copy has to be the canonical one — keeping a
+    # second copy here as well would just drift out of step with it.
+    p.add_argument("--out", default=os.path.join(
+        os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+        "helm", "openg2p-nsr", "files", "nsr-dashboards.zip"))
     p.add_argument("--db-name", default=DB_NAME)
     p.add_argument("--sqlalchemy-uri",
                    default="postgresql+psycopg2://postgres:XXXXX@commons-postgresql:5432/nsr",
