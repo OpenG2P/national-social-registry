@@ -26,6 +26,14 @@ silently producing records that point nowhere.
 */}}
 {{- $ctx := . }}
 {{- $pg := tpl .Values.global.postgresqlHost $ }}
+{{/* These jobs run inside the registry's db-seed image — the same one that
+     carries /seed and the /openg2p-data clone. Inherit its coordinates rather
+     than declaring a second image: CI rewrites .registry.dbSeed.image.tag to
+     the freshly built version and knows nothing about an analytics-specific
+     path, so a separate tag here silently stays at the placeholder and the
+     pod ends up in ErrImagePull. */}}
+{{- $seedRepo := .Values.analytics.image.repository | default .Values.registry.dbSeed.image.repository }}
+{{- $seedTag := .Values.analytics.image.tag | default .Values.registry.dbSeed.image.tag }}
 
 {{- if .Values.analytics.bulkSample.enabled }}
 ---
@@ -79,7 +87,7 @@ spec:
                   key: {{ tpl .Values.global.masterDataDBUserPasswordKey $ | quote }}
       containers:
         - name: bulk-sample
-          image: {{ .Values.analytics.image.repository }}:{{ .Values.analytics.image.tag }}
+          image: {{ $seedRepo }}:{{ $seedTag }}
           command:
             {{/* The generator and its distributions come from the shared
                  openg2p-data repo, which the db-seed base image clones to
@@ -132,7 +140,7 @@ spec:
       restartPolicy: OnFailure
       containers:
         - name: reporting-views
-          image: {{ .Values.analytics.image.repository }}:{{ .Values.analytics.image.tag }}
+          image: {{ $seedRepo }}:{{ $seedTag }}
           {{/* CREATE OR REPLACE throughout, so this is safe on every upgrade.
                Note a plain REFRESH does NOT pick up an edited definition — the
                DDL has to be re-applied, which is what this job does. */}}

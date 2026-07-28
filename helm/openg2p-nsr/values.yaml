@@ -119,9 +119,12 @@ registry:
 # openg2p-master-data chart. Declaring a country in two charts is how registry
 # records end up pointing at places MDS has never heard of.
 analytics:
+  # Left empty on purpose: these jobs run in the registry db-seed image and
+  # inherit registry.dbSeed.image, whose tag CI rewrites to the built version.
+  # Setting a tag here would pin it to a placeholder CI does not update.
   image:
-    repository: openg2p/openg2p-nsr-db-seed
-    tag: 0.0.0-develop
+    repository: ""
+    tag: ""
   # Where the db-seed base image clones the shared openg2p-data repo. The sample
   # generator, its distributions and the country packs all live there rather
   # than being copied into the image separately.
