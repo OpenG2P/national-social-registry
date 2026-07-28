@@ -1,0 +1,94 @@
+# Load the default NSR dashboards into Superset at install time.
+#
+# Safe to run on every install and upgrade: every asset in the bundle carries a
+# deterministic uuid5, so a repeat import UPDATES the existing dashboards rather
+# than creating a second copy of each.
+#
+# Order matters — this must run AFTER the register tables are seeded and
+# reporting_views.sql has been applied, because the datasets in the bundle point
+# at nsr_rpt_household / nsr_rpt_individual.
+#
+#   kubectl -n <ns> create configmap nsr-dashboard-bundle \
+#       --from-file=nsr-dashboards.zip
+#   kubectl -n <ns> apply -f import-dashboards-job.yaml
+#
+# The bundle ships WITHOUT a database password (it is not a secret store). The
+# connection is repaired from the cluster secret after import, which is why this
+# runs inside the Superset image rather than shelling out to the CLI alone.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: nsr-import-dashboards
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "20" # after db-seed
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  backoffLimit: 2
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: import
+          image: apachesuperset.docker.scarf.sh/apache/superset:4.0.1
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              set -e
+              echo "[dashboards] importing bundle"
+              superset import-dashboards -p /bundle/nsr-dashboards.zip -u "$SUPERSET_ADMIN"
+
+              echo "[dashboards] pointing the NSR connection at this cluster"
+              python - <<'PY'
+              import os
+              from superset.app import create_app
+              app = create_app()
+              with app.app_context():
+                  from superset import db
+                  from superset.models.core import Database
+                  from superset.models.dashboard import Dashboard
+                  d = (db.session.query(Database)
+                       .filter_by(database_name=os.environ["NSR_DB_NAME"]).one())
+                  d.sqlalchemy_uri = (
+                      f"postgresql+psycopg2://{os.environ['DB_USER']}"
+                      f"@{os.environ['DB_HOST']}:{os.environ['DB_PORT']}"
+                      f"/{os.environ['NSR_DB']}")
+                  d.password = os.environ["DB_PASS"]
+                  # Imported dashboards land unpublished, which hides them from
+                  # everyone but their owner.
+                  for dash in db.session.query(Dashboard).all():
+                      dash.published = True
+                  db.session.commit()
+                  print("[dashboards] connection set, dashboards published")
+              PY
+          env:
+            - name: SUPERSET_ADMIN
+              value: admin
+            - name: NSR_DB_NAME
+              value: NSR # database_name inside Superset
+            - name: NSR_DB
+              value: nsr # actual Postgres database
+            - name: DB_HOST
+              value: commons-postgresql
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_USER
+              value: postgres
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: commons-postgresql
+                  key: postgres-password
+          volumeMounts:
+            - name: bundle
+              mountPath: /bundle
+          resources:
+            requests:
+              memory: 512Mi
+              cpu: 200m
+            limits:
+              memory: 2Gi
+      volumes:
+        - name: bundle
+          configMap:
+            name: nsr-dashboard-bundle
