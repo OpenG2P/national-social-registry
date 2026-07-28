@@ -81,12 +81,15 @@ spec:
         - name: bulk-sample
           image: {{ .Values.analytics.image.repository }}:{{ .Values.analytics.image.tag }}
           command:
+            {{/* The generator and its distributions come from the shared
+                 openg2p-data repo, which the db-seed base image clones to
+                 /openg2p-data at build time — they are not copied into /seed. */}}
             - python
-            - /seed/generate_nsr_bulk_sample.py
+            - {{ printf "%s/scripts/generate_nsr_bulk_sample.py" .Values.analytics.dataDir }}
             - --individuals
             - {{ .Values.analytics.bulkSample.individuals | quote }}
             - --distributions
-            - /seed/distributions.json
+            - {{ printf "%s/national-social-registry/distributions.json" .Values.analytics.dataDir }}
             {{- if .Values.analytics.bulkSample.expectedCountry }}
             {{/* A guard, not a selector: errors if the environment's MDS holds a
                  different country than this deployment expects. */}}

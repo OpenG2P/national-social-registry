@@ -37,4 +37,9 @@ COPY docker/db-seed/seed-data/                                       /seed/seed-
 # NSR's domain-specific loaders, overriding the base image's farmer-shaped ones.
 COPY docker/db-seed/load_sample_data.py /seed/load_sample_data.py
 COPY docker/db-seed/upload_images.py    /seed/upload_images.py
+
+# NSR's reporting layer. Unlike the sample generator — which lives in
+# openg2p-data and is already present via the base image's clone at
+# /openg2p-data — these views are NSR's own schema and ship with this image.
+COPY docker/db-seed/reporting_views.sql /seed/reporting_views.sql
 RUN chmod +x /seed/load_sample_data.py /seed/upload_images.py
