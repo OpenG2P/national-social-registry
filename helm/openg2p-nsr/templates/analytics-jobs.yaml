@@ -41,6 +41,10 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: {{ .Release.Name }}-nsr-bulk-sample
+  labels:
+    app.kubernetes.io/name: nsr-bulk-sample
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
   annotations:
     helm.sh/hook: post-install,post-upgrade
     helm.sh/hook-weight: "40"
@@ -129,6 +133,10 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: {{ .Release.Name }}-nsr-reporting-views
+  labels:
+    app.kubernetes.io/name: nsr-reporting-views
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
   annotations:
     helm.sh/hook: post-install,post-upgrade
     helm.sh/hook-weight: "45"
@@ -168,6 +176,10 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: {{ .Release.Name }}-nsr-dashboards
+  labels:
+    app.kubernetes.io/name: nsr-dashboards
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
   annotations:
     helm.sh/hook: post-install,post-upgrade
     helm.sh/hook-weight: "50"
