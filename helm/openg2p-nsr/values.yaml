@@ -16,6 +16,22 @@
 # ── Globals (propagate to the openg2p-registry subchart) ──────────────────────
 global:
   registryVariant: 'nsr'
+  # Database wiring, mirroring openg2p-registry's own defaults. Declared here
+  # rather than inherited because a parent chart's templates cannot read a
+  # subchart's global defaults, and this chart's analytics jobs need them.
+  # Values set here propagate down, so parent and subchart stay in step —
+  # but they must be revisited if the subchart's naming scheme changes.
+  postgresqlHost: commons-postgresql
+  registryDB: '{{ printf "%s" .Release.Name | replace "-" "_" }}'
+  registryDBPort: 5432
+  registryDBUser: '{{ printf "%s_user" .Release.Name | replace "-" "_" }}'
+  registryDBSecret: '{{ .Release.Name }}'
+  registryDBUserPasswordKey: '{{ .Release.Name }}-db-user'
+  masterDataDB: 'master_data'
+  masterDataDBPort: 5432
+  masterDataDBUser: 'master_data_user'
+  masterDataDBSecret: 'master-data'
+  masterDataDBUserPasswordKey: 'master-data-db-user'
   # Ingress host for this registry. Overrides the subchart's generic default.
   registryHostname: '{{ .Release.Name }}.{{ .Release.Namespace }}.openg2p.org'
 
@@ -48,7 +64,10 @@ registry:
     # demo records/geo/images, so turn the db-seed loaders on. NB these are
     # `dbSeed.*`, not `global.*` — the db-seed Job reads .Values.dbSeed.load*
     # and there is no global fallback, so setting them under global is inert.
-    loadGeoData: true
+    # Geo is seeded by the master-data chart now (geoSeed.countryPack there),
+    # not as a side effect of the registry seed. Leaving this on would load a
+    # second, unrelated hierarchy over the one MDS already holds.
+    loadGeoData: false
     loadSampleData: true
     loadImages: true
     loadTemplates: true
@@ -91,3 +110,47 @@ registry:
     # functional_record_id of the injected sanity record (see
     # test/sanity/sanity/fixtures.py).
     searchText: SANITY-INDIVIDUAL-0001
+
+# ── Analytics: sample data, reporting views, dashboards ──────────────────────
+# Runs after the registry db-seed (hook weight 10) as 15 -> 20 -> 30.
+#
+# There is deliberately no country setting here. Geography comes from whatever
+# the environment's Master Data Service holds — see geoSeed.countryPack in the
+# openg2p-master-data chart. Declaring a country in two charts is how registry
+# records end up pointing at places MDS has never heard of.
+analytics:
+  image:
+    repository: openg2p/openg2p-nsr-db-seed
+    tag: 0.0.0-develop
+  waitImage: jbergknoff/postgresql-client:latest
+
+  bulkSample:
+    enabled: true
+    # ~50k individuals over ~12.5k households. Enough for woreda-level drill-down
+    # to have real signal (Ethiopia has ~1,150 woredas, so roughly a dozen
+    # households each) while still seeding in about a minute.
+    individuals: 50000
+    # Optional guard: fails the job if MDS holds a different country than this
+    # deployment expects. Not a selector — MDS remains the source of truth.
+    expectedCountry: ""
+
+  reportingViews:
+    enabled: true
+
+  dashboards:
+    enabled: true
+    image:
+      repository: apachesuperset.docker.scarf.sh/apache/superset
+      tag: 4.0.1
+    supersetAdmin: admin
+    # database_name of the connection inside Superset, as recorded in the bundle
+    supersetDatabaseName: NSR
+    # ConfigMap holding nsr-dashboards.zip; defaults to <release>-nsr-dashboard-bundle
+    bundleConfigMap: ""
+
+  resources:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+    limits:
+      memory: 2Gi

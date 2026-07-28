@@ -1,0 +1,229 @@
+{{/*
+NSR analytics install chain: bulk sample -> reporting views -> dashboards.
+
+These live in NSR's umbrella chart rather than the openg2p-registry subchart
+because they are NSR-specific: the sample generator targets NSR's schema, the
+reporting views are NSR's, and the dashboards are built over those views.
+
+Ordering, by hook weight:
+    5   MDS geo seed            (openg2p-master-data chart)
+    10  registry db-seed        (openg2p-registry subchart — fixtures, templates)
+    19  iam-register-payload    (subchart)
+    20  iam-register            (subchart)
+    25  sanity suite            (subchart)
+    40  bulk sample             here
+    45  reporting views         here
+    50  dashboard import        here
+
+The analytics chain sits above 25 deliberately: the sanity suite asserts against
+the seeded fixture, and dropping 50k generated records in underneath it would
+change what it is checking.
+
+Geography is NOT declared here. It comes from whatever the environment's Master
+Data Service holds — see geoSeed.countryPack in the openg2p-master-data chart.
+The bulk-sample job below refuses to run against an empty MDS rather than
+silently producing records that point nowhere.
+*/}}
+{{- $ctx := . }}
+{{- $pg := tpl .Values.global.postgresqlHost $ }}
+
+{{- if .Values.analytics.bulkSample.enabled }}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-nsr-bulk-sample
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "40"
+    helm.sh/hook-delete-policy: before-hook-creation
+spec:
+  backoffLimit: 0 # a half-written load must be purged, not blindly retried
+  template:
+    spec:
+      restartPolicy: Never
+      initContainers:
+        {{/* Fail loudly on empty geography. Seeding a registry against an MDS
+             that has not been populated yet produces records whose geo points
+             at nothing, and nothing downstream notices until a map is blank. */}}
+        - name: require-mds-geo
+          image: {{ .Values.analytics.waitImage }}
+          command:
+            - sh
+            - -c
+            - |
+              set -e
+              for i in $(seq 1 60); do
+                n=$(psql -tAc "select count(*) from g2p_geo_level_values" 2>/dev/null || echo 0)
+                if [ "${n:-0}" -gt 0 ]; then
+                  echo "MDS geo present: $n units"; exit 0
+                fi
+                echo "waiting for MDS geo to be seeded..."; sleep 5
+              done
+              echo "ERROR: MDS geo is still empty. Install/seed the master-data" \
+                   "chart (geoSeed.countryPack) before seeding the registry." >&2
+              exit 1
+          env:
+            - name: PGHOST
+              value: {{ $pg | quote }}
+            - name: PGPORT
+              value: {{ .Values.global.masterDataDBPort | default 5432 | quote }}
+            - name: PGDATABASE
+              value: {{ tpl .Values.global.masterDataDB $ | quote }}
+            - name: PGUSER
+              value: {{ tpl .Values.global.masterDataDBUser $ | quote }}
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ tpl .Values.global.masterDataDBSecret $ | quote }}
+                  key: {{ tpl .Values.global.masterDataDBUserPasswordKey $ | quote }}
+      containers:
+        - name: bulk-sample
+          image: {{ .Values.analytics.image.repository }}:{{ .Values.analytics.image.tag }}
+          command:
+            - python
+            - /seed/generate_nsr_bulk_sample.py
+            - --individuals
+            - {{ .Values.analytics.bulkSample.individuals | quote }}
+            - --distributions
+            - /seed/distributions.json
+            {{- if .Values.analytics.bulkSample.expectedCountry }}
+            {{/* A guard, not a selector: errors if the environment's MDS holds a
+                 different country than this deployment expects. */}}
+            - --expect-country
+            - {{ .Values.analytics.bulkSample.expectedCountry | quote }}
+            {{- end }}
+          env:
+            - name: PGHOST
+              value: {{ $pg | quote }}
+            - name: PGPORT
+              value: {{ .Values.global.registryDBPort | default 5432 | quote }}
+            - name: NSR_DB
+              value: {{ tpl .Values.global.registryDB $ | quote }}
+            - name: MDS_DB
+              value: {{ tpl .Values.global.masterDataDB $ | quote }}
+            - name: PGUSER
+              value: {{ tpl .Values.global.registryDBUser $ | quote }}
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ tpl .Values.global.registryDBSecret $ | quote }}
+                  key: {{ tpl .Values.global.registryDBUserPasswordKey $ | quote }}
+          resources: {{- toYaml .Values.analytics.resources | nindent 12 }}
+{{- end }}
+
+{{- if .Values.analytics.reportingViews.enabled }}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-nsr-reporting-views
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "45"
+    helm.sh/hook-delete-policy: before-hook-creation
+spec:
+  backoffLimit: 2
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: reporting-views
+          image: {{ .Values.analytics.image.repository }}:{{ .Values.analytics.image.tag }}
+          {{/* CREATE OR REPLACE throughout, so this is safe on every upgrade.
+               Note a plain REFRESH does NOT pick up an edited definition — the
+               DDL has to be re-applied, which is what this job does. */}}
+          command: ["sh", "-c", "psql -v ON_ERROR_STOP=1 -f /seed/reporting_views.sql"]
+          env:
+            - name: PGHOST
+              value: {{ $pg | quote }}
+            - name: PGPORT
+              value: {{ .Values.global.registryDBPort | default 5432 | quote }}
+            - name: PGDATABASE
+              value: {{ tpl .Values.global.registryDB $ | quote }}
+            - name: PGUSER
+              value: {{ tpl .Values.global.registryDBUser $ | quote }}
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ tpl .Values.global.registryDBSecret $ | quote }}
+                  key: {{ tpl .Values.global.registryDBUserPasswordKey $ | quote }}
+          resources: {{- toYaml .Values.analytics.resources | nindent 12 }}
+{{- end }}
+
+{{- if .Values.analytics.dashboards.enabled }}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-nsr-dashboards
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "50"
+    helm.sh/hook-delete-policy: before-hook-creation
+spec:
+  backoffLimit: 2
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: import-dashboards
+          image: {{ .Values.analytics.dashboards.image.repository }}:{{ .Values.analytics.dashboards.image.tag }}
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              set -e
+              {{/* Every asset in the bundle carries a deterministic uuid5, so a
+                   repeat import updates in place instead of creating a second
+                   copy of each dashboard — which is what makes this safe to run
+                   on every upgrade. */}}
+              superset import-dashboards -p /bundle/nsr-dashboards.zip -u "$SUPERSET_ADMIN"
+              python - <<'PY'
+              import os
+              from superset.app import create_app
+              with create_app().app_context():
+                  from superset import db
+                  from superset.models.core import Database
+                  from superset.models.dashboard import Dashboard
+                  d = (db.session.query(Database)
+                       .filter_by(database_name=os.environ["SUPERSET_DB_NAME"]).one())
+                  # The bundle ships no password — it is not a secret store.
+                  d.sqlalchemy_uri = (
+                      f"postgresql+psycopg2://{os.environ['REGISTRY_DB_USER']}"
+                      f"@{os.environ['PGHOST']}:{os.environ['PGPORT']}"
+                      f"/{os.environ['REGISTRY_DB']}")
+                  d.password = os.environ["REGISTRY_DB_PASSWORD"]
+                  # Imported dashboards land unpublished, hiding them from
+                  # everyone but their owner.
+                  for dash in db.session.query(Dashboard).all():
+                      dash.published = True
+                  db.session.commit()
+                  print("dashboards published, connection set")
+              PY
+          env:
+            - name: SUPERSET_ADMIN
+              value: {{ .Values.analytics.dashboards.supersetAdmin | quote }}
+            - name: SUPERSET_DB_NAME
+              value: {{ .Values.analytics.dashboards.supersetDatabaseName | quote }}
+            - name: PGHOST
+              value: {{ $pg | quote }}
+            - name: PGPORT
+              value: {{ .Values.global.registryDBPort | default 5432 | quote }}
+            - name: REGISTRY_DB
+              value: {{ tpl .Values.global.registryDB $ | quote }}
+            - name: REGISTRY_DB_USER
+              value: {{ tpl .Values.global.registryDBUser $ | quote }}
+            - name: REGISTRY_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ tpl .Values.global.registryDBSecret $ | quote }}
+                  key: {{ tpl .Values.global.registryDBUserPasswordKey $ | quote }}
+          volumeMounts:
+            - name: bundle
+              mountPath: /bundle
+          resources: {{- toYaml .Values.analytics.resources | nindent 12 }}
+      volumes:
+        - name: bundle
+          configMap:
+            name: {{ .Values.analytics.dashboards.bundleConfigMap | default (printf "%s-nsr-dashboard-bundle" .Release.Name) }}
+{{- end }}
