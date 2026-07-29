@@ -124,6 +124,18 @@ spec:
                 secretKeyRef:
                   name: {{ tpl .Values.global.registryDBSecret $ | quote }}
                   key: {{ tpl .Values.global.registryDBUserPasswordKey $ | quote }}
+            {{/* Master Data is a separate database owned by a separate role.
+                 Reading the geo hierarchy as the registry user fails with
+                 "permission denied for table g2p_geo_levels". */}}
+            - name: MDS_PGUSER
+              value: {{ tpl .Values.global.masterDataDBUser $ | quote }}
+            - name: MDS_PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ tpl .Values.global.masterDataDBSecret $ | quote }}
+                  key: {{ tpl .Values.global.masterDataDBUserPasswordKey $ | quote }}
+            - name: MDS_PGPORT
+              value: {{ .Values.global.masterDataDBPort | default 5432 | quote }}
           resources: {{- toYaml .Values.analytics.resources | nindent 12 }}
 {{- end }}
 

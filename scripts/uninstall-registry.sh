@@ -309,6 +309,21 @@ fi
 _blue "==> [2/7] Delete leftover Jobs and their Pods"
 if [[ "$NAMESPACE_EXISTS" == true ]]; then
   run "kubectl -n '$NAMESPACE' delete job -l 'app.kubernetes.io/instance=$RELEASE' --ignore-not-found --wait=true --timeout=2m"
+
+  # Fallback sweep by name prefix. The label selector above misses any Job whose
+  # template forgot the standard labels — which is easy to do for a hook Job and
+  # leaves it behind forever, since hook-delete-policy keeps helm from removing
+  # it. Every Job this chart creates is named "<release>-...", so this catches
+  # them regardless of labelling, including ones from charts installed before
+  # the labels were added.
+  LEFTOVER_JOBS=$(kubectl -n "$NAMESPACE" get jobs -o name 2>/dev/null \
+    | grep -E "^job(\.batch)?/${RELEASE}-" || true)
+  if [[ -n "$LEFTOVER_JOBS" ]]; then
+    echo "  unlabelled Jobs matching '${RELEASE}-*':"
+    echo "$LEFTOVER_JOBS" | sed 's/^/    /'
+    run "kubectl -n '$NAMESPACE' delete $(echo $LEFTOVER_JOBS | tr '\n' ' ') --ignore-not-found --wait=true --timeout=2m"
+  fi
+
   # Orphan pods (completed/failed) that a Job left behind after TTL etc.
   run "kubectl -n '$NAMESPACE' delete pod -l 'app.kubernetes.io/instance=$RELEASE' --ignore-not-found --field-selector=status.phase!=Running"
 else
