@@ -96,7 +96,12 @@ def pct(col, label):
     return sql_metric(f"ROUND(100.0 * AVG(CASE WHEN {col} THEN 1 ELSE 0 END), 1)", label)
 
 
-COUNT = simple("*", "COUNT", "Total")
+# COUNT(*) as an adhoc SQL metric, NOT simple("*", "COUNT", ...). A SIMPLE
+# adhoc metric names a column, and Superset validates that name against the
+# dataset's real columns — "*" is not one, so every chart using it fails at
+# render with "Columns missing in dataset: ['*']" even though the underlying
+# SQL is perfectly valid.
+COUNT = sql_metric("COUNT(*)", "Total")
 
 
 # ---------------------------------------------------------------------------
