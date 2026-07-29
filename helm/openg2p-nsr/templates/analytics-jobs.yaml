@@ -208,11 +208,53 @@ spec:
           args:
             - |
               set -e
-              {{/* Every asset in the bundle carries a deterministic uuid5, so a
-                   repeat import updates in place instead of creating a second
-                   copy of each dashboard — which is what makes this safe to run
-                   on every upgrade. */}}
+
+              {{/* An import needs a user to own the assets. On a Keycloak-only
+                   Superset there are NO local users until someone logs in, so
+                   `-u admin` fails with a bare "AttributeError: user". Create a
+                   service identity instead. AUTH_OAUTH removes the local login
+                   form, so its password cannot be used to sign in — the row
+                   exists purely as an ownership/audit identity. */}}
+              superset fab list-users 2>/dev/null | grep -q "$SUPERSET_ADMIN" || \
+                superset fab create-admin \
+                  --username "$SUPERSET_ADMIN" \
+                  --firstname Service --lastname Importer \
+                  --email "$SUPERSET_ADMIN@openg2p.local" \
+                  --password "$(head -c 32 /dev/urandom | base64)"
+
+              python - <<'PY'
+              import os, zipfile, yaml
+              from superset.app import create_app
+              app = create_app()
+              with app.app_context():
+                  from flask import g
+                  from superset import db, security_manager
+                  from superset.models.slice import Slice
+                  g.user = security_manager.find_user(username=os.environ["SUPERSET_ADMIN"])
+
+                  # Superset's dashboard importer calls import_chart(overwrite=False)
+                  # — only DASHBOARDS honour overwrite. Re-importing a corrected
+                  # bundle therefore leaves existing charts untouched and a chart
+                  # fix never reaches a deployment that already has it. Delete the
+                  # charts this bundle owns (matched on uuid, so nothing
+                  # hand-made is touched) and let the import recreate them.
+                  uuids = set()
+                  with zipfile.ZipFile("/bundle/nsr-dashboards.zip") as z:
+                      for n in z.namelist():
+                          if "/charts/" in n and n.endswith((".yaml", ".yml")):
+                              cfg = yaml.safe_load(z.read(n)) or {}
+                              if cfg.get("uuid"):
+                                  uuids.add(str(cfg["uuid"]))
+                  stale = [c for c in db.session.query(Slice).all()
+                           if str(c.uuid) in uuids]
+                  for c in stale:
+                      db.session.delete(c)
+                  db.session.commit()
+                  print(f"[dashboards] replacing {len(stale)} existing chart(s)")
+              PY
+
               superset import-dashboards -p /bundle/nsr-dashboards.zip -u "$SUPERSET_ADMIN"
+
               python - <<'PY'
               import os
               from superset.app import create_app

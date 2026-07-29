@@ -149,7 +149,10 @@ analytics:
     image:
       repository: apachesuperset.docker.scarf.sh/apache/superset
       tag: 4.0.1
-    supersetAdmin: admin
+    # Service identity that owns imported assets. On a Keycloak-only Superset
+    # no local user exists until someone logs in, so the Job creates this one
+    # if absent; AUTH_OAUTH means its password cannot be used to log in.
+    supersetAdmin: svc-importer
     # database_name of the connection inside Superset, as recorded in the bundle
     supersetDatabaseName: NSR
     # ConfigMap holding nsr-dashboards.zip; defaults to <release>-nsr-dashboard-bundle
