@@ -160,10 +160,27 @@ analytics:
     image:
       repository: apachesuperset.docker.scarf.sh/apache/superset
       tag: 4.0.1
-    # Service identity that owns imported assets. On a Keycloak-only Superset
-    # no local user exists until someone logs in, so the Job creates this one
-    # if absent; AUTH_OAUTH means its password cannot be used to log in.
+    # Service account that owns imported assets. On a Keycloak-only Superset no
+    # local user exists until someone logs in, so the Job creates this one if
+    # absent. It cannot log in through the UI — AUTH_OAUTH removes the local
+    # login form — but see the password below: it can still use the REST API.
     supersetAdmin: svc-importer
+    # Password for that account, read from a Secret. Leave the secret name empty
+    # and the Job generates a random password and discards it, which is fine if
+    # the account only ever needs to own assets.
+    #
+    # Set it when anything has to call the Superset API as a machine, which is
+    # what G2P Insight's Dashboards tab does. Under AUTH_TYPE = AUTH_OAUTH this
+    # is the ONLY way in: POST /login/ is a browser redirect to Keycloak and
+    # returns 405 to a form post, and /api/v1/security/login authenticates
+    # against Superset's OWN user table — provider=db never consults Keycloak, so
+    # no Keycloak credential, however privileged, can authenticate a service.
+    #
+    # When set, the Job converges the account onto this password on every run,
+    # so rotating the Secret and upgrading is enough to rotate the credential.
+    supersetAdminPasswordSecret:
+      name: ""
+      key: password
     # database_name of the connection inside Superset, as recorded in the bundle
     supersetDatabaseName: NSR
     # ConfigMap holding nsr-dashboards.zip; defaults to <release>-nsr-dashboard-bundle

@@ -212,15 +212,37 @@ spec:
               {{/* An import needs a user to own the assets. On a Keycloak-only
                    Superset there are NO local users until someone logs in, so
                    `-u admin` fails with a bare "AttributeError: user". Create a
-                   service identity instead. AUTH_OAUTH removes the local login
-                   form, so its password cannot be used to sign in — the row
-                   exists purely as an ownership/audit identity. */}}
-              superset fab list-users 2>/dev/null | grep -q "$SUPERSET_ADMIN" || \
+                   service account instead.
+
+                   The password is NOT throwaway when supersetAdminPasswordSecret
+                   is set. AUTH_OAUTH removes the local login form, so this
+                   account cannot sign in through the UI — but Superset's REST API
+                   still authenticates it via /api/v1/security/login with
+                   provider=db, and under OAuth that is the only way any machine
+                   client (G2P Insight's Dashboards tab) can reach the API at all.
+                   A discarded random password locks the API out for good, which
+                   is why this converges the account onto the Secret's value on
+                   every run rather than only at creation. */}}
+              SVC_PW="${SUPERSET_ADMIN_PASSWORD:-}"
+              if [ -z "$SVC_PW" ]; then
+                SVC_PW="$(head -c 32 /dev/urandom | base64)"
+                echo "[dashboards] no password Secret configured — generating a" \
+                     "throwaway one. The Superset REST API will NOT be reachable" \
+                     "as $SUPERSET_ADMIN; set analytics.dashboards.supersetAdminPasswordSecret."
+              fi
+              if superset fab list-users 2>/dev/null | grep -q "$SUPERSET_ADMIN"; then
+                if [ -n "${SUPERSET_ADMIN_PASSWORD:-}" ]; then
+                  echo "[dashboards] resetting $SUPERSET_ADMIN password to the configured Secret"
+                  superset fab reset-password --username "$SUPERSET_ADMIN" \
+                    --password "$SVC_PW"
+                fi
+              else
                 superset fab create-admin \
                   --username "$SUPERSET_ADMIN" \
                   --firstname Service --lastname Importer \
                   --email "$SUPERSET_ADMIN@openg2p.local" \
-                  --password "$(head -c 32 /dev/urandom | base64)"
+                  --password "$SVC_PW"
+              fi
 
               python - <<'PY'
               import os, zipfile, yaml
@@ -280,6 +302,15 @@ spec:
           env:
             - name: SUPERSET_ADMIN
               value: {{ .Values.analytics.dashboards.supersetAdmin | quote }}
+            {{- with .Values.analytics.dashboards.supersetAdminPasswordSecret }}
+            {{- if .name }}
+            - name: SUPERSET_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ tpl .name $ | quote }}
+                  key: {{ .key | default "password" | quote }}
+            {{- end }}
+            {{- end }}
             - name: SUPERSET_DB_NAME
               value: {{ .Values.analytics.dashboards.supersetDatabaseName | quote }}
             - name: PGHOST
