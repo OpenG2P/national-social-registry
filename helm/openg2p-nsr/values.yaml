@@ -133,12 +133,23 @@ analytics:
 
   bulkSample:
     enabled: true
-    # ~50k individuals over ~12.5k households. Enough for woreda-level drill-down
-    # to have real signal (Ethiopia has ~1,150 woredas, so roughly a dozen
-    # households each) while still seeding in about a minute.
-    individuals: 50000
+    # ~250k individuals over ~62.5k households, sized against the DEFAULT geo
+    # pack (Kamuntu, 668 villages) so the deepest level averages ~90 households
+    # and its percentages are reportable rather than suppressed as unreliable.
+    #
+    # This is the one number to revisit when changing countryPack, because the
+    # denominator that matters is households *per leaf unit*, not the total. The
+    # previous 50k was sized for Ethiopia's 1,148 woredas and leaves roughly a
+    # dozen households each — enough for counts and rankings, too thin for rates,
+    # since one household then moves a percentage by ~8 points.
+    individuals: 250000
     # Optional guard: fails the job if MDS holds a different country than this
     # deployment expects. Not a selector — MDS remains the source of truth.
+    #
+    # This is the root unit's P-code, NOT the pack directory name: "XK" for
+    # Kamuntu (pack XKM), "ET" for Ethiopia (pack ETH). The two differ because a
+    # P-code is ISO alpha-2 while a pack is named by alpha-3, so setting "XKM"
+    # here would abort every run.
     expectedCountry: ""
 
   reportingViews:
