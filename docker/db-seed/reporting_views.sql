@@ -148,10 +148,10 @@ SELECT
 
     -- Deprivation flags. Spelled out as booleans so a chart can average them
     -- straight into a percentage instead of restating the category lists.
-    (hs.water_source_type IN ('PUBLIC_TAP', 'PIPED_DWELLING'))        AS has_improved_water,
-    (hs.sanitation_type  IN ('IMPROVED_LATRINE', 'FLUSH_TOILET'))     AS has_improved_sanitation,
-    (hs.cooking_fuel_type IN ('LPG', 'ELECTRICITY'))                  AS has_clean_cooking,
-    (hs.lighting_source  IN ('SOLAR', 'GRID_ELECTRICITY'))            AS has_electricity,
+    (hs.water_source_type IN ('PUBLIC_TAP', 'PIPED'))                 AS has_improved_water,
+    (hs.sanitation_type  IN ('COMPOSTING_TOILET', 'FLUSH_TOILET'))    AS has_improved_sanitation,
+    (hs.cooking_fuel_type IN ('GAS', 'ELECTRICITY'))                  AS has_clean_cooking,
+    (hs.lighting_source  IN ('SOLAR', 'GRID'))                        AS has_electricity,
     (h.overcrowding_indicator > 3)                                    AS is_overcrowded,
     (hs.water_distance_minutes > 30)                                  AS water_over_30min
 FROM g2p_register_households h
@@ -195,7 +195,11 @@ SELECT
     (i.estimated_age >= 65)                    AS is_elderly,
     i.marital_status,
     i.relationship_to_head,
-    (i.relationship_to_head = 'HEAD')          AS is_head,
+    -- SELF, not HEAD: RelationshipToHeadEnum names the head's own row SELF.
+    -- This read 'HEAD' and agreed with the sample generator, but neither matched
+    -- the enum. Aligning the generator alone would silently make is_head false
+    -- for every household — and every headship metric with it.
+    (i.relationship_to_head = 'SELF')          AS is_head,
     i.citizenship_category,
     i.residency_status,
     i.dependency_indicator,
@@ -212,7 +216,10 @@ SELECT
     i.orphanhood_flag,
     i.chronic_illness_flag,
     i.displacement_status,
-    (i.displacement_status <> 'SETTLED')       AS is_displaced,
+    -- HOST_COMMUNITY is DisplacementStatusEnum's "not displaced" member; SETTLED
+    -- belongs to PastoralistClassificationEnum. Comparing against the wrong
+    -- enum's value here would count every single household as displaced.
+    (i.displacement_status <> 'HOST_COMMUNITY') AS is_displaced,
     i.pastoralist_classification,
     i.high_mobility_indicator,
 
