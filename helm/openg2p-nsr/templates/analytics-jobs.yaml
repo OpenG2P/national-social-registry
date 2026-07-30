@@ -209,6 +209,32 @@ spec:
             - |
               set -e
 
+              {{/* Everything below drives Superset's own CLI and ORM, which means
+                   it writes to whatever SQLALCHEMY_DATABASE_URI resolves to. That
+                   used to be nothing: this Job was given no Superset config at
+                   all, so Superset fell back to its default SQLite file, the
+                   service account and all 8 dashboards were created inside the
+                   Job's own pod, and it exited 0 leaving the real Superset empty.
+                   An install that reported success and imported nothing.
+
+                   The config now arrives via envFrom + the mounted
+                   superset_config.py. This asserts it actually took, because the
+                   failure is otherwise completely silent. */}}
+              python - <<'PY'
+              import sys
+              from superset.app import create_app
+              uri = str(create_app().config.get("SQLALCHEMY_DATABASE_URI", ""))
+              if uri.startswith("sqlite"):
+                  sys.exit(
+                      "[dashboards] ABORT: Superset resolved its metadata database to "
+                      f"{uri!r} — a throwaway file in this pod, not the Superset this "
+                      "environment runs. Importing here would report success and change "
+                      "nothing. Set analytics.dashboards.superset.envFromSecret and "
+                      ".configSecret to the Secrets the Superset deployment uses."
+                  )
+              print(f"[dashboards] metadata database: {uri.split('@')[-1] or uri}")
+              PY
+
               {{/* An import needs a user to own the assets. On a Keycloak-only
                    Superset there are NO local users until someone logs in, so
                    `-u admin` fails with a bare "AttributeError: user". Create a
@@ -299,7 +325,57 @@ spec:
                   db.session.commit()
                   print("dashboards published, connection set")
               PY
+
+              {{- if .Values.analytics.dashboards.superset.enableEmbedding }}
+              {{/* Imported dashboards carry no embedded UUID, so G2P Insights can
+                   list them and render none. Enabling it is a REST call rather
+                   than an ORM write: the embedded-dashboard tables are internal
+                   and have moved between Superset versions, whereas this endpoint
+                   has not.
+
+                   Authenticating with provider=db is the only option under
+                   AUTH_TYPE = AUTH_OAUTH — that endpoint checks Superset's own
+                   user table and never consults Keycloak. Which is exactly why
+                   the service account above needs a real password. */}}
+              python - <<'PY'
+              import os, sys, requests
+              base = os.environ["SUPERSET_URL"].rstrip("/")
+              pw = os.environ.get("SUPERSET_ADMIN_PASSWORD")
+              if not pw:
+                  print("[dashboards] no service-account password configured — "
+                        "skipping embedding. Insights will list the dashboards and "
+                        "be unable to render them.")
+                  sys.exit(0)
+              s = requests.Session()
+              r = s.post(f"{base}/api/v1/security/login", timeout=30, json={
+                  "username": os.environ["SUPERSET_ADMIN"], "password": pw,
+                  "provider": "db", "refresh": True})
+              r.raise_for_status()
+              s.headers["Authorization"] = f"Bearer {r.json()['access_token']}"
+              csrf = s.get(f"{base}/api/v1/security/csrf_token/", timeout=30)
+              if csrf.ok:
+                  s.headers.update({"X-CSRFToken": csrf.json()["result"], "Referer": base})
+              got = s.get(f"{base}/api/v1/dashboard/?q=(page_size:200)", timeout=60)
+              got.raise_for_status()
+              done = 0
+              for d in got.json().get("result", []):
+                  e = s.post(f"{base}/api/v1/dashboard/{d['id']}/embedded",
+                             json={"allowed_domains": []}, timeout=30)
+                  if e.ok:
+                      done += 1
+                  else:
+                      print(f"[dashboards] embedding {d['id']} failed "
+                            f"{e.status_code}: {e.text[:160]}")
+              print(f"[dashboards] embedding enabled on {done} dashboard(s)")
+              PY
+              {{- end }}
           env:
+            - name: SUPERSET_URL
+              value: {{ tpl .Values.analytics.dashboards.superset.url $ | quote }}
+            {{- with .Values.analytics.dashboards.superset.configSecret }}
+            - name: SUPERSET_CONFIG_PATH
+              value: /app/pythonpath/{{ $.Values.analytics.dashboards.superset.configKey }}
+            {{- end }}
             - name: SUPERSET_ADMIN
               value: {{ .Values.analytics.dashboards.supersetAdmin | quote }}
             {{- with .Values.analytics.dashboards.supersetAdminPasswordSecret }}
@@ -326,12 +402,33 @@ spec:
                 secretKeyRef:
                   name: {{ tpl .Values.global.registryDBSecret $ | quote }}
                   key: {{ tpl .Values.global.registryDBUserPasswordKey $ | quote }}
+          {{- with .Values.analytics.dashboards.superset.envFromSecret }}
+          envFrom:
+            {{/* Superset's DB_HOST/DB_NAME/DB_USER/DB_PASS — the same Secret its
+                 own deployment consumes, so the CLI below reaches the same
+                 metadata database rather than a local file. */}}
+            - secretRef:
+                name: {{ tpl . $ | quote }}
+          {{- end }}
           volumeMounts:
             - name: bundle
               mountPath: /bundle
+            {{- if .Values.analytics.dashboards.superset.configSecret }}
+            - name: superset-config
+              mountPath: /app/pythonpath
+              readOnly: true
+            {{- end }}
           resources: {{- toYaml .Values.analytics.resources | nindent 12 }}
       volumes:
         - name: bundle
           configMap:
             name: {{ .Values.analytics.dashboards.bundleConfigMap | default (printf "%s-nsr-dashboard-bundle" .Release.Name) }}
+        {{- with .Values.analytics.dashboards.superset.configSecret }}
+        - name: superset-config
+          secret:
+            secretName: {{ tpl . $ | quote }}
+            items:
+              - key: {{ $.Values.analytics.dashboards.superset.configKey }}
+                path: {{ $.Values.analytics.dashboards.superset.configKey }}
+        {{- end }}
 {{- end }}

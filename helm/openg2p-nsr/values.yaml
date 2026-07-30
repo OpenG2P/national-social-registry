@@ -183,6 +183,31 @@ analytics:
       key: password
     # database_name of the connection inside Superset, as recorded in the bundle
     supersetDatabaseName: NSR
+
+    # Superset's OWN configuration. This job runs Superset's CLI and ORM
+    # (`superset fab`, `create_app()`, `import-dashboards`), so it must be
+    # pointed at the SAME metadata database Superset itself uses.
+    #
+    # Without these it was pointed at nothing: Superset defaults
+    # SQLALCHEMY_DATABASE_URI to a SQLite file, so the job created its service
+    # account and imported all 8 dashboards into a throwaway database inside its
+    # own pod, exited 0, and left the real Superset empty. A successful install
+    # with no dashboards in it. The job now aborts rather than repeat that.
+    #
+    # Defaults match the commons-services Superset chart; override for a Superset
+    # deployed under another name.
+    superset:
+      # In-cluster base URL, used for the REST calls that enable embedding.
+      url: http://commons-services-superset:8088
+      # Secret carrying Superset's DB_HOST/DB_NAME/DB_USER/DB_PASS.
+      envFromSecret: commons-services-superset-env
+      # Secret carrying superset_config.py (AUTH_TYPE, SECRET_KEY, the DB URI).
+      configSecret: commons-services-superset-config
+      configKey: superset_config.py
+      # Enable embedding on the imported dashboards. Without this they exist and
+      # are published but carry no embedded UUID, so G2P Insights' Dashboards tab
+      # lists them and can render none of them.
+      enableEmbedding: true
     # ConfigMap holding nsr-dashboards.zip; defaults to <release>-nsr-dashboard-bundle
     bundleConfigMap: ""
 
