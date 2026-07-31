@@ -91,9 +91,77 @@ def sql_metric(expr, label):
     }
 
 
+# d3 format for a ratio: multiplies by 100 and appends the sign, so 0.124 -> 12.4%.
+PCT_FORMAT = ".1%"
+
+
 def pct(col, label):
-    """Percentage of rows where a boolean column is true."""
-    return sql_metric(f"ROUND(100.0 * AVG(CASE WHEN {col} THEN 1 ELSE 0 END), 1)", label)
+    """Share of rows where a boolean column is true, as a RATIO (0-1).
+
+    Returns a ratio rather than an already-multiplied percentage so the chart
+    can format it with d3's "%" — which multiplies by 100 and appends the sign.
+    Emitting 12.4 and formatting it as SMART_NUMBER, as this used to, printed a
+    bare "12.4" with nothing to say it was a percentage. Multiplying here AND
+    formatting as a percent would print "1240%".
+
+    The private __pct__ marker tells the chart helpers to apply PCT_FORMAT; they
+    pop it before the metric is serialised, so Superset never sees it.
+    """
+    m = sql_metric(f"AVG(CASE WHEN {col} THEN 1.0 ELSE 0 END)", label)
+    m["__pct__"] = True
+    return m
+
+
+def pct_expr(expr, label):
+    """A ratio metric from an arbitrary expression, marked like pct().
+
+    For the conditional shares — coverage of the poorest quintile, leakage to
+    the richest — where the denominator is a subset rather than every row.
+    """
+    m = sql_metric(expr, label)
+    m["__pct__"] = True
+    return m
+
+
+def _fmt_for(metrics):
+    """PCT_FORMAT when every metric here is a ratio from pct(), else the default.
+
+    Mixed charts keep SMART_NUMBER: a percent format applied to a count would
+    multiply it by 100.
+    """
+    ms = metrics if isinstance(metrics, list) else [metrics]
+    flags = [bool(m.pop("__pct__", False)) if isinstance(m, dict) else False for m in ms]
+    return PCT_FORMAT if flags and all(flags) else "SMART_NUMBER"
+
+
+# Columns where NULL means "the question does not apply" and the reporting view
+# therefore labels the value NA. Shown as the chart's description so a reader who
+# meets an NA slice can find out what it means without leaving the dashboard.
+NA_MEANING = {
+    "employment_status": "NA = not of working age (every under-5 and school-age child).",
+    "primary_livelihood": "NA = not of working age.",
+    "secondary_livelihood": "NA = no second livelihood, which is most people.",
+    "education_level": "NA = too young for school (under 5).",
+    "foundational_id_verification_status": "NA = no foundational ID to verify.",
+    "marital_status": "NA = not recorded for this person.",
+    "citizenship_category": "NA = not recorded for this person.",
+    "residency_status": "NA = not recorded for this person.",
+    "disability_status": "NA = not recorded for this person.",
+    "displacement_status": "NA = not recorded for this person.",
+    "pastoralist_classification": "NA = not recorded for this person.",
+    "relationship_to_head": "NA = not recorded for this person.",
+}
+
+
+def na_note(*dims):
+    """The NA explanation for whichever of these dimensions can carry one."""
+    seen, out = set(), []
+    for d in dims:
+        for col in (d if isinstance(d, list) else [d]):
+            if isinstance(col, str) and col in NA_MEANING and col not in seen:
+                seen.add(col)
+                out.append(NA_MEANING[col])
+    return " ".join(out) or None
 
 
 # COUNT(*) as an adhoc SQL metric, NOT simple("*", "COUNT", ...). A SIMPLE
@@ -110,7 +178,8 @@ COUNT = sql_metric("COUNT(*)", "Total")
 def big(name, dataset, metric, subheader=""):
     return {
         "name": name, "dataset": dataset, "viz_type": "big_number_total",
-        "params": {"metric": metric, "subheader": subheader, "y_axis_format": "SMART_NUMBER"},
+        "params": {"metric": metric, "subheader": subheader,
+                   "y_axis_format": _fmt_for(metric)},
     }
 
 
@@ -119,9 +188,10 @@ def bar(name, dataset, x, metrics, series=None, row_limit=100, sort_desc=True):
         "x_axis": x, "metrics": metrics, "groupby": series or [],
         "row_limit": row_limit, "orientation": "vertical",
         "x_axis_sort_asc": not sort_desc, "sort_series_type": "sum",
-        "y_axis_format": "SMART_NUMBER", "rich_tooltip": True,
+        "y_axis_format": _fmt_for(metrics), "rich_tooltip": True,
     }
-    return {"name": name, "dataset": dataset, "viz_type": "echarts_timeseries_bar", "params": p}
+    return {"name": name, "dataset": dataset, "viz_type": "echarts_timeseries_bar",
+            "params": p, "description": na_note(x, series)}
 
 
 def pie(name, dataset, groupby, metric, row_limit=25):
@@ -129,16 +199,30 @@ def pie(name, dataset, groupby, metric, row_limit=25):
         "name": name, "dataset": dataset, "viz_type": "pie",
         "params": {"groupby": groupby, "metric": metric, "row_limit": row_limit,
                    "donut": True, "show_labels": True, "label_type": "key_percent",
-                   "number_format": "SMART_NUMBER"},
+                   "number_format": _fmt_for(metric)},
+        "description": na_note(groupby),
     }
 
 
 def table(name, dataset, groupby, metrics, row_limit=100):
+    """A table mixes counts and ratios, so the format goes per COLUMN.
+
+    Capture the ratio labels before _fmt_for runs — it pops the __pct__ marker,
+    which must not reach Superset. Forgetting that call here was a real bug: the
+    marker leaked into six exported charts, because every other helper popped it
+    and this one did not.
+    """
+    pct_labels = [m["label"] for m in metrics
+                  if isinstance(m, dict) and m.get("__pct__")]
+    _fmt_for(metrics)
     return {
         "name": name, "dataset": dataset, "viz_type": "table",
+        "description": na_note(groupby),
         "params": {"query_mode": "aggregate", "groupby": groupby, "metrics": metrics,
                    "row_limit": row_limit, "include_search": True,
-                   "order_desc": True, "server_pagination": False},
+                   "order_desc": True, "server_pagination": False,
+                   "column_config": {lbl: {"d3NumberFormat": PCT_FORMAT}
+                                     for lbl in pct_labels}},
     }
 
 
@@ -157,9 +241,9 @@ def build_charts():
         table("Data completeness by region", HH,
               ["geo_2"],
               [COUNT,
-               sql_metric("ROUND(100.0*AVG(CASE WHEN geo_5_id IS NOT NULL THEN 1 ELSE 0 END),1)",
+               sql_metric("AVG(CASE WHEN geo_5_id IS NOT NULL THEN 1.0 ELSE 0 END)",
                           "% geo-resolved to lowest level"),
-               sql_metric("ROUND(100.0*AVG(CASE WHEN poverty_score IS NOT NULL THEN 1 ELSE 0 END),1)",
+               sql_metric("AVG(CASE WHEN poverty_score IS NOT NULL THEN 1.0 ELSE 0 END)",
                           "% with poverty score")]),
     ]
 
@@ -189,13 +273,13 @@ def build_charts():
         big("Households scored", HH, COUNT),
         big("Enrolment coverage", HH, pct("is_enrolled", "% enrolled")),
         big("Coverage of poorest quintile", HH,
-            sql_metric("ROUND(100.0*AVG(CASE WHEN poverty_quintile = 1 AND is_enrolled "
-                       "THEN 1.0 WHEN poverty_quintile = 1 THEN 0.0 END), 1)",
-                       "% of poorest quintile enrolled")),
+            pct_expr("AVG(CASE WHEN poverty_quintile = 1 AND is_enrolled "
+                     "THEN 1.0 WHEN poverty_quintile = 1 THEN 0.0 END)",
+                     "Poorest quintile enrolled")),
         big("Leakage to richest two quintiles", HH,
-            sql_metric("ROUND(100.0*AVG(CASE WHEN is_enrolled AND poverty_quintile >= 4 "
-                       "THEN 1.0 WHEN is_enrolled THEN 0.0 END), 1)",
-                       "% of enrolled who are better off")),
+            pct_expr("AVG(CASE WHEN is_enrolled AND poverty_quintile >= 4 "
+                     "THEN 1.0 WHEN is_enrolled THEN 0.0 END)",
+                     "Enrolled who are better off")),
         # The core targeting picture: enrolment should fall as you move away
         # from quintile 1. A flat or rising line means targeting is not working.
         bar("Enrolment rate by poverty quintile", HH, "poverty_quintile",
@@ -207,9 +291,9 @@ def build_charts():
               [COUNT,
                simple("poverty_score", "AVG", "Avg poverty score"),
                pct("is_enrolled", "% enrolled"),
-               sql_metric("ROUND(100.0*AVG(CASE WHEN poverty_quintile = 1 AND is_enrolled "
-                          "THEN 1.0 WHEN poverty_quintile = 1 THEN 0.0 END), 1)",
-                          "% of poorest quintile covered")]),
+               pct_expr("AVG(CASE WHEN poverty_quintile = 1 AND is_enrolled "
+                        "THEN 1.0 WHEN poverty_quintile = 1 THEN 0.0 END)",
+                        "Poorest quintile covered")]),
     ]
 
     # -- 4. Programme enrolment ---------------------------------------------
@@ -278,9 +362,9 @@ def build_charts():
     d["G2P Delivery Readiness"] = [
         big("Foundational ID coverage", IND, pct("has_foundational_id", "% with ID")),
         big("Phone reachability", IND, pct("has_phone", "% with phone")),
-        big("Verified IDs", IND, sql_metric(
-            "ROUND(100.0*AVG(CASE WHEN foundational_id_verification_status = 'VERIFIED' "
-            "THEN 1 ELSE 0 END), 1)", "% verified")),
+        big("Verified IDs", IND, pct_expr(
+            "AVG(CASE WHEN foundational_id_verification_status = 'VERIFIED' "
+            "THEN 1.0 ELSE 0 END)", "Verified")),
         pie("ID verification status", IND, ["foundational_id_verification_status"], COUNT),
         bar("ID coverage by sex", IND, "gender", [pct("has_foundational_id", "% with ID")]),
         bar("ID coverage by region", IND, "geo_2", [pct("has_foundational_id", "% with ID")]),
@@ -369,7 +453,9 @@ def chart_yaml(c, dataset_uuids):
     })
     return {
         "slice_name": c["name"],
-        "description": None,
+        # Superset shows this as an info icon beside the chart title, which is
+        # where a reader who meets an "NA" slice will look first.
+        "description": c.get("description"),
         "certified_by": None,
         "certification_details": None,
         "viz_type": c["viz_type"],

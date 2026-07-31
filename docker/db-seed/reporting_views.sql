@@ -213,10 +213,10 @@ SELECT
     -- missing data. Labelling it NA says what it means. The booleans derived
     -- from these columns deliberately still test the raw value, so their meaning
     -- is unchanged.
-    COALESCE(i.education_level, 'NA')          AS education_level,
-    COALESCE(i.primary_livelihood, 'NA')       AS primary_livelihood,
-    COALESCE(i.secondary_livelihood, 'NA')     AS secondary_livelihood,
-    COALESCE(i.employment_status, 'NA')        AS employment_status,
+    COALESCE(i.education_level, 'NA (under 5)')          AS education_level,
+    COALESCE(i.primary_livelihood, 'NA (not working age)')       AS primary_livelihood,
+    COALESCE(i.secondary_livelihood, 'NA (none)')     AS secondary_livelihood,
+    COALESCE(i.employment_status, 'NA (not working age)')        AS employment_status,
     i.coping_strategies_index,
 
     COALESCE(i.disability_status, 'NA')                 AS disability_status,
@@ -234,7 +234,7 @@ SELECT
 
     -- G2P delivery readiness: can this person actually be paid?
     (i.foundational_id IS NOT NULL)            AS has_foundational_id,
-    COALESCE(i.foundational_id_verification_status, 'NA')
+    COALESCE(i.foundational_id_verification_status, 'NA (no ID)')
                                                AS foundational_id_verification_status,
     (i.phone_numbers IS NOT NULL
      AND jsonb_array_length(i.phone_numbers) > 0) AS has_phone,
