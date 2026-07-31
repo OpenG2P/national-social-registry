@@ -35,6 +35,12 @@ COPY nsr-extension/src/openg2p_registry_nsr_extension/templates/     /seed/templ
 COPY docker/db-seed/seed-data/                                       /seed/seed-data/
 
 # NSR's domain-specific loaders, overriding the base image's farmer-shaped ones.
+# NSR's bulk sample generator, its attribute marginals, and the query that
+# rebuilds them. These were in openg2p-data; they write NSR's extension tables and
+# depend on NSR's enums, so they version with the schema they target.
+COPY docker/db-seed/generate_nsr_bulk_sample.py  /seed/generate_nsr_bulk_sample.py
+COPY docker/db-seed/distributions.json           /seed/distributions.json
+COPY docker/db-seed/extract_nsr_distributions.sql /seed/extract_nsr_distributions.sql
 COPY docker/db-seed/load_sample_data.py /seed/load_sample_data.py
 COPY docker/db-seed/upload_images.py    /seed/upload_images.py
 

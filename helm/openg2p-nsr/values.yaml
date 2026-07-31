@@ -125,10 +125,10 @@ analytics:
   image:
     repository: ""
     tag: ""
-  # Where the db-seed base image clones the shared openg2p-data repo. The sample
-  # generator, its distributions and the country packs all live there rather
-  # than being copied into the image separately.
-  dataDir: /openg2p-data
+  # No dataDir: the sample generator and its distributions are NSR's own and are
+  # copied into /seed by the db-seed image. They used to be read from the shared
+  # openg2p-data clone at /openg2p-data, which is what let them drift out of step
+  # with the enums they write.
   waitImage: jbergknoff/postgresql-client:latest
 
   bulkSample:

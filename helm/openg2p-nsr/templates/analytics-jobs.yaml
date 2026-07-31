@@ -27,7 +27,7 @@ silently producing records that point nowhere.
 {{- $ctx := . }}
 {{- $pg := tpl .Values.global.postgresqlHost $ }}
 {{/* These jobs run inside the registry's db-seed image — the same one that
-     carries /seed and the /openg2p-data clone. Inherit its coordinates rather
+     carries /seed, including NSR's own generator and views. Inherit its coordinates rather
      than declaring a second image: CI rewrites .registry.dbSeed.image.tag to
      the freshly built version and knows nothing about an analytics-specific
      path, so a separate tag here silently stays at the placeholder and the
@@ -93,15 +93,17 @@ spec:
         - name: bulk-sample
           image: {{ $seedRepo }}:{{ $seedTag }}
           command:
-            {{/* The generator and its distributions come from the shared
-                 openg2p-data repo, which the db-seed base image clones to
-                 /openg2p-data at build time — they are not copied into /seed. */}}
+            {{/* The generator and its distributions are NSR's own and are copied
+                 into /seed by this repo's db-seed image, alongside
+                 reporting_views.sql. They used to be fetched from the shared
+                 openg2p-data clone, which put them in a different repo from the
+                 enums they depend on. */}}
             - python
-            - {{ printf "%s/scripts/generate_nsr_bulk_sample.py" .Values.analytics.dataDir }}
+            - /seed/generate_nsr_bulk_sample.py
             - --individuals
             - {{ .Values.analytics.bulkSample.individuals | quote }}
             - --distributions
-            - {{ printf "%s/national-social-registry/distributions.json" .Values.analytics.dataDir }}
+            - /seed/distributions.json
             {{- if .Values.analytics.bulkSample.expectedCountry }}
             {{/* A guard, not a selector: errors if the environment's MDS holds a
                  different country than this deployment expects. */}}

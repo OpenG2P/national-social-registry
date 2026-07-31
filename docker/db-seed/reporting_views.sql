@@ -193,39 +193,49 @@ SELECT
          ELSE 'Elderly (65+)' END              AS age_band,
     (i.estimated_age < 18)                     AS is_child,
     (i.estimated_age >= 65)                    AS is_elderly,
-    i.marital_status,
-    i.relationship_to_head,
+    COALESCE(i.marital_status, 'NA')                    AS marital_status,
+    COALESCE(i.relationship_to_head, 'NA')              AS relationship_to_head,
     -- SELF, not HEAD: RelationshipToHeadEnum names the head's own row SELF.
     -- This read 'HEAD' and agreed with the sample generator, but neither matched
     -- the enum. Aligning the generator alone would silently make is_head false
     -- for every household — and every headship metric with it.
     (i.relationship_to_head = 'SELF')          AS is_head,
-    i.citizenship_category,
-    i.residency_status,
+    COALESCE(i.citizenship_category, 'NA')              AS citizenship_category,
+    COALESCE(i.residency_status, 'NA')                  AS residency_status,
     i.dependency_indicator,
 
-    i.education_level,
-    i.primary_livelihood,
-    i.secondary_livelihood,
-    i.employment_status,
+    -- NULL here means "the question does not apply", not "nobody asked".
+    -- employment_status and primary_livelihood are null for 100% of under-5s and
+    -- school-age children; education_level for 100% of under-5s;
+    -- secondary_livelihood for the 84% with only one; and
+    -- foundational_id_verification_status for the half with no ID to verify.
+    -- Superset renders a null group as the literal "null", which reads as
+    -- missing data. Labelling it NA says what it means. The booleans derived
+    -- from these columns deliberately still test the raw value, so their meaning
+    -- is unchanged.
+    COALESCE(i.education_level, 'NA')          AS education_level,
+    COALESCE(i.primary_livelihood, 'NA')       AS primary_livelihood,
+    COALESCE(i.secondary_livelihood, 'NA')     AS secondary_livelihood,
+    COALESCE(i.employment_status, 'NA')        AS employment_status,
     i.coping_strategies_index,
 
-    i.disability_status,
+    COALESCE(i.disability_status, 'NA')                 AS disability_status,
     (i.disability_status = 'YES')              AS has_disability,
     i.plw_status,
     i.orphanhood_flag,
     i.chronic_illness_flag,
-    i.displacement_status,
+    COALESCE(i.displacement_status, 'NA')               AS displacement_status,
     -- HOST_COMMUNITY is DisplacementStatusEnum's "not displaced" member; SETTLED
     -- belongs to PastoralistClassificationEnum. Comparing against the wrong
     -- enum's value here would count every single household as displaced.
     (i.displacement_status <> 'HOST_COMMUNITY') AS is_displaced,
-    i.pastoralist_classification,
+    COALESCE(i.pastoralist_classification, 'NA')        AS pastoralist_classification,
     i.high_mobility_indicator,
 
     -- G2P delivery readiness: can this person actually be paid?
     (i.foundational_id IS NOT NULL)            AS has_foundational_id,
-    i.foundational_id_verification_status,
+    COALESCE(i.foundational_id_verification_status, 'NA')
+                                               AS foundational_id_verification_status,
     (i.phone_numbers IS NOT NULL
      AND jsonb_array_length(i.phone_numbers) > 0) AS has_phone,
 
