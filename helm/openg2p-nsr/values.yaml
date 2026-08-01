@@ -71,6 +71,12 @@ registry:
     loadSampleData: true
     loadImages: true
     loadTemplates: true
+    # Copy the country's code lists from Master Data, and match the geo dropdowns
+    # to the hierarchy it holds. Both are country-agnostic: they take whatever
+    # pack this environment loaded, and no-op when Master Data carries neither.
+    # This is what lets one NSR image serve any country.
+    loadAttributes: true
+    syncGeoWidgets: true
 
   # staffUi and beneApi are consumed as-is from the openg2p-registry base images
   # (subchart defaults already point at openg2p/openg2p-registry-*), so they are
