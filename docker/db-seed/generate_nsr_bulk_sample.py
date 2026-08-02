@@ -222,6 +222,129 @@ RELATIONSHIPS = ["SELF", "SPOUSE", "CHILD", "PARENT", "SIBLING", "OTHER_RELATIVE
 MARITAL = ["SINGLE", "MARRIED", "WIDOWED", "DIVORCED", "SEPARATED"]
 
 
+# Which generator constant feeds which code list. Anything listed here is
+# reconciled against the registry's own g2p_attribute_values before use.
+CODE_LISTS = {
+    "DISPLACEMENT": "DISPLACEMENT_STATUS",
+    "HEADSHIP": "HEADSHIP_TYPE",
+    "MARITAL": "MARITAL_STATUS",
+    "PASTORALIST": "PASTORALIST_CLASSIFICATION",
+    "PROGRAMS": "PROGRAM_NAME",
+    "RELATIONSHIPS": "RELATIONSHIP_TO_HEAD",
+    "TENURE": "TENURE_STATUS",
+}
+# The housing dict is keyed by column, and every key names a list.
+HOUSING_LISTS = {
+    "dwelling_type": "DWELLING_TYPE", "roof_material": "ROOF_MATERIAL",
+    "wall_material": "WALL_MATERIAL", "floor_material": "FLOOR_MATERIAL",
+    "water_source_type": "WATER_SOURCE_TYPE", "sanitation_type": "SANITATION_TYPE",
+    "lighting_source": "LIGHTING_SOURCE", "cooking_fuel_type": "COOKING_FUEL_TYPE",
+}
+
+
+def read_code_lists(conn):
+    """attribute_id -> ordered value codes, from the registry's own tables."""
+    with conn.cursor() as cur:
+        cur.execute("select to_regclass('public.g2p_attribute_values')")
+        if cur.fetchone()[0] is None:
+            return {}
+        cur.execute("select attribute_id, value_code from g2p_attribute_values"
+                    " order by attribute_id, sort_order")
+        out = {}
+        for aid, code in cur.fetchall():
+            out.setdefault(aid, []).append(code)
+    return out
+
+
+def head_relationship(conn, fallback):
+    """The value meaning 'head of household', asked for by ROLE.
+
+    Not by position and not by name. `RELATIONSHIPS[0]` happened to be SELF, so
+    every head was labelled correctly only for as long as a country used that
+    code in that slot — and a country that does not would have had every head
+    silently mislabelled, with no error anywhere.
+    """
+    with conn.cursor() as cur:
+        cur.execute("select to_regclass('public.g2p_attribute_value_roles')")
+        if cur.fetchone()[0] is None:
+            return fallback
+        cur.execute("""
+            select v.value_code from g2p_attribute_values v
+              join g2p_attribute_value_roles r on r.value_id = v.value_id
+             where r.role = 'head_of_household' order by v.sort_order limit 1
+        """)
+        row = cur.fetchone()
+    return row[0] if row else fallback
+
+
+def reconcile_with_code_lists(conn):
+    """Drop generated values the registry's code lists do not contain.
+
+    The lists here are hand-written and ordered — deprived_pick reads them
+    worst-to-best, so the ORDER carries the deprivation gradient and cannot be
+    taken from a code list, whose sort_order is display order. So the ordering
+    is kept and merely filtered: whatever survives still means what it meant,
+    and nothing unresolvable is emitted.
+
+    A value the registry defines but this script never emits is fine and
+    reported, not added — inserting it into a worst-to-best sequence at an
+    arbitrary point would silently change what the data says about poverty.
+    """
+    seeded = read_code_lists(conn)
+    if not seeded:
+        print("[bulk-seed] no code lists in this registry — generating from "
+              "built-in values")
+        return
+
+    g = globals()
+    dropped, unused = [], []
+
+    def filt(values, aid):
+        have = seeded.get(aid)
+        if not have:
+            return values, [], []
+        keep = [v for v in values if v in have]
+        gone = [v for v in values if v not in have]
+        never = [v for v in have if v not in values]
+        if not keep:
+            # No overlap at all: a country with a wholly different vocabulary.
+            # Its own list, in its own order, beats emitting nothing.
+            keep = list(have)
+        return keep, gone, never
+
+    for const, aid in CODE_LISTS.items():
+        vals = g[const]
+        pairs = vals and isinstance(vals[0], tuple)
+        codes = [v[0] for v in vals] if pairs else list(vals)
+        keep, gone, never = filt(codes, aid)
+        if gone: dropped.append(f"{aid}: {', '.join(gone)}")
+        if never: unused.append(f"{aid}: {', '.join(never)}")
+        g[const] = [v for v in vals if v[0] in keep] if pairs else keep
+
+    for col, aid in HOUSING_LISTS.items():
+        if col not in HOUSING: continue
+        keep, gone, never = filt(list(HOUSING[col]), aid)
+        if gone: dropped.append(f"{aid}: {', '.join(gone)}")
+        if never: unused.append(f"{aid}: {', '.join(never)}")
+        HOUSING[col] = keep
+
+    # Weighted lists are derived from the constants, so rebuild them after.
+    for base in ("PROGRAMS", "TENURE", "DISPLACEMENT", "PASTORALIST"):
+        stem = {"PROGRAMS": "PROGRAM"}.get(base, base)
+        g[f"{stem}_NAMES"], g[f"{stem}_WEIGHTS"] = names_and_weights(g[base])
+
+    g["RELATIONSHIPS"] = ([head_relationship(conn, g["RELATIONSHIPS"][0])]
+                          + [r for r in g["RELATIONSHIPS"]
+                             if r != head_relationship(conn, g["RELATIONSHIPS"][0])])
+    print(f"[bulk-seed] head of household = {g['RELATIONSHIPS'][0]!r} (by role)")
+    if dropped:
+        print("[bulk-seed] not generating values absent from this registry's lists:")
+        for d in dropped: print(f"[bulk-seed]     {d}")
+    if unused:
+        print("[bulk-seed] defined by the registry but never generated:")
+        for u in unused: print(f"[bulk-seed]     {u}")
+
+
 def deprived_pick(options, poverty, rng):
     """Pick from a worst->best ordered list, skewed by `poverty` in [0,1].
 
@@ -922,6 +1045,10 @@ def main():
         # script but not the pack.
         purge(conn)
         return 0
+
+    # Before anything is generated: keep only values this registry's code lists
+    # actually contain, and find the head-of-household value by role.
+    reconcile_with_code_lists(conn)
 
     dist = load_distributions(args.distributions, rng)
 
