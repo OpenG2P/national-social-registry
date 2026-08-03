@@ -269,6 +269,24 @@ spec:
                       "nothing. Set analytics.dashboards.superset.envFromSecret and "
                       ".configSecret to the Secrets the Superset deployment uses."
                   )
+              # Resolving the URI is not the same as being able to USE it, and the
+              # difference is not cosmetic: with a blank password every command
+              # below still runs, each one logging a swallowed
+              # "DB Creation and initialization failed" before carrying on, and the
+              # Job dies several minutes later somewhere unrelated. Connect once,
+              # here, where the message can say what is actually wrong.
+              from sqlalchemy import create_engine
+              try:
+                  create_engine(uri).connect().close()
+              except Exception as exc:
+                  sys.exit(
+                      f"[dashboards] ABORT: cannot connect to Superset's metadata "
+                      f"database at {uri.split('@')[-1]}: {exc}\n"
+                      "[dashboards] If this is an authentication failure, check "
+                      "analytics.dashboards.superset.dbPasswordSecret — DB_PASS is "
+                      "empty in the envFrom Secret and has to come from the "
+                      "Superset chart's own password Secret."
+                  )
               print(f"[dashboards] metadata database: {uri.split('@')[-1] or uri}")
               PY
 
@@ -409,14 +427,52 @@ spec:
                         "be unable to render them.")
                   sys.exit(0)
               s = requests.Session()
+
+              # Superset sets SESSION_COOKIE_SECURE — correct for browsers arriving
+              # over the public HTTPS ingress, and fatal here: this Job talks to the
+              # in-cluster Service over http, and an HTTP client will not transmit a
+              # Secure cookie over a plaintext connection. The CSRF token below then
+              # arrives with no session to validate it against, and every call comes
+              # back "400 The CSRF session token is missing" — which reads like a
+              # missing token, not a dropped cookie, and sends you looking in the
+              # wrong place entirely.
+              #
+              # Called before EVERY request, not once: Superset re-issues the session
+              # cookie on each response, so clearing the flag a single time buys
+              # exactly one request. That failure mode is nastier than the original,
+              # because the first dashboard embeds and the rest do not — a partial
+              # success that looks like a per-dashboard problem.
+              #
+              # Clearing the flag on our own cookie jar, not on Superset: the config
+              # is right, and the hop it affects is pod-to-Service inside the
+              # cluster. Using the public hostname would also work, at the cost of
+              # routing every service-to-service call back out through the ingress —
+              # which is exactly what splitting the Superset URL removed.
+              def allow_session_cookie_over_http():
+                  for cookie in s.cookies:
+                      cookie.secure = False
+
               r = s.post(f"{base}/api/v1/security/login", timeout=30, json={
                   "username": os.environ["SUPERSET_ADMIN"], "password": pw,
                   "provider": "db", "refresh": True})
               r.raise_for_status()
               s.headers["Authorization"] = f"Bearer {r.json()['access_token']}"
+              allow_session_cookie_over_http()
               csrf = s.get(f"{base}/api/v1/security/csrf_token/", timeout=30)
-              if csrf.ok:
-                  s.headers.update({"X-CSRFToken": csrf.json()["result"], "Referer": base})
+              if not csrf.ok:
+                  sys.exit(f"[dashboards] ABORT: csrf_token {csrf.status_code}: "
+                           f"{csrf.text[:200]}")
+              s.headers.update({"X-CSRFToken": csrf.json()["result"], "Referer": base})
+              # Superset sets SESSION_COOKIE_SECURE — correct for browsers arriving
+              # over the public HTTPS ingress, and fatal here: this Job talks to the
+              # in-cluster Service over http, and an HTTP client will not transmit a
+              # Secure cookie over a plaintext connection. The token above then
+              # arrives with no session to validate it against, and every call comes
+              # back "400 The CSRF session token is missing" — which reads like a
+              # missing token, not a dropped cookie, so it sends you looking in the
+              # wrong place entirely.
+              #
+              # See allow_session_cookie_over_http above.
               # Which dashboards are OURS, resolved through the ORM.
               #
               # NOT from the list API: DashboardRestApi.list_columns does not
@@ -443,6 +499,7 @@ spec:
 
               done = 0
               for did in ids:
+                  allow_session_cookie_over_http()
                   e = s.post(f"{base}/api/v1/dashboard/{did}/embedded",
                              json={"allowed_domains": []}, timeout=30)
                   if e.ok:
@@ -473,6 +530,19 @@ spec:
                 secretKeyRef:
                   name: {{ tpl .name $ | quote }}
                   key: {{ .key | default "password" | quote }}
+            {{- end }}
+            {{- end }}
+            {{- with .Values.analytics.dashboards.superset.dbPasswordSecret }}
+            {{- if .name }}
+            {{/* Superset's METADATA database password. Deliberately an explicit
+                 `env:` and not left to envFromSecret: DB_PASS is present but
+                 EMPTY in that Secret, and an explicit env var overrides the one
+                 envFrom supplies. The Superset deployment does exactly this. */}}
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ tpl .name $ | quote }}
+                  key: {{ .key | quote }}
             {{- end }}
             {{- end }}
             - name: SUPERSET_DB_NAME

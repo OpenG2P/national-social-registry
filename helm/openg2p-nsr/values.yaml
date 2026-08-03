@@ -219,6 +219,17 @@ analytics:
       waitSeconds: 5
       # Secret carrying Superset's DB_HOST/DB_NAME/DB_USER/DB_PASS.
       envFromSecret: commons-services-superset-env
+      # ...except DB_PASS, which in that Secret is EMPTY. The Superset chart keeps
+      # the password in a Secret of its own and injects it as an explicit `env:`
+      # entry, which takes precedence over the same key coming from `envFrom`.
+      # Copying only the envFrom half therefore produced a URI with no password and
+      # the CLI died on `fe_sendauth: no password supplied` — after waiting for
+      # Superset, after installing authlib, so the log looked like it was working
+      # right up to the point it wasn't. Rendered as an explicit env var here for
+      # the same reason: it has to win over the blank one.
+      dbPasswordSecret:
+        name: superset-db-user
+        key: superset-db-user-password
       # Secret carrying superset_config.py (AUTH_TYPE, SECRET_KEY, the DB URI).
       configSecret: commons-services-superset-config
       configKey: superset_config.py

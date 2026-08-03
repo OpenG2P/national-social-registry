@@ -1046,6 +1046,31 @@ def main():
         purge(conn)
         return 0
 
+    # Already seeded? Then there is nothing to do.
+    #
+    # This runs as a post-install AND post-upgrade hook, so it re-runs on every
+    # upgrade — and it is NOT idempotent by construction: the RNG is seeded from
+    # a fixed --seed so a run is reproducible, which means a second run generates
+    # the SAME record ids, and COPY has no ON CONFLICT to absorb them. The second
+    # run therefore died on `duplicate key value violates unique constraint
+    # g2p_register_individuals_pkey` at the very first row, failing the upgrade
+    # and, because Helm stops at a failed hook, taking the reporting views and
+    # the dashboard import down with it.
+    #
+    # Generating a fresh set instead would silently double the registry on every
+    # upgrade. So: seeded means done. `--purge` is how you ask for a rebuild.
+    if not args.dry_run:
+        with conn.cursor() as cur:
+            cur.execute(
+                'select count(*) from "public"."g2p_register_individuals"'
+                " where created_by = %s", (SEEDER,))
+            existing = cur.fetchone()[0]
+        if existing:
+            print(f"[bulk-seed] {existing:,} individuals already written by "
+                  f"'{SEEDER}' — nothing to do.")
+            print("[bulk-seed] Re-run with --purge first to regenerate.")
+            return 0
+
     # Before anything is generated: keep only values this registry's code lists
     # actually contain, and find the head-of-household value by role.
     reconcile_with_code_lists(conn)
