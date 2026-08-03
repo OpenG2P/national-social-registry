@@ -212,6 +212,11 @@ analytics:
     superset:
       # In-cluster base URL, used for the REST calls that enable embedding.
       url: http://commons-services-superset:8088
+      # Superset is a different Helm release, so nothing orders it against this
+      # Job. Wait rather than fail: a Superset merely restarting would otherwise
+      # take the whole dashboard import down with it.
+      waitAttempts: 60
+      waitSeconds: 5
       # Secret carrying Superset's DB_HOST/DB_NAME/DB_USER/DB_PASS.
       envFromSecret: commons-services-superset-env
       # Secret carrying superset_config.py (AUTH_TYPE, SECRET_KEY, the DB URI).

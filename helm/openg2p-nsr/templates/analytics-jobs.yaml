@@ -203,6 +203,29 @@ spec:
   template:
     spec:
       restartPolicy: OnFailure
+      initContainers:
+        {{/* Superset belongs to a DIFFERENT Helm release (commons-services), so
+             nothing orders it against this hook. Without a gate, a Superset that
+             is merely restarting fails this Job outright — and with the whole
+             import behind it, an unrelated pod restart loses the dashboards. */}}
+        - name: wait-for-superset
+          image: {{ .Values.analytics.dashboards.image.repository }}:{{ .Values.analytics.dashboards.image.tag }}
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              for i in $(seq 1 {{ .Values.analytics.dashboards.superset.waitAttempts }}); do
+                if python -c "import sys,urllib.request; urllib.request.urlopen('$SUPERSET_URL/health', timeout=5)" 2>/dev/null; then
+                  echo "[dashboards] Superset is up at $SUPERSET_URL"
+                  exit 0
+                fi
+                echo "[dashboards] waiting for Superset at $SUPERSET_URL ($i)"
+                sleep {{ .Values.analytics.dashboards.superset.waitSeconds }}
+              done
+              echo "[dashboards] Superset never became reachable at $SUPERSET_URL" >&2
+              exit 1
+          env:
+            - name: SUPERSET_URL
+              value: {{ tpl .Values.analytics.dashboards.superset.url $ | quote }}
       containers:
         - name: import-dashboards
           image: {{ .Values.analytics.dashboards.image.repository }}:{{ .Values.analytics.dashboards.image.tag }}
@@ -318,26 +341,51 @@ spec:
               superset import-dashboards -p /bundle/nsr-dashboards.zip -u "$SUPERSET_ADMIN"
 
               python - <<'PY'
-              import os
+              import os, sys, zipfile, yaml
               from superset.app import create_app
               with create_app().app_context():
                   from superset import db
                   from superset.models.core import Database
                   from superset.models.dashboard import Dashboard
-                  d = (db.session.query(Database)
-                       .filter_by(database_name=os.environ["SUPERSET_DB_NAME"]).one())
+
+                  name = os.environ["SUPERSET_DB_NAME"]
+                  # one_or_none, not one: `.one()` raises AFTER the import has
+                  # already succeeded, so the dashboards exist, their connection
+                  # does not, and the Job reports failure with a SQLAlchemy
+                  # traceback that names neither.
+                  d = db.session.query(Database).filter_by(database_name=name).one_or_none()
+                  if d is None:
+                      sys.exit(
+                          f"[dashboards] no Superset database connection named {name!r} after "
+                          "import. The bundle declares it, so this means the import did not "
+                          "create it. Check analytics.dashboards.supersetDatabaseName matches "
+                          "the database_name recorded in the bundle.")
                   # The bundle ships no password — it is not a secret store.
                   d.sqlalchemy_uri = (
                       f"postgresql+psycopg2://{os.environ['REGISTRY_DB_USER']}"
                       f"@{os.environ['PGHOST']}:{os.environ['PGPORT']}"
                       f"/{os.environ['REGISTRY_DB']}")
                   d.password = os.environ["REGISTRY_DB_PASSWORD"]
-                  # Imported dashboards land unpublished, hiding them from
-                  # everyone but their owner.
+
+                  # Publish only what this bundle owns. Superset may be shared —
+                  # commons-services runs one for the whole environment — and
+                  # publishing every dashboard in it would expose someone else's
+                  # draft, from a Job that has no business touching it.
+                  ours = set()
+                  with zipfile.ZipFile("/bundle/nsr-dashboards.zip") as z:
+                      for n in z.namelist():
+                          if "/dashboards/" in n and n.endswith((".yaml", ".yml")):
+                              cfg = yaml.safe_load(z.read(n)) or {}
+                              if cfg.get("uuid"):
+                                  ours.add(str(cfg["uuid"]))
+                  published = 0
                   for dash in db.session.query(Dashboard).all():
-                      dash.published = True
+                      if str(dash.uuid) in ours:
+                          dash.published = True
+                          published += 1
                   db.session.commit()
-                  print("dashboards published, connection set")
+                  print(f"[dashboards] published {published} of this bundle's "
+                        f"{len(ours)} dashboard(s), connection set")
               PY
 
               {{- if .Values.analytics.dashboards.superset.enableEmbedding }}
@@ -369,17 +417,43 @@ spec:
               csrf = s.get(f"{base}/api/v1/security/csrf_token/", timeout=30)
               if csrf.ok:
                   s.headers.update({"X-CSRFToken": csrf.json()["result"], "Referer": base})
-              got = s.get(f"{base}/api/v1/dashboard/?q=(page_size:200)", timeout=60)
-              got.raise_for_status()
+              # Which dashboards are OURS, resolved through the ORM.
+              #
+              # NOT from the list API: DashboardRestApi.list_columns does not
+              # include `uuid`, so filtering the REST response on it matches
+              # nothing and silently embeds zero. The ORM has it.
+              #
+              # Scoping matters because Superset is shared across the
+              # environment — enabling embedding on another team's dashboard is
+              # a change this Job has no business making.
+              import zipfile, yaml
+              from superset.app import create_app
+              ours = set()
+              with zipfile.ZipFile("/bundle/nsr-dashboards.zip") as z:
+                  for n in z.namelist():
+                      if "/dashboards/" in n and n.endswith((".yaml", ".yml")):
+                          cfg = yaml.safe_load(z.read(n)) or {}
+                          if cfg.get("uuid"):
+                              ours.add(str(cfg["uuid"]))
+              with create_app().app_context():
+                  from superset import db
+                  from superset.models.dashboard import Dashboard
+                  ids = [d.id for d in db.session.query(Dashboard).all()
+                         if str(d.uuid) in ours]
+
               done = 0
-              for d in got.json().get("result", []):
-                  e = s.post(f"{base}/api/v1/dashboard/{d['id']}/embedded",
+              for did in ids:
+                  e = s.post(f"{base}/api/v1/dashboard/{did}/embedded",
                              json={"allowed_domains": []}, timeout=30)
                   if e.ok:
                       done += 1
                   else:
-                      print(f"[dashboards] embedding {d['id']} failed "
+                      print(f"[dashboards] embedding {did} failed "
                             f"{e.status_code}: {e.text[:160]}")
+              if done != len(ours):
+                  print(f"[dashboards] WARNING: embedded {done} but the bundle has "
+                        f"{len(ours)} dashboard(s) — Insights will list the rest "
+                        "and be unable to render them")
               print(f"[dashboards] embedding enabled on {done} dashboard(s)")
               PY
               {{- end }}
