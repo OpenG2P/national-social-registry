@@ -185,7 +185,14 @@ analytics:
     # When set, the Job converges the account onto this password on every run,
     # so rotating the Secret and upgrading is enough to rotate the credential.
     supersetAdminPasswordSecret:
-      name: ""
+      # Generated on first install and adopted thereafter, so nobody has to
+      # invent one. Whichever of NSR and G2P Insights installs first creates it;
+      # the other adopts it, which is why both charts default to the same name
+      # and key. Set generate=false and create the Secret yourself if your
+      # pipeline renders manifests and applies them (helm template / --dry-run
+      # cannot read the cluster, so it would mint a new password every render).
+      generate: true
+      name: openg2p-insights-superset-svc
       key: password
     # database_name of the connection inside Superset, as recorded in the bundle
     supersetDatabaseName: NSR
