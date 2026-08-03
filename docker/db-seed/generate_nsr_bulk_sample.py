@@ -1059,12 +1059,22 @@ def main():
     #
     # Generating a fresh set instead would silently double the registry on every
     # upgrade. So: seeded means done. `--purge` is how you ask for a rebuild.
+    # to_regclass rather than querying the table directly: on a fresh install this
+    # hook can land before the registry has created its schema, and a plain SELECT
+    # would raise UndefinedTable *and* poison the transaction, so every later
+    # statement fails too. That would replace Loader's clear "table ... not found
+    # in target schema" with a traceback pointing at this check instead of at the
+    # real problem. Absent table simply means not seeded — let Loader report it.
     if not args.dry_run:
         with conn.cursor() as cur:
-            cur.execute(
-                'select count(*) from "public"."g2p_register_individuals"'
-                " where created_by = %s", (SEEDER,))
-            existing = cur.fetchone()[0]
+            cur.execute("select to_regclass('public.g2p_register_individuals')")
+            if cur.fetchone()[0] is None:
+                existing = 0
+            else:
+                cur.execute(
+                    'select count(*) from "public"."g2p_register_individuals"'
+                    " where created_by = %s", (SEEDER,))
+                existing = cur.fetchone()[0]
         if existing:
             print(f"[bulk-seed] {existing:,} individuals already written by "
                   f"'{SEEDER}' — nothing to do.")
