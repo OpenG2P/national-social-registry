@@ -211,6 +211,18 @@ spec:
             - |
               set -e
 
+              {{- with .Values.analytics.dashboards.superset.bootstrapKey }}
+              # Same bootstrap the Superset deployment runs before starting. It
+              # installs what the mounted config requires — authlib for
+              # AUTH_OAUTH — which the stock image does not carry.
+              if [ -f "/app/pythonpath/{{ . }}" ]; then
+                echo "[dashboards] sourcing {{ . }}"
+                . "/app/pythonpath/{{ . }}"
+              else
+                echo "[dashboards] {{ . }} not mounted — continuing without it"
+              fi
+              {{- end }}
+
               {{/* Everything below drives Superset's own CLI and ORM, which means
                    it writes to whatever SQLALCHEMY_DATABASE_URI resolves to. That
                    used to be nothing: this Job was given no Superset config at
@@ -432,5 +444,15 @@ spec:
             items:
               - key: {{ $.Values.analytics.dashboards.superset.configKey }}
                 path: {{ $.Values.analytics.dashboards.superset.configKey }}
+              {{- with $.Values.analytics.dashboards.superset.bootstrapKey }}
+              {{/* The deployed Superset sources this before starting, and it is
+                   where AUTH_OAUTH's dependency comes from — the stock image does
+                   not ship authlib. Projecting only superset_config.py gave this
+                   Job a config demanding OAuth and no library to satisfy it, so
+                   every run died in create_app with ModuleNotFoundError before
+                   importing anything. */}}
+              - key: {{ . }}
+                path: {{ . }}
+              {{- end }}
         {{- end }}
 {{- end }}

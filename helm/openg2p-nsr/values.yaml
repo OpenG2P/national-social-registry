@@ -217,6 +217,12 @@ analytics:
       # Secret carrying superset_config.py (AUTH_TYPE, SECRET_KEY, the DB URI).
       configSecret: commons-services-superset-config
       configKey: superset_config.py
+      # Sourced before the Superset CLI runs, exactly as the Superset deployment
+      # does before starting. It installs what the mounted config needs — authlib
+      # for AUTH_OAUTH — which the stock apache/superset image does not ship.
+      # Without it this Job died in create_app with ModuleNotFoundError, before
+      # importing a single dashboard. Set empty to skip.
+      bootstrapKey: superset_bootstrap.sh
       # Enable embedding on the imported dashboards. Without this they exist and
       # are published but carry no embedded UUID, so G2P Insights' Dashboards tab
       # lists them and can render none of them.
