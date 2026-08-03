@@ -59,7 +59,11 @@ jobs:
 
           {"name": "sanity-tests",
            "repo": "openg2p/openg2p-nsr-sanity-tests",
-           "dockerfile": "docker/sanity-tests/Dockerfile"}
+           "dockerfile": "docker/sanity-tests/Dockerfile"},
+
+          {"name": "maps",
+           "repo": "openg2p/openg2p-nsr-maps",
+           "dockerfile": "docker/maps/Dockerfile"}
         ]
 
       # The thin wrapper chart. It owns no templates — it pins openg2p-registry
