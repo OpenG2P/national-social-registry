@@ -22,7 +22,11 @@
 #   insightMaps.build.image.repository = openg2p/openg2p-nsr-maps
 #
 # Build context = repo root (so docker/maps/ is reachable).
-ARG INSIGHTS_VERSION=0.0.0-develop
+# Pinned to a published build, not a floating tag — the same convention the
+# db-seed image uses for its registry-platform base. `0.0.0-develop` without a
+# build number is not a tag that exists: CI publishes `0.0.0-develop.<n>` and
+# `develop`, so the unnumbered form fails the pull.
+ARG INSIGHTS_VERSION=0.0.0-develop.49
 FROM registry.gitlab.com/openg2p/g2p-insights/openg2p-insights-evidence-builder:${INSIGHTS_VERSION}
 
 # Replace the reference content wholesale rather than merging: a leftover
