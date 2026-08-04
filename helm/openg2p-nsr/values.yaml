@@ -26,39 +26,39 @@ global:
   registryDBPort: 5432
   registryDBUser: '{{ printf "%s_user" .Release.Name | replace "-" "_" }}'
   registryDBSecret: '{{ .Release.Name }}'
-  repository: registry.gitlab.com/openg2p/registry/national-social-registry/staff-api
+  registryDBUserPasswordKey: '{{ .Release.Name }}-db-user'
   masterDataDB: 'master_data'
   masterDataDBPort: 5432
   masterDataDBUser: 'master_data_user'
-  repository: registry.gitlab.com/openg2p/registry/national-social-registry/partner-api
+  masterDataDBSecret: 'master-data'
   masterDataDBUserPasswordKey: 'master-data-db-user'
   # Ingress host for this registry. Overrides the subchart's generic default.
   registryHostname: '{{ .Release.Name }}.{{ .Release.Namespace }}.openg2p.org'
-repository: registry.gitlab.com/openg2p/registry/national-social-registry/celery
+
 # ── openg2p-registry subchart overrides ───────────────────────────────────────
 registry:
   # NSR-built images (each FROM the matching openg2p-registry base image).
-  repository: registry.gitlab.com/openg2p/registry/national-social-registry/celery
+  # CI rewrites these tags to the freshly built NSR version (lockstep); the base
   # image they extend is pinned by the openg2p-registry dependency version.
   staffApi:
     image:
-      repository: registry.gitlab.com/openg2p/registry/national-social-registry/db-seed
+      repository: registry.gitlab.com/openg2p/registry/national-social-registry/staff-api
       tag: 0.0.0-develop
   partnerApi:
     image:
-      repository: openg2p/openg2p-nsr-partner-api
+      repository: registry.gitlab.com/openg2p/registry/national-social-registry/partner-api
       tag: 0.0.0-develop
   celeryWorker:
     image:
-      repository: openg2p/openg2p-nsr-celery
+      repository: registry.gitlab.com/openg2p/registry/national-social-registry/celery
       tag: 0.0.0-develop
   celeryBeat:
     image:
-      repository: openg2p/openg2p-nsr-celery
+      repository: registry.gitlab.com/openg2p/registry/national-social-registry/celery
       tag: 0.0.0-develop
   dbSeed:
     image:
-      repository: openg2p/openg2p-nsr-db-seed
+      repository: registry.gitlab.com/openg2p/registry/national-social-registry/db-seed
       tag: 0.0.0-develop
     # The subchart defaults these OFF (minimal reference registry). NSR ships
     # demo records/geo/images, so turn the db-seed loaders on. NB these are
@@ -95,7 +95,7 @@ registry:
   # version whose reference defaults are individual + household.
   idgenerator:
     idGenerator:
-      repository: registry.gitlab.com/openg2p/registry/national-social-registry/sanity-tests
+      appConfig:
         idTypes:
           individual:
             idLength: 12
@@ -111,7 +111,7 @@ registry:
   sanity:
     enabled: true
     image:
-      repository: openg2p/openg2p-nsr-sanity-tests
+      repository: registry.gitlab.com/openg2p/registry/national-social-registry/sanity-tests
       tag: 0.0.0-develop
     # functional_record_id of the injected sanity record (see
     # test/sanity/sanity/fixtures.py).
