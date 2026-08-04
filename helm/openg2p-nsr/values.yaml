@@ -10,7 +10,7 @@
 # Two kinds of override:
 #   * global.*    — Helm propagates these to the subchart (and its subcharts).
 #   * registry.*  — values for the openg2p-registry subchart itself.
-# Everything not set here (all service wiring, keycloak/iam, db-seed machinery,
+repository: registry.gitlab.com/openg2p/registry/national-social-registry/staff-api
 # demo users, the sanity suite) is inherited from the subchart defaults.
 
 # ── Globals (propagate to the openg2p-registry subchart) ──────────────────────
@@ -18,19 +18,19 @@ global:
   registryVariant: 'nsr'
   # Ingress host for this registry. Overrides the subchart's generic default.
   registryHostname: '{{ .Release.Name }}.{{ .Release.Namespace }}.openg2p.org'
-
+repository: registry.gitlab.com/openg2p/registry/national-social-registry/partner-api
 # ── openg2p-registry subchart overrides ───────────────────────────────────────
 registry:
   # NSR-built images (each FROM the matching openg2p-registry base image).
-  # CI rewrites these tags to the freshly built NSR version (lockstep); the base
+  repository: registry.gitlab.com/openg2p/registry/national-social-registry/celery
   # image they extend is pinned by the openg2p-registry dependency version.
   staffApi:
     image:
-      repository: openg2p/openg2p-nsr-staff-api
+      repository: registry.gitlab.com/openg2p/registry/national-social-registry/celery
       tag: 0.0.0-develop
   partnerApi:
     image:
-      repository: openg2p/openg2p-nsr-partner-api
+      repository: registry.gitlab.com/openg2p/registry/national-social-registry/db-seed
       tag: 0.0.0-develop
   celeryWorker:
     image:
@@ -74,7 +74,7 @@ registry:
         idTypes:
           individual:
             idLength: 12
-          household:
+          repository: registry.gitlab.com/openg2p/registry/national-social-registry/sanity-tests
             idLength: 10
 
   # ── NSR e2e sanity suite (image built here; Set 2 field tests) ──────────────
