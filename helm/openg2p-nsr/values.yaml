@@ -26,23 +26,23 @@ global:
   registryDBPort: 5432
   registryDBUser: '{{ printf "%s_user" .Release.Name | replace "-" "_" }}'
   registryDBSecret: '{{ .Release.Name }}'
-  registryDBUserPasswordKey: '{{ .Release.Name }}-db-user'
+  repository: registry.gitlab.com/openg2p/registry/national-social-registry/staff-api
   masterDataDB: 'master_data'
   masterDataDBPort: 5432
   masterDataDBUser: 'master_data_user'
-  masterDataDBSecret: 'master-data'
+  repository: registry.gitlab.com/openg2p/registry/national-social-registry/partner-api
   masterDataDBUserPasswordKey: 'master-data-db-user'
   # Ingress host for this registry. Overrides the subchart's generic default.
   registryHostname: '{{ .Release.Name }}.{{ .Release.Namespace }}.openg2p.org'
-
+repository: registry.gitlab.com/openg2p/registry/national-social-registry/celery
 # ── openg2p-registry subchart overrides ───────────────────────────────────────
 registry:
   # NSR-built images (each FROM the matching openg2p-registry base image).
-  # CI rewrites these tags to the freshly built NSR version (lockstep); the base
+  repository: registry.gitlab.com/openg2p/registry/national-social-registry/celery
   # image they extend is pinned by the openg2p-registry dependency version.
   staffApi:
     image:
-      repository: openg2p/openg2p-nsr-staff-api
+      repository: registry.gitlab.com/openg2p/registry/national-social-registry/db-seed
       tag: 0.0.0-develop
   partnerApi:
     image:
@@ -95,7 +95,7 @@ registry:
   # version whose reference defaults are individual + household.
   idgenerator:
     idGenerator:
-      appConfig:
+      repository: registry.gitlab.com/openg2p/registry/national-social-registry/sanity-tests
         idTypes:
           individual:
             idLength: 12
