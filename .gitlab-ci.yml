@@ -36,13 +36,8 @@ variables:
       {
         "name": "sanity-tests",
         "dockerfile": "docker/sanity-tests/Dockerfile"
-      },
-      {
-        "name": "maps",
-        "dockerfile": "docker/maps/Dockerfile"
       }
     ]
-
   CHART_PATH: helm/openg2p-nsr
   CHART_IMAGE_PATHS: '[".registry.staffApi.image.tag",".registry.partnerApi.image.tag",".registry.celeryWorker.image.tag",".registry.celeryBeat.image.tag",".registry.dbSeed.image.tag",".registry.sanity.image.tag"]'
   CHART_INHERIT_QUESTIONS: '{"dependency":"openg2p-registry","alias":"registry"}'
