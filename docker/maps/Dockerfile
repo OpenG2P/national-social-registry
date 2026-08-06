@@ -32,6 +32,23 @@ FROM registry.gitlab.com/openg2p/g2p-insights/openg2p-insights-evidence-builder:
 # Replace the reference content wholesale rather than merging: a leftover
 # reference query would run against NSR's database and fail the build, or worse
 # succeed and put a meaningless panel on the page.
+# Fail the BUILD if the base is the wrong stage.
+#
+# openg2p-insights-evidence-builder must be the `builder` target: the Evidence
+# toolchain plus /usr/local/bin/build-into. Until the packaging CI honoured the
+# `target` field it published the SERVING stage under this name — no toolchain —
+# and the mistake only surfaced in the cluster, as `exec: build-into: not found`
+# in a Job nobody watches, after a green install. Catch it here, where the error
+# names the cause and nothing is published.
+#
+# If this fires, the pin above predates that fix: move it to the first
+# g2p-insights build published after it.
+RUN test -x /usr/local/bin/build-into || { \
+      echo "ERROR: base image has no /usr/local/bin/build-into — it is the serving" >&2; \
+      echo "       stage, not 'builder'. Bump INSIGHTS_VERSION to a build made after" >&2; \
+      echo "       the packaging CI started passing --target." >&2; \
+      exit 1; }
+
 USER 0
 RUN rm -f /app/sources/registry/*.sql /app/pages/*.md
 

@@ -98,7 +98,7 @@ select
   round(avg(pct_enrolled), 1)        as pct_enrolled,
   round(avg(pct_no_id), 1)           as pct_no_id,
   round(avg(pct_poorest_covered), 1) as pct_poorest_covered
-from nsr.level1_summary
+from registry.level1_summary
 ```
 
 ## National
@@ -111,7 +111,7 @@ from nsr.level1_summary
 </Grid>
 
 ```sql l1
-select * from nsr.level1_summary order by poverty_score desc
+select * from registry.level1_summary order by poverty_score desc
 ```
 
 <!-- HEADING:1 -->
@@ -125,13 +125,13 @@ with nat as (
   select round(avg(pct_enrolled), 1)        as n_enrolled,
          round(avg(pct_no_id), 1)           as n_no_id,
          round(avg(pct_poorest_covered), 1) as n_poorest
-  from nsr.level1_summary
+  from registry.level1_summary
 )
 select r.*,
        round(r.pct_enrolled        - nat.n_enrolled, 1) as d_enrolled,
        round(r.pct_no_id           - nat.n_no_id, 1)    as d_no_id,
        round(r.pct_poorest_covered - nat.n_poorest, 1)  as d_poorest
-from nsr.level1_summary r cross join nat
+from registry.level1_summary r cross join nat
 where r.pcode = '${inputs.sel_l1.pcode}'
 ```
 
@@ -174,7 +174,7 @@ where r.pcode = '${inputs.sel_l1.pcode}'
 </div>
 
 ```sql l2_in_l1
-select * from nsr.level2_summary
+select * from registry.level2_summary
 where parent_pcode = '${inputs.sel_l1.pcode}'
 order by poverty_score desc
 ```
@@ -186,14 +186,14 @@ with parent as (
   select pct_enrolled as p_enrolled,
          pct_no_id    as p_no_id,
          pct_poorest_covered as p_poorest
-  from nsr.level1_summary
+  from registry.level1_summary
   where pcode = '${inputs.sel_l1.pcode}'
 )
 select z.*,
        round(z.pct_enrolled        - parent.p_enrolled, 1) as d_enrolled,
        round(z.pct_no_id           - parent.p_no_id, 1)    as d_no_id,
        round(z.pct_poorest_covered - parent.p_poorest, 1)  as d_poorest
-from nsr.level2_summary z cross join parent
+from registry.level2_summary z cross join parent
 where z.pcode = '${inputs.sel_l2.pcode}'
 ```
 
@@ -250,7 +250,7 @@ select
     enrolled_hh,
     no_id_hh,
     pcode
-from nsr.level3_summary
+from registry.level3_summary
 where parent_pcode = '${inputs.sel_l2.pcode}'
 order by poorest_not_enrolled desc, poverty_score desc
 ```
@@ -282,7 +282,7 @@ in.
 -- percentages are suppressed under 30 households and would be blank for all but
 -- 50 of the 1,135 areas in this sample.
 select area_name, households, individuals, poverty_score
-from nsr.level3_summary
+from registry.level3_summary
 where pcode = '${inputs.sel_l3.pcode}'
 ```
 
