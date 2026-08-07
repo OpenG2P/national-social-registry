@@ -8,48 +8,15 @@ sidebar: hide
 full_width: true
 ---
 
-<style>
-  @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Slab:wght@400;500;700&display=swap");
-  :global(body), :global(.markdown) {
-    font-family: "Roboto", system-ui, sans-serif !important;
-    color: #061327;
-  }
-  :global(.markdown h1), :global(.markdown h2), :global(.markdown h3) {
-    font-family: "Roboto Slab", Georgia, serif !important;
-    color: #061327;
-  }
-  :global(.over-container) { display: none !important; }
-  /* The frontmatter title still renders an <h1>Maps</h1>, which sat ABOVE the
-     brand bar and read oddly. Hidden here rather than dropped from the
-     frontmatter, because that title is also the browser tab name. */
-  :global(.markdown h1.title) { display: none !important; }
+<!--
+  The look of this page — the two-column layout, the brand bar, the type — comes
+  from the PLATFORM, injected at build time by apply_theme.py in the Insights
+  Evidence builder. Do not paste a <style> block here: it would be replaced on
+  the next build, and while it survived it would pin this page to one version of
+  a theme every registry is supposed to share.
 
-  /* Brand bar. Evidence's own wordmark is hidden above, so this claims the
-     space rather than adding to it. */
-  .brandbar {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 16px; padding: 12px 20px; margin: 0 0 16px;
-    /* OpenG2P black. Both logos switch to their dark-background variants —
-       the light ones have dark lettering and vanish on this. */
-    background: #061327;
-    border-radius: 4px;
-  }
-  .brandbar img { display: block; }
-  .brandbar .product { height: 30px; }      /* G2P Insight, 4.87:1 */
-  .brandbar .org     { height: 40px; }      /* OpenG2P, 4.38:1 */
-
-  /* Two columns: map beside its numbers, instead of stacked full-width.
-     A single 1400px-wide, 400px-tall map wasted most of the viewport and
-     pushed every figure below the fold. */
-  .split {
-    display: grid; grid-template-columns: 1.15fr 1fr;
-    gap: 20px; align-items: start; margin-bottom: 8px;
-  }
-  /* Below ~1100px two columns stop helping — the map gets too narrow to
-     click accurately, so fall back to stacked. */
-  @media (max-width: 1100px) { .split { grid-template-columns: 1fr; } }
-</style>
-
+  Use class="split" for a map beside its numbers; the platform styles it.
+-->
 <div class="brandbar">
   <img class="product" src="/logos/g2p-insight-dark.svg" alt="G2P Insight" />
   <img class="org" src="/logos/openg2p-horizontal-dark.png" alt="OpenG2P" />
