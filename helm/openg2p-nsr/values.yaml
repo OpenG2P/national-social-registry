@@ -178,6 +178,16 @@ analytics:
     # costs time rather than availability).
     refreshSchedule: "0 * * * *"
 
+    # DEVELOPMENT ONLY — override the reporting scripts from a ConfigMap, so a
+    # change to the SQL or the platform's generator can be tested against a real
+    # install without publishing an image first. Empty in every real deployment.
+    devOverlay:
+      configMap: ""
+      files:
+        - generate_reporting_views.py
+        - reporting_views.sql
+        - reporting.yaml
+
     # Which materialized views the refresh covers. Matched by prefix rather than
     # listed, so a view added to reporting_views.sql is picked up without anyone
     # remembering to add it here.

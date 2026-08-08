@@ -54,3 +54,44 @@ pii:
     # `phone` pattern and carries no contact detail at all — it is a proxy for
     # digital access, which is a genuine vulnerability indicator.
     - mobile_phone_type
+
+# The individual's own attributes, carried down onto each of its children.
+#
+# "Vulnerability by sex", "livelihood by age band" are questions about the child
+# row, and without these every chart asking one has to remember to join back to
+# nsr_rpt_individual — over 259,328 rows, in every chart, forever.
+#
+# age_band comes from the individual view rather than being redefined here: two
+# definitions of where 25 falls is how two charts come to disagree.
+inherit:
+  individual_vulnerability:
+    individual: [household_id, gender, is_female, age_band]
+  individual_livelihood:
+    individual: [household_id, gender, is_female, age_band]
+  individual_disability:
+    individual: [household_id, gender, is_female, age_band]
+  individual_shock:
+    individual: [household_id, gender, is_female, age_band]
+  individual_program:
+    individual: [household_id, gender, is_female, age_band]
+
+# Materialized, with the columns their charts group by.
+#
+# These three are the large ones — 259k, 166k and 62k rows — and each joins the
+# individual or household view on every read. A plain view is the right default
+# and the wrong choice here; the Farmer Registry materializes fr_rpt_crop at a
+# comparable size for the same reason.
+#
+# The refresh CronJob picks them up automatically: it matches on the nsr_rpt_
+# prefix and resolves order from pg_depend, so nothing here needs listing twice.
+materialized:
+  individual_vulnerability:
+    indexes:
+      - [disability_status]
+      - [geo_1, geo_2, geo_3]
+  individual_livelihood:
+    indexes:
+      - [geo_1, geo_2, geo_3]
+  household_housing_and_service:
+    indexes:
+      - [geo_1, geo_2, geo_3]
