@@ -48,4 +48,7 @@ COPY docker/db-seed/upload_images.py    /seed/upload_images.py
 # openg2p-data and is already present via the base image's clone at
 # /openg2p-data — these views are NSR's own schema and ship with this image.
 COPY docker/db-seed/reporting_views.sql /seed/reporting_views.sql
+# What the platform's reporting generator cannot infer: which views are
+# hand-written here rather than generated.
+COPY docker/db-seed/reporting.yaml     /seed/reporting.yaml
 RUN chmod +x /seed/load_sample_data.py /seed/upload_images.py

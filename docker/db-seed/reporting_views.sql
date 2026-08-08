@@ -24,21 +24,9 @@
 -- turn need a first non-concurrent refresh — which CREATE ... AS does for us.)
 -- =============================================================================
 
--- Level labels for this deployment, so dashboards can name geo_1..geo_5.
-DROP VIEW IF EXISTS nsr_rpt_geo_levels CASCADE;
-CREATE VIEW nsr_rpt_geo_levels AS
-SELECT DISTINCT
-    (ordinality)::int                       AS depth,
-    elem ->> 'level_mnemonic'               AS level_name
-FROM g2p_register_households h,
-     LATERAL jsonb_array_elements(h.geo_code_hierarchy_json -> 'hierarchy')
-             WITH ORDINALITY AS t(elem, ordinality)
-WHERE h.geo_code_hierarchy_json IS NOT NULL;
-
-COMMENT ON VIEW nsr_rpt_geo_levels IS
-    'Geo level names for this deployment, by depth. Lets a dashboard label '
-    'geo_1..geo_5 without hardcoding a country hierarchy.';
-
+-- nsr_rpt_geo_levels is GENERATED, from Master Data — it used to be derived
+-- from registered data here, which left an empty registry unable to name its
+-- own geo columns.
 
 -- ---------------------------------------------------------------------------
 -- Households
