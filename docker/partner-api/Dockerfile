@@ -5,7 +5,7 @@
 # model; ENV defaults and the migrate+gunicorn CMD are inherited.
 #
 # Build context = repo root (so nsr-extension/ is reachable).
-ARG RP_VERSION=0.0.0-develop.343
+ARG RP_VERSION=0.0.0-develop.383
 FROM registry.gitlab.com/openg2p/registry/registry-platform/partner-api:${RP_VERSION}
 
 # Option C: select NSR's domain model (coexists with the base image's reference
