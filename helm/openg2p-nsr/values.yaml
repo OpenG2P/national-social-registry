@@ -42,23 +42,23 @@ registry:
   # image they extend is pinned by the openg2p-registry dependency version.
   staffApi:
     image:
-      repository: registry.gitlab.com/openg2p/registry/national-social-registry/staff-api
+      repository: openg2p/openg2p-nsr-staff-api
       tag: 0.0.0-develop
   partnerApi:
     image:
-      repository: registry.gitlab.com/openg2p/registry/national-social-registry/partner-api
+      repository: openg2p/openg2p-nsr-partner-api
       tag: 0.0.0-develop
   celeryWorker:
     image:
-      repository: registry.gitlab.com/openg2p/registry/national-social-registry/celery
+      repository: openg2p/openg2p-nsr-celery
       tag: 0.0.0-develop
   celeryBeat:
     image:
-      repository: registry.gitlab.com/openg2p/registry/national-social-registry/celery
+      repository: openg2p/openg2p-nsr-celery
       tag: 0.0.0-develop
   dbSeed:
     image:
-      repository: registry.gitlab.com/openg2p/registry/national-social-registry/db-seed
+      repository: openg2p/openg2p-nsr-db-seed
       tag: 0.0.0-develop
     # The subchart defaults these OFF (minimal reference registry). NSR ships
     # demo records/geo/images, so turn the db-seed loaders on. NB these are
@@ -111,7 +111,7 @@ registry:
   sanity:
     enabled: true
     image:
-      repository: registry.gitlab.com/openg2p/registry/national-social-registry/sanity-tests
+      repository: openg2p/openg2p-nsr-sanity-tests
       tag: 0.0.0-develop
     # functional_record_id of the injected sanity record (see
     # test/sanity/sanity/fixtures.py).
